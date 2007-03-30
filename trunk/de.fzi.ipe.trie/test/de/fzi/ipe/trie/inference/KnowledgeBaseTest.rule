@@ -1,0 +1,20 @@
+# Example Rule File
+@prefix zach: <http://www.fzi.de/ipe/zach#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+
+[testFail:
+    (x,x,x)
+<-
+    (http://www.fzi.de/ipe/zach#FFF, ?X, ?Y)
+    (http://www.fzi.de/ipe/zach#Valentin, ?X, ?X)
+    (?X, http://www.fzi.de/ipe/zach#Valentin, ?Y)
+    (?X,?X, ?X)
+]
+
+[testSuc:
+    (x,x,x)
+<-
+    (http://www.fzi.de/ipe/zach#Valentin, ?X, ?Y)
+    (?A, ?B, ?C)
+    (?A, http://www.fzi.de/ipe/zach#works_on, ?Y)
+]
