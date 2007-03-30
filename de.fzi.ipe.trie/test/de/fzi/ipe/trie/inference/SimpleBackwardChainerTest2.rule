@@ -1,0 +1,37 @@
+# Example Rule File
+@prefix zach: <http://www.fzi.de/ipe/zach#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+
+[test1:
+    (x,x,x)
+<-
+    (?werkzeug, zach:has_contributor, ?person)
+]
+
+[rule1:
+    (?tool,zach:has_contributor,?person)
+<-
+    (?person, zach:works_onT, ?tool)
+    (?tool, rdf:type, zach:Tool)
+]
+
+[rule2:
+    (?person, zach:works_onT, ?tool)
+<-
+    (?person, zach:works_on, ?tool)
+]
+
+[rule3:
+	(?person2, zach:works_onT, ?tool)
+<-
+    (?person1, zach:works_on, ?tool)
+    (?person1, zach:member_of, ?project)
+    (?person2, zach:member_of, ?project)
+]
+
+[rule4:
+	(?person, zach:works_onT, ?tool) 
+<- 
+	(?person, zach:member_of, ?tool)
+	(X,X,X)
+]

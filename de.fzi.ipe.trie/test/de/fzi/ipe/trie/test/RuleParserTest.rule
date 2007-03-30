@@ -1,0 +1,13 @@
+# Example Rule File
+@prefix zach: <http://www.fzi.de/ipe/zach#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+
+
+[projectUsesTool: 
+	(?A zach:uses ?C)
+<-
+	(?B zach:works_on ?C)
+	(?B zach:member_of ?A) 
+	(?A rdf:type zach:Project)
+]
+

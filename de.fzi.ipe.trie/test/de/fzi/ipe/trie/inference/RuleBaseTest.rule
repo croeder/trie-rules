@@ -1,0 +1,56 @@
+# Example Rule File
+@prefix zach: <http://www.fzi.de/ipe/zach#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+
+[testRule:
+    (x,x,x)
+<-
+    (a, ?Y, ?Y)
+    (a, ?Y, ?Y)
+    (?X,?X, b)
+    (?X,?X, b)
+]
+
+
+[fail0: 
+	(?X,b,?X)
+<-
+	(x,x,x)
+]
+
+[suc0: 
+	(?X,a,?X)
+<-
+	(x,x,x)
+]
+
+[fail1: 
+	(?X,?X,b)
+<-
+	(x,x,x)
+]
+
+[suc1: 
+	(a,a,?X)
+<-
+	(x,x,x)
+]
+
+[fail2: 
+	(?Y,a,?Y)
+<-
+	(x,x,x)
+]
+
+[suc2: 
+	(?Y,a,?A)
+<-
+	(x,x,x)
+]
+
+[suc3: 
+	(?Y,a,?Y)
+	(?Y,a,?A)
+<-
+	(x,x,x)
+]

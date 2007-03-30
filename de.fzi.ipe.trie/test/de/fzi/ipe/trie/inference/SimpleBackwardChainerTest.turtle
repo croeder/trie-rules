@@ -1,0 +1,13 @@
+@prefix : <http://www.fzi.de/ipe/zach#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+
+:Valentin a :Person;
+	:works_on :SOBOLEO.
+	
+:Simone a :Person;
+	:works_on :SOBOLEO;
+	:member_of :Wissensnetz.
+		
+:Wissensnetz a :Project.
+
+:SOBOLEO a :Tool.
