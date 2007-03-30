@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         id="InferenceExplorer"
+         name="InferenceExplorer"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="de.fzi.ipe.trie.rcp.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="de.fzi.ipe.trie.rcp.Perspective"
+            id="de.fzi.ipe.trie.rcp.perspective"
+            name="Perspective">
+      </perspective>
+   </extension>
+   <extension
+         id="InferenceExplorerProduct"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="de.fzi.ipe.trie.rcp.InferenceExplorer"
+            name="Inference Explorer"/>
+   </extension>
+
+   
+   
+
+</plugin>
