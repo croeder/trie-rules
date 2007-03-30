@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+ 
+   <extension
+         name="Inference Explorer"
+         point="org.eclipse.ui.views">
+      <view
+            category="Inference Explorer"
+            class="de.fzi.ipe.trie.debugger.DebugView"
+            icon="icons/bug.gif"
+            id="de.fzi.ipe.trie.debugger.InferenceExplorer"
+            name="Inference Explorer"/>
+      <view
+            class="de.fzi.ipe.trie.debugger.gui.files.FileChooserView"
+            id="de.fzi.ipe.trie.debugger.FileChooserView"
+            name="File Chooser"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+   </extension>
+</plugin>

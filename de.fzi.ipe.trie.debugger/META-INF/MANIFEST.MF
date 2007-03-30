@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-Name: Inference Explorer
+Bundle-SymbolicName: de.fzi.ipe.trie.debugger;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: lib/jena.jar,
+ .,
+ src/main/
+Bundle-Activator: de.fzi.ipe.trie.debugger.DebuggerPlugin
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.ui.ide,
+ de.fzi.ipe.trie
+Eclipse-LazyStart: true
+Bundle-Vendor: FZI
+Bundle-ManifestVersion: 2
+Export-Package: de.fzi.ipe.trie.debugger,
+ de.fzi.ipe.trie.debugger.gui.files
