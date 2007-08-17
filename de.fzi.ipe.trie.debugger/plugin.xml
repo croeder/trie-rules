@@ -11,12 +11,12 @@
             icon="icons/bug.gif"
             id="de.fzi.ipe.trie.debugger.InferenceExplorer"
             name="Inference Explorer"/>
-      <view
-            class="de.fzi.ipe.trie.debugger.gui.files.FileChooserView"
-            id="de.fzi.ipe.trie.debugger.FileChooserView"
-            name="File Chooser"/>
    </extension>
    <extension
          point="org.eclipse.ui.startup">
+   </extension>
+   <extension
+         point="de.fzi.ipe.trie.fileManagement.knowledgeBaseListener">
+      <Listener ClassName="de.fzi.ipe.trie.debugger.model.DebuggerRuleStore"/>
    </extension>
 </plugin>

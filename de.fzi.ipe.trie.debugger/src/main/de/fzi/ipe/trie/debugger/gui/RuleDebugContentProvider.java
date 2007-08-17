@@ -7,7 +7,6 @@ import java.util.Iterator;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 
 import de.fzi.ipe.trie.debugger.DebugView;
-import de.fzi.ipe.trie.debugger.gui.files.SourceFiles;
 import de.fzi.ipe.trie.debugger.model.DebuggerAtom;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
 import de.fzi.ipe.trie.debugger.model.DebuggerRuleStore;
@@ -183,7 +182,7 @@ public class RuleDebugContentProvider {
      */
     public void reload() throws IOException{ 
     	DebuggerRuleStore.clearCache();
-		SourceFiles.getInstance().reload();
+    	DebuggerRuleStore.reload();
         if (currentRule != null) setupRule(currentRule.getName());
     }
 

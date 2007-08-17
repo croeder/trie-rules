@@ -537,11 +537,6 @@ public class DebugView extends ViewPart {
 		refresh.setToolTipText("Reload Data and Refresh View");
 	}
 
-	protected void jumpToRule(DebuggerRule currentRule) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	private void createRuleActions() {
 		DebuggerRule[] rules = contentProvider.getAllRules();
 		ruleActions = new Action[rules.length];
