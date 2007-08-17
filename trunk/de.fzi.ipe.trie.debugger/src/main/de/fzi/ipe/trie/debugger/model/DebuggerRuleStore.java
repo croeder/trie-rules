@@ -1,6 +1,7 @@
 package de.fzi.ipe.trie.debugger.model;
 
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,26 +11,23 @@ import java.util.Set;
 import java.util.Stack;
 
 import de.fzi.ipe.trie.Rule;
+import de.fzi.ipe.trie.filemanagement.extensionPoint.Datamodel;
+import de.fzi.ipe.trie.filemanagement.extensionPoint.KnowledgeBaseListener;
 import de.fzi.ipe.trie.inference.KnowledgeBase;
 
 
-public class DebuggerRuleStore {
+public class DebuggerRuleStore implements KnowledgeBaseListener {
 
-	private static KnowledgeBase kb = new KnowledgeBase();
+	private static Datamodel dm;
 	private static Map<Rule,DebuggerRule> ruleCache = new HashMap<Rule,DebuggerRule>();
 
 	
 	
 	public static void clearCache() {
-		kb.clear();
 		ruleCache.clear();
 	}
 
 
-	public void init(KnowledgeBase kb) {
-		DebuggerRuleStore.kb = kb;
-	}
-	
 	public static DebuggerRule getRule(Rule rule) {
 		DebuggerRule toReturn = ruleCache.get(rule);
 		if (toReturn == null) {
@@ -40,16 +38,16 @@ public class DebuggerRuleStore {
 	}
 	
 	public static DebuggerRule getRule(String ruleName) {
-		Rule rule = kb.getRuleBase().getRule(ruleName);
+		Rule rule = dm.getKnowledgeBase().getRuleBase().getRule(ruleName);
 		return getRule(rule);
 	}
 	
 	public static KnowledgeBase getKnowledgeBase() {
-		return kb;
+		return dm.getKnowledgeBase();
 	}
 	
 	public static Set<DebuggerRule> getPossibilities(DebuggerAtom bodyClause) {
-		List<Rule> matchingRules = kb.getRuleBase().getMatchingRules(bodyClause.getAtom());
+		List<Rule> matchingRules = dm.getKnowledgeBase().getRuleBase().getMatchingRules(bodyClause.getAtom());
 		Set<DebuggerRule> toReturn = new HashSet<DebuggerRule>();
 		for (Rule r:matchingRules) {
 			toReturn.add(getRule(r));
@@ -80,11 +78,26 @@ public class DebuggerRuleStore {
 	}
 	
 	public static DebuggerRule[] getRules() {
-		Collection<Rule> allRules = kb.getRuleBase().getAllRules();
+		Collection<Rule> allRules = dm.getKnowledgeBase().getRuleBase().getAllRules();
 		for (Rule r:allRules) {
 			getRule(r);
 		}
 		return ruleCache.values().toArray(new DebuggerRule[ruleCache.values().size()]);
+	}
+
+
+	public void knowledgeBaseChanged() {
+		clearCache();
+	}
+
+
+	public void setDatamodel(Datamodel dm) {
+		DebuggerRuleStore.dm = dm;
+	}
+
+
+	public static void reload() throws IOException {
+		dm.reload();
 	}
 
 	
