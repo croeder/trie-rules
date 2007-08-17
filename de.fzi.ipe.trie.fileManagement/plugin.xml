@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="de.fzi.ipe.trie.fileManagement.knowledgeBaseListener" name="Knowledge Base Listener" schema="schema/de.fzi.ipe.trie.fileManagement.knowledgeBaseListener.exsd"/>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="de.fzi.ipe.trie.filemanagement.FileChooserView"
+            id="de.fzi.ipe.trie.debugger.FileChooserView"
+            name="File Chooser"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup class="de.fzi.ipe.trie.filemanagement.EarlyStartupManager"/>
+   </extension>
+
+</plugin>

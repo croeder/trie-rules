@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: FileManagement Plug-in
+Bundle-SymbolicName: de.fzi.ipe.trie.fileManagement;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: de.fzi.ipe.trie.filemanagement.Activator
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ de.fzi.ipe.trie
+Eclipse-LazyStart: true
+Bundle-ClassPath: lib/jena.jar,
+ .
+Export-Package: de.fzi.ipe.trie.filemanagement,
+ de.fzi.ipe.trie.filemanagement.extensionPoint
