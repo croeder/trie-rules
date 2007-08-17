@@ -1,0 +1,20 @@
+# Example Rule File
+@prefix zach: <http://www.fzi.de/ipe/zach#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+
+
+[Rule_Father: 
+   (?A,rdf:type,zach:father) 
+<- 
+   (?A,rdf:type,zach:male) 
+   (?A,zach:parent,?B)]
+
+[Rule_Parent:
+   (?X,zach:parent,?Y) 
+<- 
+    (?Y,zach:child,?X)]
+
+[Rule_ChildFromRaises:
+   (?X,zach:child,?Y) 
+<- 
+   (?Y,zach:raises,?X)]

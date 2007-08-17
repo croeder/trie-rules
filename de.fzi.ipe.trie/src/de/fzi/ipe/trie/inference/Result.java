@@ -20,7 +20,7 @@ public class Result {
 	private List<Prooftree> prooftrees;
 	
 	
-	protected Result(ExecutionTreeQuery query, List<VariableBindings> result, List<Prooftree> prooftrees) {
+	public Result(ExecutionTreeQuery query, List<VariableBindings> result, List<Prooftree> prooftrees) {
 		Set<Variable> variables = query.getVariableMap().keySet();
 		int i=0;
 		for (Variable v:variables) {
