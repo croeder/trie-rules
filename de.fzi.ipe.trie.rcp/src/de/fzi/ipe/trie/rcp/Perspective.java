@@ -5,7 +5,7 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
 import de.fzi.ipe.trie.debugger.DebugView;
-import de.fzi.ipe.trie.debugger.gui.files.FileChooserView;
+import de.fzi.ipe.trie.filemanagement.FileChooserView;
 
 public class Perspective implements IPerspectiveFactory {
 

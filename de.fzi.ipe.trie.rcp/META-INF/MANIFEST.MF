@@ -8,5 +8,6 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  de.fzi.ipe.trie,
+ de.fzi.ipe.trie.fileManagement,
  de.fzi.ipe.trie.debugger
 Eclipse-LazyStart: true

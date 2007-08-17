@@ -21,6 +21,7 @@
       <plugin id="com.ibm.icu"/>
       <plugin id="de.fzi.ipe.trie"/>
       <plugin id="de.fzi.ipe.trie.debugger"/>
+      <plugin id="de.fzi.ipe.trie.fileManagement"/>
       <plugin id="de.fzi.ipe.trie.rcp"/>
       <plugin id="org.eclipse.ant.core"/>
       <plugin id="org.eclipse.core.commands"/>
