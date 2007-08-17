@@ -72,6 +72,7 @@ public class ExecutionTreeGoal extends ExecutionTreeElement {
 	}
 	
 	protected void create(KnowledgeBase kb) {		
+		System.out.println("call " + this); //TODO sysout
 		addChild(new ExecutionTreeFacts(goal,kb));
 		
 		List<ExecutionTreeRule> matchingRules = kb.getRuleBase().getExecutionTreeRules(goal);

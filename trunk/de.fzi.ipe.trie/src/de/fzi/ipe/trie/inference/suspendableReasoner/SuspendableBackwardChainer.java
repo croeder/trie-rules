@@ -1,16 +1,22 @@
-package de.fzi.ipe.trie.inference;
+package de.fzi.ipe.trie.inference.suspendableReasoner;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import de.fzi.ipe.trie.Atom;
+import de.fzi.ipe.trie.inference.GoalStack;
+import de.fzi.ipe.trie.inference.KnowledgeBase;
+import de.fzi.ipe.trie.inference.Result;
+import de.fzi.ipe.trie.inference.VariableBindings;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
 import de.fzi.ipe.trie.inference.prooftree.Prooftree;
 
-public class SimpleBackwardChainer {
-
+public class SuspendableBackwardChainer {
+	
+	private Suspender suspender = new Suspender();
+	
 	private KnowledgeBase knowledgeBase;
 
 	private GoalStack toProof = new GoalStack();
@@ -21,7 +27,7 @@ public class SimpleBackwardChainer {
 	
 	private ExecutionTreeQuery query;
 	
-	public SimpleBackwardChainer(KnowledgeBase knowledgeBase) {
+	public SuspendableBackwardChainer(KnowledgeBase knowledgeBase) {
 		this.knowledgeBase = knowledgeBase;
 	}
 	
@@ -36,6 +42,9 @@ public class SimpleBackwardChainer {
 	
 	
 	
+	public Suspender getSuspender() {
+		return suspender;
+	}
 	
 	private void proceed() {
 		while (true) {
