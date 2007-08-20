@@ -3,17 +3,13 @@ package de.fzi.ipe.trie.filemanagement;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -30,10 +26,16 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.hp.hpl.jena.shared.JenaException;
 
+import de.fzi.ipe.trie.filemanagement.extensionPoint.Datamodel;
+import de.fzi.ipe.trie.filemanagement.extensionPoint.KnowledgeBaseListener;
+import de.fzi.ipe.trie.filemanagement.gui.FileLabelProvider;
+import de.fzi.ipe.trie.filemanagement.gui.FileSetContentProvider;
+
 public class FileChooserView extends ViewPart {
 
 	public static final String VIEW_ID = "de.fzi.ipe.trie.debugger.FileChooserView";
 	private Composite parent;
+	private ListViewer rdfFileList, ruleFileList;
 	
 	
 	public FileChooserView() {
@@ -47,6 +49,16 @@ public class FileChooserView extends ViewPart {
 		createRDFFileFields(parent);
 		createRuleFileFields(parent);
 		
+		SourceFiles.getInstance().addListener(new KnowledgeBaseListener() {
+
+			public void knowledgeBaseChanged() {
+				if (rdfFileList != null) rdfFileList.refresh();
+				if (ruleFileList != null) ruleFileList.refresh();
+			}
+
+			public void setDatamodel(Datamodel dm) {
+				;
+			}});
 	}
 
 	private void createRuleFileFields(final Composite parent) {
@@ -60,15 +72,15 @@ public class FileChooserView extends ViewPart {
 		Label rdfFilesLabel = new Label(rdfFilesGroup, SWT.NONE);
 		rdfFilesLabel.setText("Rule Files");
 		
-		
 		Composite listHolder = new Composite(rdfFilesGroup,SWT.NONE);
 		listHolder.setLayout(new FillLayout());
 		GridData listHolderGD = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
 		listHolderGD.heightHint = 200;
 		listHolder.setLayoutData(listHolderGD);
-		final ListViewer ruleFileList = new ListViewer(listHolder,SWT.NONE);
+		ruleFileList = new ListViewer(listHolder,SWT.NONE);
 		ruleFileList.setContentProvider(new FileSetContentProvider());
 		ruleFileList.setLabelProvider(new FileLabelProvider());
+		ruleFileList.setInput(SourceFiles.getInstance().getRuleFiles());
 
 		Composite buttonHolder = new Composite(rdfFilesGroup, SWT.NONE);
 		buttonHolder.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL));
@@ -91,7 +103,6 @@ public class FileChooserView extends ViewPart {
 					try {
 						File file = new File(fullPath);
 						SourceFiles.getInstance().addRuleFile(file);
-						ruleFileList.setInput(SourceFiles.getInstance().getRuleFiles());
 						saveFileChooserPath(fullPath);						
 					} catch (IOException e1) {
 						showError("Could not read File!", "Could not read file "+e1.getMessage(),e1);
@@ -116,8 +127,12 @@ public class FileChooserView extends ViewPart {
 				IStructuredSelection selection = (IStructuredSelection) ruleFileList.getSelection();
 				if (!selection.isEmpty()) {
 					File toRemove = (File) selection.getFirstElement();
-					SourceFiles.getInstance().removeRuleFile(toRemove);
-					ruleFileList.setInput(SourceFiles.getInstance().getRuleFiles());
+					try {
+						SourceFiles.getInstance().removeRuleFile(toRemove);						
+					} catch (IOException e1) {
+						showError("Encountered error reloading files after file removal!", "Could not read file "+e1.getMessage(),e1);
+						e1.printStackTrace();		
+					}
 				}
 				
 			}});
@@ -158,9 +173,10 @@ public class FileChooserView extends ViewPart {
 		GridData listHolderGD = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
 		listHolderGD.heightHint = 200;
 		listHolder.setLayoutData(listHolderGD);
-		final ListViewer rdfFileList = new ListViewer(listHolder,SWT.NONE);
+		rdfFileList = new ListViewer(listHolder,SWT.NONE);
 		rdfFileList.setContentProvider(new FileSetContentProvider());
 		rdfFileList.setLabelProvider(new FileLabelProvider());
+		rdfFileList.setInput(SourceFiles.getInstance().getRDFFiles());
 
 		Composite buttonHolder = new Composite(rdfFilesGroup, SWT.NONE);
 		buttonHolder.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL));
@@ -177,13 +193,12 @@ public class FileChooserView extends ViewPart {
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog fileDialog = new FileDialog(parent.getShell());
 				fileDialog.setFileName(getFileChooserPath());
-				fileDialog.setFilterExtensions(new String[] {"*.rdf","*.turtle","*.*"});
+				fileDialog.setFilterExtensions(new String[] {"*.rdf","*.turtle","*.*"});	
 				String fullPath = fileDialog.open();
 				if (fullPath != null) {
 					File file = new File(fullPath);
 					try {
 						SourceFiles.getInstance().addRDFFile(file);
-						rdfFileList.setInput(SourceFiles.getInstance().getRDFFiles());
 						saveFileChooserPath(fullPath);
 					} catch (FileNotFoundException e1) {
 						showError("Could not find File!", "Could not find file "+e1.getMessage(),e1);
@@ -208,8 +223,12 @@ public class FileChooserView extends ViewPart {
 				IStructuredSelection selection = (IStructuredSelection) rdfFileList.getSelection();
 				if (!selection.isEmpty()) {
 					File toRemove = (File) selection.getFirstElement();
-					SourceFiles.getInstance().removeRDFFile(toRemove);
-					rdfFileList.setInput(SourceFiles.getInstance().getRDFFiles());
+					try {
+						SourceFiles.getInstance().removeRDFFile(toRemove);
+					} catch (IOException e1) {
+						showError("Encountered error reloading files after file removal!", "Could not read file "+e1.getMessage(),e1);
+						e1.printStackTrace();		
+					}
 				}
 				
 			}});
@@ -224,36 +243,6 @@ public class FileChooserView extends ViewPart {
 		Status status = new Status(IStatus.ERROR,"de.fzi.ipe.trie.debugger",-1,message,exception);
 		ErrorDialog.openError(parent.getShell(), title, message, status);
 
-	}
-	
-	
-	private class FileLabelProvider extends LabelProvider {
-
-		public String getText(Object element) {
-			if (element instanceof File) return ((File)element).getName();
-			else return super.getText(element);
-		}
-				
-	}
-	
-	private class FileSetContentProvider implements IStructuredContentProvider{
-
-		private File[] files;
-		
-		public void dispose() {}
-
-		@SuppressWarnings("unchecked")
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			if (newInput instanceof Set) {
-				files = ((Set<File>)newInput).toArray(new File[0]);
-			}
-			else files = new File[0];
-		}
-
-		public Object[] getElements(Object inputElement) {
-			return files;
-		}
-		
 	}
 	
 	

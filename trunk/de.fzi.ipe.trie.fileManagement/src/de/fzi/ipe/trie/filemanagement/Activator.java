@@ -34,6 +34,7 @@ public class Activator extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+		SourceFiles.getInstance().saveFileLocations();
 		plugin = null;
 		super.stop(context);
 	}
