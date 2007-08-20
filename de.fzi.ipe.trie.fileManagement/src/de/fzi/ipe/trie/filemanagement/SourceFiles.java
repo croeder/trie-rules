@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
+
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ModelMaker;
@@ -36,8 +38,75 @@ public class SourceFiles implements Datamodel{
 		return instance;
 	}
 
-	
 	private SourceFiles() {
+		loadFiles();
+	}
+	
+	/**
+	 * Stors the location of all files currently active - used to reload these files the next time the program 
+	 * is opened. 
+	 * @see SourceFiles#loadFiles()
+	 */
+	protected void saveFileLocations() { 
+		IDialogSettings favoritesSettings = Activator.getInstance().getDialogSettings();
+		IDialogSettings wizardSettings = favoritesSettings.getSection("fileChooser");
+		if (wizardSettings == null) {
+			wizardSettings = favoritesSettings.addNewSection("fileChooser");
+		}
+		wizardSettings.put("rdfFiles",fileSetToString(rdfFiles));
+		wizardSettings.put("ruleFiles",fileSetToString(ruleFiles));
+	}
+
+	/**
+	 * Loads the files that were active at the time the program was terminated the last time. 
+	 */
+	protected void loadFiles() {
+		IDialogSettings favoritesSettings = Activator.getInstance().getDialogSettings();
+		IDialogSettings wizardSettings = favoritesSettings.getSection("fileChooser");
+		if (wizardSettings != null) {
+			String rdfFilesString = wizardSettings.get("rdfFiles");
+			if (rdfFilesString != null) {
+				Set<File> rdfFiles = stringToFileSet(rdfFilesString);
+				for (File f:rdfFiles) {
+					try {
+						addRDFFile(f);
+					} catch (FileNotFoundException e) {
+						System.err.println("Could not reload file "+f.toString()+" - no big deal. ");
+						e.printStackTrace();
+					}
+				}
+			}
+			String ruleFilesString = wizardSettings.get("ruleFiles");
+			if (ruleFilesString != null) {
+				Set<File> ruleFiles = stringToFileSet(ruleFilesString);
+				for (File f:ruleFiles) {
+					try {
+						addRuleFile(f);						
+					} catch (IOException e) {
+						System.err.println("Could not reload file "+f.toString()+" - no big deal. ");
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+	
+	private static String fileSetToString(Set<File> files) {
+		StringBuilder builder = new StringBuilder();
+		for (File f:files) {
+			builder.append(f.getAbsolutePath());
+			builder.append(";;");
+		}
+		return builder.toString();
+	}
+
+	private static Set<File> stringToFileSet(String string) {
+		String[] paths = string.split(";;");
+		Set<File> toReturn = new HashSet<File>();
+		for (String p: paths) {
+			toReturn.add(new File(p));
+		}
+		return toReturn;
 	}
 	
 	public void addListener(KnowledgeBaseListener list) {
@@ -60,6 +129,7 @@ public class SourceFiles implements Datamodel{
 		for (File f:ruleFiles) {
 			addRuleToKB(f);
 		}	
+		notifyListeners();
 	}
 	
 	public Set<File> getRuleFiles() {
@@ -101,13 +171,13 @@ public class SourceFiles implements Datamodel{
 		knowledgeBase.addRules(rules); 
 	}
 
-	public void removeRDFFile(File toRemove) {
+	public void removeRDFFile(File toRemove) throws IOException {
 		rdfFiles.remove(toRemove);
-		//TODO not removed from kb.
+		reload();
 	}
 	
-	public void removeRuleFile(File toRemove) {
+	public void removeRuleFile(File toRemove) throws IOException {
 		ruleFiles.remove(toRemove);
-		//TODO not removed from kb. 
+		reload();
 	}
 }
