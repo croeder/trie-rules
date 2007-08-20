@@ -12,7 +12,8 @@ import de.fzi.ipe.trie.inference.prooftree.Prooftree;
 public class SimpleBackwardChainer {
 
 	private KnowledgeBase knowledgeBase;
-
+	private Suspender suspender;
+	
 	private GoalStack toProof = new GoalStack();
 	private List<ExecutionTreeGoal> proofTrace = new LinkedList<ExecutionTreeGoal>();
 	private VariableBindings vb = new VariableBindings();
@@ -21,9 +22,19 @@ public class SimpleBackwardChainer {
 	
 	private ExecutionTreeQuery query;
 	
+	public GoalStack getGoalStack() { return toProof; }
+	public List<ExecutionTreeGoal> getProofTrace() { return proofTrace; }
+	public VariableBindings getVariableBindings() { return vb; }	
+
 	public SimpleBackwardChainer(KnowledgeBase knowledgeBase) {
-		this.knowledgeBase = knowledgeBase;
+		this(knowledgeBase,new NullSuspender());
 	}
+	
+	public SimpleBackwardChainer(KnowledgeBase knowledgeBase, Suspender suspender) {
+		this.knowledgeBase = knowledgeBase;
+		this.suspender = suspender;
+	}
+	
 	
 	
 	public Result hasProof(Atom[] goals) {
@@ -40,6 +51,7 @@ public class SimpleBackwardChainer {
 	private void proceed() {
 		while (true) {
 			while (!toProof.isEmpty()) {
+				suspender.performedAction(Suspender.Action.TryingGoal, toProof.peek(), null);
 				ExecutionTreeGoal currentElement = toProof.pop(); 
 				System.out.println("Try to prove "+currentElement); //TODO sysout
 				
