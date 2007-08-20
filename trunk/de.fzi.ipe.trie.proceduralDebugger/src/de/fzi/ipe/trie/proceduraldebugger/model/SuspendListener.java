@@ -1,8 +1,8 @@
 package de.fzi.ipe.trie.proceduraldebugger.model;
 
-import de.fzi.ipe.trie.Atom;
 import de.fzi.ipe.trie.Rule;
-import de.fzi.ipe.trie.inference.suspendableReasoner.Suspender.Action;
+import de.fzi.ipe.trie.inference.Suspender.Action;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 
 
 /**
@@ -13,7 +13,7 @@ import de.fzi.ipe.trie.inference.suspendableReasoner.Suspender.Action;
  */
 public interface SuspendListener {
 	
-	public void suspending(Action a, Atom goal, Rule r);
+	public void suspending(Action a, ExecutionTreeGoal goal, Rule r);
 	public void waking();
 
 	

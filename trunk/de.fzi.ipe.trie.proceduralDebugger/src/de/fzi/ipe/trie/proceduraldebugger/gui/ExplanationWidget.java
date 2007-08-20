@@ -10,9 +10,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 
-import de.fzi.ipe.trie.Atom;
 import de.fzi.ipe.trie.Rule;
-import de.fzi.ipe.trie.inference.suspendableReasoner.Suspender.Action;
+import de.fzi.ipe.trie.inference.Suspender.Action;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 import de.fzi.ipe.trie.proceduraldebugger.model.ReasoningAccess;
 import de.fzi.ipe.trie.proceduraldebugger.model.SuspendListener;
 
@@ -75,7 +75,7 @@ public class ExplanationWidget implements SuspendListener{
 		group.setLayoutData(layoutData);
 	}
 	
-	public void suspending(Action a, Atom goal, Rule r) {
+	public void suspending(Action a, ExecutionTreeGoal goal, Rule r) {
 		title.setText(a.toString());
 		explanation.setText("This here explains nothing!This here explains nothing!This here explains nothing!");
 	}
