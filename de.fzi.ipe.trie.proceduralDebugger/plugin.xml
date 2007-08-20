@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="de.fzi.ipe.trie.fileManagement.knowledgeBaseListener">
+      <Listener ClassName="de.fzi.ipe.trie.proceduraldebugger.model.DatamodelAccess"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="de.fzi.ipe.trie.proceduraldebugger.ProceduralDebugView"
+            id="de.fzi.ipe.trie.proceduraldebugger.ProceduralDebugView"
+            name="Procedural Debugger"/>
+   </extension>
+
+</plugin>
