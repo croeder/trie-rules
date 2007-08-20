@@ -9,5 +9,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  de.fzi.ipe.trie,
  de.fzi.ipe.trie.fileManagement,
- de.fzi.ipe.trie.debugger
+ de.fzi.ipe.trie.debugger,
+ de.fzi.ipe.trie.proceduralDebugger
 Eclipse-LazyStart: true
