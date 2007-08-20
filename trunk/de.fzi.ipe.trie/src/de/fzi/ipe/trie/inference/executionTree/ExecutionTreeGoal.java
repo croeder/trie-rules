@@ -18,6 +18,10 @@ public class ExecutionTreeGoal extends ExecutionTreeElement {
 		this.goal = goal;
 	}
 	
+	public Atom getGoal() {
+		return goal;
+	}
+	
 	public boolean proof(GoalStack stack, VariableBindings vb, KnowledgeBase kb) {
 		if (!isPrepared) create(kb);
 		boolean success = false;

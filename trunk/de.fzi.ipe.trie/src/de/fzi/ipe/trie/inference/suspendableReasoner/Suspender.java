@@ -12,19 +12,23 @@ import de.fzi.ipe.trie.Rule;
 public class Suspender {
 
 	public enum Action { TryingGoal } ;
-	
+
 	private boolean run = false;
-	
-	
+
 	
 	/**
 	 * Method that stops the thread if the current state matches the conditions specified in the suspender. Restarts the thred on 
-	 * actions by the user. This implementation stops alway, other behavior can be achieved by overriding it. 
+	 * actions by the user. This implementation stops always, other behavior can be achieved by overriding it. 
 	 * @param a
 	 * @param goal
 	 * @param r
 	 */
-	public synchronized void suspend(Action a, Atom goal, Rule r) {
+	public void performedAction(Action a, Atom goal, Rule r) {
+		suspend(a,goal,r);
+	}
+	
+	
+	protected synchronized void suspend(Action a, Atom goal, Rule r) {
 		while (!run) {
 			try {
 				this.wait();
@@ -44,5 +48,9 @@ public class Suspender {
 		notify();
 	}
 	
+	public void step() {
+		wake();
+	}
+		
 	
 }

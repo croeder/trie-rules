@@ -2,6 +2,8 @@ package de.fzi.ipe.trie.inference;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import de.fzi.ipe.trie.GroundTerm;
 import de.fzi.ipe.trie.Term;
@@ -32,6 +34,10 @@ public class VariableBindings {
 			GroundTerm groundTerm = variableBindings.get(var);
 			return groundTerm != null ? groundTerm : var;			
 		}
+	}
+	
+	public Set<Entry<ProofVariable, GroundTerm>> getEntrySet() {
+		return variableBindings.entrySet();
 	}
 	
 	public void removeBindings(ExecutionTreeElement elem) {
