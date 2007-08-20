@@ -15,7 +15,7 @@ import de.fzi.ipe.trie.inference.prooftree.Prooftree;
 
 public class SuspendableBackwardChainer {
 	
-	private Suspender suspender = new Suspender();
+	private Suspender suspender=null;
 	
 	private KnowledgeBase knowledgeBase;
 
@@ -27,8 +27,17 @@ public class SuspendableBackwardChainer {
 	
 	private ExecutionTreeQuery query;
 	
-	public SuspendableBackwardChainer(KnowledgeBase knowledgeBase) {
+	public SuspendableBackwardChainer(KnowledgeBase knowledgeBase, Suspender suspender) {
 		this.knowledgeBase = knowledgeBase;
+		this.suspender = suspender;
+	}
+	
+	public GoalStack getGoalStack() {
+		return toProof;
+	}
+	
+	public List<ExecutionTreeGoal> getProofTrace() {
+		return proofTrace;
 	}
 	
 	
@@ -41,14 +50,10 @@ public class SuspendableBackwardChainer {
 	}
 	
 	
-	
-	public Suspender getSuspender() {
-		return suspender;
-	}
-	
 	private void proceed() {
 		while (true) {
 			while (!toProof.isEmpty()) {
+				suspender.performedAction(Suspender.Action.TryingGoal, toProof.peek().getGoal(), null);
 				ExecutionTreeGoal currentElement = toProof.pop(); 
 				System.out.println("Try to prove "+currentElement); //TODO sysout
 				
@@ -72,6 +77,10 @@ public class SuspendableBackwardChainer {
 				toProof.push(lastGoal);
 			}
 		}
+	}
+
+	public VariableBindings getVariableBindings() {
+		return vb;
 	}	
 	
 }
