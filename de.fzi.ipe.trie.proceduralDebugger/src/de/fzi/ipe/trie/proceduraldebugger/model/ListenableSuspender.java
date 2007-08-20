@@ -5,16 +5,15 @@ import java.util.Set;
 
 import org.eclipse.swt.widgets.Display;
 
-import de.fzi.ipe.trie.Atom;
 import de.fzi.ipe.trie.Rule;
-import de.fzi.ipe.trie.inference.suspendableReasoner.Suspender;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 
-public class ListenableSuspender extends Suspender {
+public class ListenableSuspender extends ConfigurableSuspender {
 	
 	private Set<SuspendListener> listeners = new HashSet<SuspendListener>();
 	
 	@Override
-	public synchronized void suspend(final Action a, final Atom goal, final Rule r) {
+	public synchronized void suspend(final Action a, final ExecutionTreeGoal goal, final Rule r) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				for (SuspendListener s: listeners) s.suspending(a, goal, r);

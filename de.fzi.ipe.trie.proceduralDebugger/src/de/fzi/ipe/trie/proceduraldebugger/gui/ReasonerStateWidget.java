@@ -6,16 +6,16 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
-import de.fzi.ipe.trie.Atom;
 import de.fzi.ipe.trie.Rule;
-import de.fzi.ipe.trie.inference.suspendableReasoner.SuspendableBackwardChainer;
-import de.fzi.ipe.trie.inference.suspendableReasoner.Suspender.Action;
+import de.fzi.ipe.trie.inference.SimpleBackwardChainer;
+import de.fzi.ipe.trie.inference.Suspender.Action;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 import de.fzi.ipe.trie.proceduraldebugger.model.ReasoningAccess;
 import de.fzi.ipe.trie.proceduraldebugger.model.SuspendListener;
 
 public abstract class ReasonerStateWidget implements SuspendListener{
 
-	SuspendableBackwardChainer reasoner; 
+	SimpleBackwardChainer reasoner; 
 	Group group;
 	
 	public ReasonerStateWidget(Composite parent,String title, int height) {
@@ -43,8 +43,8 @@ public abstract class ReasonerStateWidget implements SuspendListener{
 		return (GridData) group.getLayoutData();
 	}
 	
-
-	public void suspending(Action a, Atom goal, Rule r) {
+	
+	public void suspending(Action a, ExecutionTreeGoal goal, Rule r) {
 		if (reasoner != ReasoningAccess.getReasoner()) {
 			reasoner = ReasoningAccess.getReasoner();
 			changedReasoner();
