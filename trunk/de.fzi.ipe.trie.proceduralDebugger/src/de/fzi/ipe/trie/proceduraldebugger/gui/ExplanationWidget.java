@@ -1,5 +1,7 @@
 package de.fzi.ipe.trie.proceduraldebugger.gui;
 
+import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -11,16 +13,22 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 
 import de.fzi.ipe.trie.Rule;
+import de.fzi.ipe.trie.inference.Suspender;
 import de.fzi.ipe.trie.inference.Suspender.Action;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
+import de.fzi.ipe.trie.proceduraldebugger.gui.labelProvider.LabelUtil;
 import de.fzi.ipe.trie.proceduraldebugger.model.ReasoningAccess;
 import de.fzi.ipe.trie.proceduraldebugger.model.SuspendListener;
 
-public class ExplanationWidget implements SuspendListener{
+public class ExplanationWidget implements SuspendListener, ILabelProviderListener{
 
 	private Group group;
 	private Label title;
 	private Label explanation;
+	
+	private ExecutionTreeGoal lastGoal;
+	private Suspender.Action lastAction;
+	private Rule lastRule;
 	
 	private Font largeFont;
 	
@@ -29,6 +37,7 @@ public class ExplanationWidget implements SuspendListener{
 		createTitle(); 
 		createExplanation();
 
+		LabelUtil.addListener(null, this);
 		ReasoningAccess.getSuspender().addListener(this);
 	}
 
@@ -76,13 +85,58 @@ public class ExplanationWidget implements SuspendListener{
 	}
 	
 	public void suspending(Action a, ExecutionTreeGoal goal, Rule r) {
-		title.setText(a.toString());
-		explanation.setText("This here explains nothing!This here explains nothing!This here explains nothing!");
+		this.lastAction = a;
+		this.lastGoal = goal;
+		this.lastRule = r;
+		if (a == Action.CALLING_GOAL)  {
+			title.setText("Trying to prove "+LabelUtil.toString(goal.getGoal()));
+			StringBuilder text = new StringBuilder();
+			text.append("The inference engine is trying to prove the goal ");
+			text.append(LabelUtil.toString(goal.getGoal()));
+			text.append(".");
+			explanation.setText(text.toString());
+		}
+		else if (a == Action.RETRY_GOAL) {
+			title.setText("Retrying to prove "+LabelUtil.toString(goal.getGoal()));
+			StringBuilder text = new StringBuilder();
+			text.append("The inference engine is again trying to prove the goal ");
+			text.append(LabelUtil.toString(goal.getGoal()));
+			text.append(" to find more terms satisfying it. ");
+			explanation.setText(text.toString());
+		}
+		else if (a == Action.SUCCESS) {
+			title.setText("Found answer to the query!");
+			explanation.setText("The Variable Bindings field shows the result. The inference engine will continue to try to find more answers.");
+		}
+		else if (a == Action.END) {
+			title.setText("Finished");
+			explanation.setText("The inference engine has tried everything and cannot find more results.	");
+		}
+		else if (a == Action.FAIL_GOAL) {
+			title.setText("Failed to prove "+LabelUtil.toString(goal.getGoal()));
+			explanation.setText("Failed to get any (more) results for this goal. The inference engine will backtrack to try to get more results for a previous goal (or give up, if there's nothing else to try).");
+		}
+		else if (a==Action.EXIT_GOAL) {
+			title.setText("Found (another) way to prove "+LabelUtil.toString(goal.getGoal()));
+			explanation.setText("The inference engine found another way to prove this goal. This may need to be investigated further in the next steps.");
+		}
+		else if (a == Action.ADD_RULE_TO_EXECUTION_TREE) {
+			title.setText("It look like rule "+r.getName()+" could be useful in proving the goal "+LabelUtil.toString(goal.getGoal()));
+			explanation.setText("For now this information is only saved for later. The inference engine will later investigate wheter it actually can provide a result.");			
+		}
+		else {
+			title.setText("mmmh?");
+			explanation.setText(a.toString());
+		}
 	}
 
 	public void waking() {
 		title.setText("Running ...");
 		explanation.setText("Currently there is nothing to explain!");
+	}
+
+	public void labelProviderChanged(LabelProviderChangedEvent event) {
+		suspending(lastAction,lastGoal,lastRule);
 	}
 
 }
