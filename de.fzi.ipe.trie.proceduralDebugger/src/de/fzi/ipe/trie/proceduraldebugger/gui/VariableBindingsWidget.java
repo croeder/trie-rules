@@ -13,8 +13,8 @@ public class VariableBindingsWidget extends ReasonerStateWidget{
 
 	private TableViewer table;
 	
-	public VariableBindingsWidget(Composite parent) {
-		super(parent,"Variable Bindings",305);
+	public VariableBindingsWidget(Composite parent,int height) {
+		super(parent,"Variable Bindings",height);
 		table = new TableViewer(group);
 		
 		table.getTable().setHeaderVisible(true);

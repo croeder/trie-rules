@@ -39,13 +39,11 @@ public class ProceduralDebugView extends ViewPart {
 		createTopButtonPanel(mainComposite);
 		new ConfigurationWidget(mainComposite,60);
 		new ExplanationWidget(mainComposite);
-		new VariableBindingsWidget(mainComposite);
-		new ExecutionTreeWidget(mainComposite,300);
-		CurrentRuleWidget cr = new CurrentRuleWidget(mainComposite,300);
-		cr.getLayoutData().verticalSpan = 2;
-		cr.getLayoutData().verticalAlignment = SWT.FILL;
-		new ProofTraceWidget(mainComposite);
-		new GoalStackWidget(mainComposite);
+		new VariableBindingsWidget(mainComposite,200);
+		ExecutionTreeWidget et = new ExecutionTreeWidget(mainComposite,400);
+		et.getLayoutData().verticalSpan = 2;
+		et.getLayoutData().verticalAlignment = SWT.FILL;
+		new CurrentRuleWidget(mainComposite,200);
 		parent.layout(true);
 	}
 
@@ -66,10 +64,6 @@ public class ProceduralDebugView extends ViewPart {
 	private void createTopButtonPanel(Composite parent) {
 		Composite panel = new Composite(parent,SWT.NONE);
 		panel.setLayout(new RowLayout(SWT.HORIZONTAL));
-		
-//		GridData layoutData = new GridData();
-//		layoutData.horizontalSpan = 2;
-//		panel.setLayoutData(layoutData);
 		
 		RowData buttonLD = new RowData();
 		buttonLD.height = 50;
