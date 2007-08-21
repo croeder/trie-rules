@@ -21,16 +21,16 @@ public class VariableBindingsTreeLabelProvider implements ITableLabelProvider{
 	public String getColumnText(Object element, int columnIndex) {
 		Entry<ProofVariable, GroundTerm> entry = (Entry<ProofVariable, GroundTerm>) element;
 		if (columnIndex == 0) {
-			return entry.getKey().toString();
+			return LabelUtil.toString(entry.getKey());
 		}
 		else if (columnIndex == 1) {
-			return entry.getValue().toString();
+			return LabelUtil.toString(entry.getValue());
 		}		
 		else return null;
 	}
 
 	public void addListener(ILabelProviderListener listener) {
-		;
+		LabelUtil.addListener(this, listener);
 	}
 
 	public void dispose() {
@@ -42,7 +42,7 @@ public class VariableBindingsTreeLabelProvider implements ITableLabelProvider{
 	}
 
 	public void removeListener(ILabelProviderListener listener) {
-		;
+		LabelUtil.addListener(this,listener);
 	}
 
 	
