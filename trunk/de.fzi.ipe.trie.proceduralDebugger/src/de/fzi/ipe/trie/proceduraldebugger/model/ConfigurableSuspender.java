@@ -1,5 +1,8 @@
 package de.fzi.ipe.trie.proceduraldebugger.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.inference.Suspender;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
@@ -18,6 +21,21 @@ public class ConfigurableSuspender extends Suspender{
 	private ExecutionTreeGoal lastGoal;	
 	private ExecutionTreeElement jumpTarget;
 	
+	private Set<Action> ignoredActions = new HashSet<Action>();
+	
+	public boolean isIgnored(Action a) {
+		return ignoredActions.contains(a);
+	}
+	
+	public void setIgnore(Action a, boolean ignore) {
+		if (ignore) ignoredActions.add(a);
+		else ignoredActions.remove(a);
+	}
+		
+	public ConfigurableSuspender() {
+		ignoredActions.add(Action.ADD_RULE_TO_EXECUTION_TREE);
+	}
+	
 	/**
 	 * Method that stops the thread if the current state matches the conditions specified in the suspender. Restarts the thred on 
 	 * actions by the user. This implementation stops always, other behavior can be achieved by overriding it. 
@@ -30,6 +48,7 @@ public class ConfigurableSuspender extends Suspender{
 			toStop = false;
 			throw new HardTerminate();
 		}
+		if (ignoredActions.contains(a)) return;
 		if (goal != null && jumpTarget != null) {
 			if (a != Action.CALLING_GOAL && a != Action.RETRY_GOAL) return; 
 			if (goal.getParent() != jumpTarget && goal != jumpTarget.getParent()) {
