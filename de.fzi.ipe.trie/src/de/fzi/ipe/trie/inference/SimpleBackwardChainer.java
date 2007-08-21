@@ -52,13 +52,14 @@ public class SimpleBackwardChainer {
 	private void proceed() {
 		while (true) {
 			while (!toProof.isEmpty()) {
-				suspender.performedAction(Suspender.Action.TryingGoal, toProof.peek(), null);
 				ExecutionTreeGoal currentElement = toProof.pop(); 
-				System.out.println("Try to prove "+currentElement); //TODO sysout
 				
-				if (!currentElement.proof(toProof, vb, knowledgeBase)) { //backtrack
-					System.out.println("Failed to prove "+currentElement); //TODO sysout
-					if (proofTrace.size() == 0) return;
+				if (!currentElement.proof(toProof, vb, knowledgeBase,suspender)) { //backtrack
+					suspender.performedAction(Suspender.Action.FAIL_GOAL, currentElement, null);
+					if (proofTrace.size() == 0) {
+						suspender.performedAction(Suspender.Action.END, null, null);						
+						return;
+					}
 					else {
 						currentElement.backtrack(vb,toProof);
 						toProof.push(currentElement);
@@ -68,9 +69,13 @@ public class SimpleBackwardChainer {
 				}
 				else proofTrace.add(currentElement);
 			}
+			suspender.performedAction(Suspender.Action.SUCCESS, null, null);
 			results.add(vb.clone());
 			prooftrees.add(new Prooftree(query));
-			if (proofTrace.size() == 0) return;
+			if (proofTrace.size() == 0) {
+				suspender.performedAction(Suspender.Action.END, null, null);
+				return;
+			}
 			else {
 				ExecutionTreeGoal lastGoal = proofTrace.remove(proofTrace.size()-1);
 				toProof.push(lastGoal);

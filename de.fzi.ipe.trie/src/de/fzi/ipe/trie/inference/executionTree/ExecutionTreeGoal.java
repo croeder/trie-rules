@@ -5,6 +5,7 @@ import java.util.List;
 import de.fzi.ipe.trie.Atom;
 import de.fzi.ipe.trie.inference.GoalStack;
 import de.fzi.ipe.trie.inference.KnowledgeBase;
+import de.fzi.ipe.trie.inference.Suspender;
 import de.fzi.ipe.trie.inference.Unification;
 import de.fzi.ipe.trie.inference.VariableBindings;
 
@@ -22,8 +23,12 @@ public class ExecutionTreeGoal extends ExecutionTreeElement {
 		return goal;
 	}
 	
-	public boolean proof(GoalStack stack, VariableBindings vb, KnowledgeBase kb) {
-		if (!isPrepared) create(kb);
+	public boolean proof(GoalStack stack, VariableBindings vb, KnowledgeBase kb, Suspender suspender ) {
+		if (!isPrepared) {
+			suspender.performedAction(Suspender.Action.CALLING_GOAL, this, null);
+			create(kb,suspender);
+		}
+		else suspender.performedAction(Suspender.Action.RETRY_GOAL, this, null); 
 		boolean success = false;
 
 		while (childIndex < getChildren().size()) {
@@ -47,7 +52,10 @@ public class ExecutionTreeGoal extends ExecutionTreeElement {
 				childIndex++;
 				success = true;
 			}
-			if (success) break;
+			if (success) {
+				suspender.performedAction(Suspender.Action.EXIT_GOAL, this, null);
+				break;
+			}
 			
 		}
 		return success;
@@ -75,12 +83,16 @@ public class ExecutionTreeGoal extends ExecutionTreeElement {
 		return "Goal: "+goal.toString();
 	}
 	
-	protected void create(KnowledgeBase kb) {		
-		System.out.println("call " + this); //TODO sysout
+	public boolean isPrepared() {
+		return isPrepared;
+	}
+	
+	protected void create(KnowledgeBase kb, Suspender suspender) {		
 		addChild(new ExecutionTreeFacts(goal,kb));
 		
 		List<ExecutionTreeRule> matchingRules = kb.getRuleBase().getExecutionTreeRules(goal);
 		for (ExecutionTreeRule r:matchingRules) {
+			suspender.performedAction(Suspender.Action.ADD_RULE_TO_EXECUTION_TREE, this, r.getRule());
 			addChild(r);
 		}
 		childIndex = 0;
