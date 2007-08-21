@@ -29,6 +29,7 @@ public class LabelUtil {
 	private static boolean hideBeforeHash = true;
 	private static Set<Tuple> listeners = new HashSet<Tuple>();
 	
+	private static NullLabelProvider NULL_LABEL_PROVIDER = new NullLabelProvider();
 	
 	public static String toString(ExecutionTreeQuery query) {
 		StringBuilder builder = new StringBuilder();
@@ -40,6 +41,10 @@ public class LabelUtil {
 	
 	public static String toString(ExecutionTreeRule eRule) {
 		Rule rule = eRule.getRule();
+		return toString(rule);
+	}
+	
+	public static String toString(Rule rule) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("["+rule.getName()+"\n");
 		appendAtomArray(rule.getHead(),builder);
@@ -97,7 +102,9 @@ public class LabelUtil {
 	
 	private static void notifyListener() {
 		for (Tuple t:listeners) {
-			LabelProviderChangedEvent event = new LabelProviderChangedEvent(t.labelProvider);
+			LabelProviderChangedEvent event;
+			if (t.labelProvider != null) event =new LabelProviderChangedEvent(t.labelProvider); 
+			else event = new LabelProviderChangedEvent(NULL_LABEL_PROVIDER);
 			t.listener.labelProviderChanged(event);
 		}
 	}
@@ -125,6 +132,26 @@ public class LabelUtil {
 			this.labelProvider = labelProvider;
 			this.listener = listener;
 		}
+	}
+	
+	private static class NullLabelProvider implements IBaseLabelProvider {
+
+		public void addListener(ILabelProviderListener listener) {
+			;
+		}
+
+		public void dispose() {
+			;
+		}
+
+		public boolean isLabelProperty(Object element, String property) {
+			return false;
+		}
+
+		public void removeListener(ILabelProviderListener listener) {
+			;
+		}
+		
 	}
 	
 }

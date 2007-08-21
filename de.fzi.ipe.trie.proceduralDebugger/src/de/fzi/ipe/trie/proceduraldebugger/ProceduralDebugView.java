@@ -16,6 +16,7 @@ import de.fzi.ipe.trie.proceduraldebugger.ctrl.SelectRuleAction;
 import de.fzi.ipe.trie.proceduraldebugger.ctrl.StartDebuggingAction;
 import de.fzi.ipe.trie.proceduraldebugger.ctrl.StepAction;
 import de.fzi.ipe.trie.proceduraldebugger.ctrl.StopAction;
+import de.fzi.ipe.trie.proceduraldebugger.gui.ConfigurationWidget;
 import de.fzi.ipe.trie.proceduraldebugger.gui.CurrentRuleWidget;
 import de.fzi.ipe.trie.proceduraldebugger.gui.ExecutionTreeWidget;
 import de.fzi.ipe.trie.proceduraldebugger.gui.ExplanationWidget;
@@ -36,6 +37,7 @@ public class ProceduralDebugView extends ViewPart {
 		Composite mainComposite = createMainComposite(parent);
 		
 		createTopButtonPanel(mainComposite);
+		new ConfigurationWidget(mainComposite,60);
 		new ExplanationWidget(mainComposite);
 		new VariableBindingsWidget(mainComposite);
 		new ExecutionTreeWidget(mainComposite,300);
@@ -65,9 +67,9 @@ public class ProceduralDebugView extends ViewPart {
 		Composite panel = new Composite(parent,SWT.NONE);
 		panel.setLayout(new RowLayout(SWT.HORIZONTAL));
 		
-		GridData layoutData = new GridData();
-		layoutData.horizontalSpan = 2;
-		panel.setLayoutData(layoutData);
+//		GridData layoutData = new GridData();
+//		layoutData.horizontalSpan = 2;
+//		panel.setLayoutData(layoutData);
 		
 		RowData buttonLD = new RowData();
 		buttonLD.height = 50;

@@ -59,7 +59,7 @@ public class CurrentRuleWidget implements SuspendListener, ILabelProviderListene
 		lastRule = r;
 		lastGoal = goal;
 		if (r != null) {
-			ruleText.setText(r.toString());
+			ruleText.setText(LabelUtil.toString(r));
 		}
 		else if (goal != null) { 
 			if (goal.getParent() instanceof ExecutionTreeQuery) {
