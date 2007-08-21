@@ -4,7 +4,7 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.widgets.Composite;
 
 import de.fzi.ipe.trie.proceduraldebugger.gui.contentProvider.ExecutionTreeGoalListContentProvider;
-import de.fzi.ipe.trie.proceduraldebugger.gui.labelProvider.ExecutionTreeGoalLabelProvider;
+import de.fzi.ipe.trie.proceduraldebugger.gui.labelProvider.ExecutionTreeElementLabelProvider;
 
 public class ProofTraceWidget extends ReasonerStateWidget{
 
@@ -14,7 +14,7 @@ public class ProofTraceWidget extends ReasonerStateWidget{
 		super(parent,"Proof Trace",150);
 		list = new ListViewer(group);
 		list.setContentProvider(new ExecutionTreeGoalListContentProvider());
-		list.setLabelProvider(new ExecutionTreeGoalLabelProvider());
+		list.setLabelProvider(new ExecutionTreeElementLabelProvider());
 	}
 
 	public void refresh() {

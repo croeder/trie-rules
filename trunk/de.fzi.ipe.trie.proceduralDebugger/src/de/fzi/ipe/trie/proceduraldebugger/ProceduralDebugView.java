@@ -12,6 +12,8 @@ import org.eclipse.ui.part.ViewPart;
 import de.fzi.ipe.trie.proceduraldebugger.ctrl.SelectRuleAction;
 import de.fzi.ipe.trie.proceduraldebugger.ctrl.StartDebuggingAction;
 import de.fzi.ipe.trie.proceduraldebugger.ctrl.StepAction;
+import de.fzi.ipe.trie.proceduraldebugger.gui.CurrentRuleWidget;
+import de.fzi.ipe.trie.proceduraldebugger.gui.ExecutionTreeWidget;
 import de.fzi.ipe.trie.proceduraldebugger.gui.ExplanationWidget;
 import de.fzi.ipe.trie.proceduraldebugger.gui.GoalStackWidget;
 import de.fzi.ipe.trie.proceduraldebugger.gui.ProofTraceWidget;
@@ -31,9 +33,11 @@ public class ProceduralDebugView extends ViewPart {
 		
 		createTopButtonPanel(mainComposite);
 		new ExplanationWidget(mainComposite);
-		VariableBindingsWidget vb = new VariableBindingsWidget(mainComposite);
-		vb.getLayoutData().verticalSpan = 2;
-		vb.getLayoutData().verticalAlignment = SWT.FILL;
+		new VariableBindingsWidget(mainComposite);
+		new ExecutionTreeWidget(mainComposite,300);
+		CurrentRuleWidget cr = new CurrentRuleWidget(mainComposite,300);
+		cr.getLayoutData().verticalSpan = 2;
+		cr.getLayoutData().verticalAlignment = SWT.FILL;
 		new ProofTraceWidget(mainComposite);
 		new GoalStackWidget(mainComposite);
 		parent.layout(true);
