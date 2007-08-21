@@ -121,8 +121,12 @@ public class ExplanationWidget implements SuspendListener, ILabelProviderListene
 			explanation.setText("The inference engine found another way to prove this goal. This may need to be investigated further in the next steps.");
 		}
 		else if (a == Action.ADD_RULE_TO_EXECUTION_TREE) {
-			title.setText("It look like rule "+r.getName()+" could be useful in proving the goal "+LabelUtil.toString(goal.getGoal()));
+			title.setText("It looks like rule "+r.getName()+" could be useful in proving the goal "+LabelUtil.toString(goal.getGoal()));
 			explanation.setText("For now this information is only saved for later. The inference engine will later investigate wheter it actually can provide a result.");			
+		}
+		else if (a == Action.STOPPED) {
+			title.setText("Stopped");
+			explanation.setText("Inference engine stopped - press Start to start again or Select to choose a new rule/query.");
 		}
 		else {
 			title.setText("mmmh?");

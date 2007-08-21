@@ -12,6 +12,8 @@ public class StepAction extends ButtonEnabledAction {
 	
 	private StepAction() {
 		setText("Step");
+		setToolTipText("Step inferencen engine");
+		setEnabled(false);
 	}
 	
 	@Override

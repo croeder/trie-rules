@@ -12,13 +12,18 @@ public class StartDebuggingAction extends ButtonEnabledAction {
 	
 	
 	public StartDebuggingAction () {
-		this.setText("2> Start Debugging");
-		this.setEnabled(false);
+		setText("Start Debugging");
+		setShortText("Start");
+		setToolTipText("Start Debugging");
+		setEnabled(false);
 	}
 	
 	@Override
 	public void run() {
 		ReasoningAccess.startDebugging();
+		StepAction.getInstance().setEnabled(true);
+		StopAction.getInstance().setEnabled(true);
+		JumpAction.getInstance().setEnabled(true);
 	}
 	
 	

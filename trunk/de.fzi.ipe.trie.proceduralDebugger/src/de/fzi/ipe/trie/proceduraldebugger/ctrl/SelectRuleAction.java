@@ -14,8 +14,9 @@ import de.fzi.ipe.trie.proceduraldebugger.model.ReasoningAccess;
 public class SelectRuleAction extends ButtonEnabledAction{
 
 	private Shell shell;
-
+	
 	private static SelectRuleAction instance;
+	
 	
 	public static SelectRuleAction getInstance(Shell shell) {
 		if (instance == null) {
@@ -26,7 +27,9 @@ public class SelectRuleAction extends ButtonEnabledAction{
 	
 	private SelectRuleAction(Shell shell) {
 		this.shell = shell;
-		this.setText("1> Select Rule or Query");
+		setShortText("Select");
+		setToolTipText("Select Rule or Query");
+		setText("Select Query");
 	}
 
 	@Override
