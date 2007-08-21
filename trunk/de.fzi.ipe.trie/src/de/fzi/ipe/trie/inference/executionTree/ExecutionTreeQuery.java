@@ -38,6 +38,14 @@ public class ExecutionTreeQuery extends ExecutionTreeInstantiation {
 		return a;
 	}
 	
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("[query:\n");
+		builder.append("<-\n");
+		for (Atom a:body) builder.append("\t"+a+"\n");
+		builder.append("]");
+		return builder.toString();
+	}
 	
 	
 }

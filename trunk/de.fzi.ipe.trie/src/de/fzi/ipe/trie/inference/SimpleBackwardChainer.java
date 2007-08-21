@@ -25,6 +25,7 @@ public class SimpleBackwardChainer {
 	public GoalStack getGoalStack() { return toProof; }
 	public List<ExecutionTreeGoal> getProofTrace() { return proofTrace; }
 	public VariableBindings getVariableBindings() { return vb; }	
+	public ExecutionTreeQuery getExecutionTree() { return query; }
 
 	public SimpleBackwardChainer(KnowledgeBase knowledgeBase) {
 		this(knowledgeBase,new NullSuspender());
