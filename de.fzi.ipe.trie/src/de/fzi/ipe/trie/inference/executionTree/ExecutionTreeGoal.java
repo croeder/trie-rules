@@ -92,8 +92,9 @@ public class ExecutionTreeGoal extends ExecutionTreeElement {
 		
 		List<ExecutionTreeRule> matchingRules = kb.getRuleBase().getExecutionTreeRules(goal);
 		for (ExecutionTreeRule r:matchingRules) {
-			suspender.performedAction(Suspender.Action.ADD_RULE_TO_EXECUTION_TREE, this, r.getRule());
+			r.setParent(this);
 			addChild(r);
+			suspender.performedAction(Suspender.Action.ADD_RULE_TO_EXECUTION_TREE, this, r.getRule());
 		}
 		childIndex = 0;
 		isPrepared = true;
