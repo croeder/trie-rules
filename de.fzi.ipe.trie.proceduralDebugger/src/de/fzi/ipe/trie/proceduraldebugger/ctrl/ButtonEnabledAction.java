@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -20,6 +21,15 @@ public abstract class ButtonEnabledAction extends Action implements SelectionLis
 	private Image image;
 	private Collection<Button> buttons = new HashSet<Button>();
 	
+	private String shortText;
+	
+	public String getShortText() {
+		return shortText;
+	}
+	
+	public void setShortText(String shortText) {
+		this.shortText = shortText;
+	}
 
 	public abstract void run();
 	
@@ -59,8 +69,9 @@ public abstract class ButtonEnabledAction extends Action implements SelectionLis
 	}
 
 	public Button createButton(Composite parent) {
-		Button button = new Button(parent,getStyle());
-		button.setText(getText());
+		Button button = new Button(parent,getStyle()|SWT.WRAP);
+		if (getShortText() == null) button.setText(getText());
+		else button.setText(getShortText());
 		button.setToolTipText(getToolTipText());
 		button.setEnabled(this.isEnabled());
 		if (getImageDescriptor() != null) button.setImage(getImage());

@@ -39,4 +39,11 @@ public class ListenableSuspender extends ConfigurableSuspender {
 		listeners.remove(list);
 	}
 
+	public void stop() {
+		super.stop(); 
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				for (SuspendListener s: listeners) s.suspending(Action.STOPPED,null, null);
+			}});
+	}
 }

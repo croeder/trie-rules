@@ -5,13 +5,17 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+import de.fzi.ipe.trie.proceduraldebugger.ctrl.JumpAction;
 import de.fzi.ipe.trie.proceduraldebugger.ctrl.SelectRuleAction;
 import de.fzi.ipe.trie.proceduraldebugger.ctrl.StartDebuggingAction;
 import de.fzi.ipe.trie.proceduraldebugger.ctrl.StepAction;
+import de.fzi.ipe.trie.proceduraldebugger.ctrl.StopAction;
 import de.fzi.ipe.trie.proceduraldebugger.gui.CurrentRuleWidget;
 import de.fzi.ipe.trie.proceduraldebugger.gui.ExecutionTreeWidget;
 import de.fzi.ipe.trie.proceduraldebugger.gui.ExplanationWidget;
@@ -65,9 +69,24 @@ public class ProceduralDebugView extends ViewPart {
 		layoutData.horizontalSpan = 2;
 		panel.setLayoutData(layoutData);
 		
-		SelectRuleAction.getInstance(parent.getShell()).createButton(panel);
-		StartDebuggingAction.getInstance().createButton(panel);
-		StepAction.getInstance().createButton(panel);
+		RowData buttonLD = new RowData();
+		buttonLD.height = 50;
+		buttonLD.width = 50;
+		
+		Button button = SelectRuleAction.getInstance(parent.getShell()).createButton(panel);
+		button.setLayoutData(buttonLD);
+		
+		button = StartDebuggingAction.getInstance().createButton(panel);
+		button.setLayoutData(buttonLD);
+		
+		button = StepAction.getInstance().createButton(panel);
+		button.setLayoutData(buttonLD);
+		
+		button = StopAction.getInstance().createButton(panel);
+		button.setLayoutData(buttonLD);
+		
+		button = JumpAction.getInstance().createButton(panel);
+		button.setLayoutData(buttonLD);
 	}
 
 	@Override

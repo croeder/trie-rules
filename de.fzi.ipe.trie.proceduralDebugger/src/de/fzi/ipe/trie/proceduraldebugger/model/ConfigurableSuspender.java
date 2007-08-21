@@ -2,6 +2,7 @@ package de.fzi.ipe.trie.proceduraldebugger.model;
 
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.inference.Suspender;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 
 
@@ -10,10 +11,12 @@ import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
  * backward chainer when it is run as part of the procedural debugger.
  * @author zach
  */
-public class ConfigurableSuspender implements Suspender{
+public class ConfigurableSuspender extends Suspender{
 
-	private boolean run = false;
+	private boolean run = false, toStop = false;
 
+	private ExecutionTreeGoal lastGoal;	
+	private ExecutionTreeElement jumpTarget;
 	
 	/**
 	 * Method that stops the thread if the current state matches the conditions specified in the suspender. Restarts the thred on 
@@ -23,6 +26,18 @@ public class ConfigurableSuspender implements Suspender{
 	 * @param r
 	 */
 	public void performedAction(Action a, ExecutionTreeGoal goal, Rule r) {
+		if (toStop) {
+			toStop = false;
+			throw new HardTerminate();
+		}
+		if (goal != null && jumpTarget != null) {
+			if (a != Action.CALLING_GOAL && a != Action.RETRY_GOAL) return; 
+			if (goal.getParent() != jumpTarget && goal != jumpTarget.getParent()) {
+				return;
+			}
+			jumpTarget = null;
+		}
+		lastGoal = goal;
 		suspend(a,goal,r);
 	}
 	
@@ -32,13 +47,25 @@ public class ConfigurableSuspender implements Suspender{
 			try {
 				this.wait();
 			} catch (InterruptedException e) {
-				;
+				if (toStop) {
+					toStop = false;
+					throw new HardTerminate();
+				}
 			}
 		}
 		run = false;
 	}
 	
 
+	/**
+	 * Resumes processing until the next Action with the same parent goal as the last one 
+	 * (or alternatively: the next action that has a goal equal to that of the parent of the last goal)
+	 */
+	public synchronized void jump() {
+		if (lastGoal != null) jumpTarget = lastGoal.getParent();
+		wake();
+	}
+	
 	/**
 	 * Tells the inference engine to continue processing.
 	 */
@@ -50,6 +77,15 @@ public class ConfigurableSuspender implements Suspender{
 	public void step() {
 		wake();
 	}
+
+
+	public void stop() {
+		toStop = true;
+		run = false;
+		jumpTarget = null;
+		super.stop();
+	}
+	
 		
 	
 }
