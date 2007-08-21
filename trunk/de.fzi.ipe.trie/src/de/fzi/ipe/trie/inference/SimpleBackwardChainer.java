@@ -28,7 +28,7 @@ public class SimpleBackwardChainer {
 	public ExecutionTreeQuery getExecutionTree() { return query; }
 
 	public SimpleBackwardChainer(KnowledgeBase knowledgeBase) {
-		this(knowledgeBase,new NullSuspender());
+		this(knowledgeBase,new Suspender());
 	}
 	
 	public SimpleBackwardChainer(KnowledgeBase knowledgeBase, Suspender suspender) {
