@@ -13,6 +13,7 @@ import de.fzi.ipe.trie.Atom;
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.Term;
 import de.fzi.ipe.trie.URITerm;
+import de.fzi.ipe.trie.inference.ProofVariable;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeRule;
 
@@ -40,8 +41,13 @@ public class LabelUtil {
 	}
 	
 	public static String toString(ExecutionTreeRule eRule) {
-		Rule rule = eRule.getRule();
-		return toString(rule);
+		StringBuilder builder = new StringBuilder();
+		builder.append("["+eRule.getRule().getName()+"\n");
+		appendAtomArray(new Atom[] {eRule.getHead()},builder);
+		builder.append("<-\n");
+		appendAtomArray(eRule.getBody(),builder);
+		builder.append("]");
+		return builder.toString();
 	}
 	
 	public static String toString(Rule rule) {
@@ -83,6 +89,10 @@ public class LabelUtil {
 				return temp.substring(hashIndex+1);
 			}
 			else return temp;
+		}
+		else if (term instanceof ProofVariable) {
+			ProofVariable var = (ProofVariable) term;
+			return var.getVariableName(); 
 		}
 		else {
 			return term.toString();

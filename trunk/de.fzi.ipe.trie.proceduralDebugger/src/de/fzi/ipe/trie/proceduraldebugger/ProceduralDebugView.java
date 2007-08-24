@@ -3,7 +3,6 @@ package de.fzi.ipe.trie.proceduraldebugger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
@@ -20,8 +19,6 @@ import de.fzi.ipe.trie.proceduraldebugger.gui.ConfigurationWidget;
 import de.fzi.ipe.trie.proceduraldebugger.gui.CurrentRuleWidget;
 import de.fzi.ipe.trie.proceduraldebugger.gui.ExecutionTreeWidget;
 import de.fzi.ipe.trie.proceduraldebugger.gui.ExplanationWidget;
-import de.fzi.ipe.trie.proceduraldebugger.gui.GoalStackWidget;
-import de.fzi.ipe.trie.proceduraldebugger.gui.ProofTraceWidget;
 import de.fzi.ipe.trie.proceduraldebugger.gui.VariableBindingsWidget;
 
 
@@ -43,7 +40,8 @@ public class ProceduralDebugView extends ViewPart {
 		ExecutionTreeWidget et = new ExecutionTreeWidget(mainComposite,400);
 		et.getLayoutData().verticalSpan = 2;
 		et.getLayoutData().verticalAlignment = SWT.FILL;
-		new CurrentRuleWidget(mainComposite,200);
+		CurrentRuleWidget currentRule = new CurrentRuleWidget(mainComposite,200);
+		et.addSelectionListener(currentRule);
 		parent.layout(true);
 	}
 
