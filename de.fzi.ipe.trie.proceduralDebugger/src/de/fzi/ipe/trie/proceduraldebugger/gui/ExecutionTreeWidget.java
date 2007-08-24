@@ -1,5 +1,6 @@
 package de.fzi.ipe.trie.proceduraldebugger.gui;
 
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
@@ -27,6 +28,10 @@ public class ExecutionTreeWidget extends ReasonerStateWidget{
 		tree.setInput(ReasoningAccess.getReasoner());
 	}
 
+	public void addSelectionListener(ISelectionChangedListener list) {
+		tree.addSelectionChangedListener(list);
+	}
+	
 	@Override
 	public void refresh() {
 		tree.refresh();
