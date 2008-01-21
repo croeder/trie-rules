@@ -23,7 +23,6 @@ public class RuleDebugContentProvider implements DebuggerEventBusListener {
     public static int DEPENDS_MODE_NONE = 0; //show nothing
     public static int DEPENDS_MODE_RULES = 1; //the depends on part should display a list of rules
     public static int DEPENDS_MODE_BUILTIN = 2; //the depends on part should display the description of a builtin
-    public static int DEPENDS_MODE_PROOFTREE = 3; //the depends on part should display a prooftree.
     
     private static DebuggerRule[] EMPTY_LIST = new DebuggerRule[0];
     
@@ -39,17 +38,7 @@ public class RuleDebugContentProvider implements DebuggerEventBusListener {
     public RuleDebugContentProvider(DebuggerEventBus eventBus) {
     	eventBus.addListener(this);
     }
-    
-    public int getDependsOnMode() {
-        if (currentRule != null) {
-        	if (currentResult != null) return DEPENDS_MODE_PROOFTREE;
-	        else return DEPENDS_MODE_RULES;
-        }
-        else {
-            return DEPENDS_MODE_NONE;
-        }
-    }
-            
+                
     public void selectRule(String ruleName) {
         if (ruleName == null) {
             setupRule(null);
@@ -197,10 +186,6 @@ public class RuleDebugContentProvider implements DebuggerEventBusListener {
         viewPart.refresh();
     }
 
-    public void selectResult(ResultLineProvider root) {
-        currentResult = root;
-        if (getDependsOnMode() == DEPENDS_MODE_PROOFTREE) viewPart.refresh();
-    }
     
     public void deselectResult() {
         currentResult = null;
