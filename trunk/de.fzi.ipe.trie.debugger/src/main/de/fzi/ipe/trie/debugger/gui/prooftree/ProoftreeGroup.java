@@ -13,19 +13,23 @@ import org.eclipse.swt.widgets.Label;
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.debugger.DebuggerPlugin;
 import de.fzi.ipe.trie.debugger.gui.RuleDebugContentProvider;
+import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
+import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
+import de.fzi.ipe.trie.debugger.gui.events.SelectedResultLineEvent;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.model.DebuggerRuleStore;
 import de.fzi.ipe.trie.inference.prooftree.ProoftreeNode;
 import de.fzi.ipe.trie.inference.prooftree.ProoftreeRuleNode;
 
-public class ProoftreeGroup {
+public class ProoftreeGroup implements DebuggerEventBusListener {
 
 	private ProoftreeTreeViewer prooftreeTreeViewer;
 	private DebuggerEventBus eventBus;
 	
 	public ProoftreeGroup(Composite parent, boolean showProoftree, DebuggerEventBus eventBus, final RuleDebugContentProvider contentProvider) {
 		this.eventBus = eventBus;
+		eventBus.addListener(this);
 		
 		Group bindings = new Group(parent, SWT.NONE);
 		bindings.setText("Prooftree");
@@ -44,7 +48,12 @@ public class ProoftreeGroup {
 					}
 				}
 			});
-			prooftreeTreeViewer.displayProoftree( contentProvider.getCurrentResult().getProoftree());
+			if (contentProvider.getCurrentResult()!= null) {
+				prooftreeTreeViewer.displayProoftree( contentProvider.getCurrentResult().getProoftree());
+			}
+			else {
+				prooftreeTreeViewer.displayProoftree(null);
+			}
 		} else {
 			bindings.setLayout(new RowLayout(SWT.HORIZONTAL));
 			bindings.setEnabled(false);
@@ -52,6 +61,13 @@ public class ProoftreeGroup {
 			label.setImage(DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_PROOFTREE));
 			Label label2 = new Label(bindings, SWT.WRAP);
 			label2.setText("Enable \"Show Prooftree\" to see the inference \nchain that led to the current result.");
+		}
+	}
+
+	public void eventNotification(DebuggerEvent event) {
+		if (event instanceof SelectedResultLineEvent) {
+			SelectedResultLineEvent resultLineEvent = (SelectedResultLineEvent) event;
+			prooftreeTreeViewer.displayProoftree(resultLineEvent.getResultLineProvider().getProoftree());
 		}
 	}
 	

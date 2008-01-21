@@ -1,6 +1,5 @@
 package de.fzi.ipe.trie.debugger.gui.events;
 
-import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
 
 public class SelectedRuleEvent implements DebuggerEvent {
