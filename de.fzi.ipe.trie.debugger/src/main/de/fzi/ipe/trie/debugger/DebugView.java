@@ -7,10 +7,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -44,24 +41,23 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.hp.hpl.jena.shared.JenaException;
 
-import de.fzi.ipe.trie.debugger.gui.BindingsTableContentProvider;
-import de.fzi.ipe.trie.debugger.gui.BindingsTableLabelProvider;
 import de.fzi.ipe.trie.debugger.gui.DebugLabelProvider;
-import de.fzi.ipe.trie.debugger.gui.DependsOnLabelProvider;
 import de.fzi.ipe.trie.debugger.gui.ResultLineProvider;
 import de.fzi.ipe.trie.debugger.gui.RuleDebugContentProvider;
-import de.fzi.ipe.trie.debugger.gui.SelectRuleDropDownAction;
 import de.fzi.ipe.trie.debugger.gui.StyledTextView;
 import de.fzi.ipe.trie.debugger.gui.TextPart;
 import de.fzi.ipe.trie.debugger.gui.actions.BackAction;
 import de.fzi.ipe.trie.debugger.gui.actions.ForwardAction;
+import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleDropDownAction;
+import de.fzi.ipe.trie.debugger.gui.bindings.BindingsTableContentProvider;
+import de.fzi.ipe.trie.debugger.gui.bindings.BindingsTableLabelProvider;
+import de.fzi.ipe.trie.debugger.gui.dependsOn.DependsOnGroup;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
+import de.fzi.ipe.trie.debugger.gui.prooftree.ProoftreeGroup;
 import de.fzi.ipe.trie.debugger.gui.prooftree.ProoftreeTreeViewer;
 import de.fzi.ipe.trie.debugger.model.DebuggerAtom;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
 import de.fzi.ipe.trie.inference.Result;
-import de.fzi.ipe.trie.inference.prooftree.ProoftreeNode;
-import de.fzi.ipe.trie.inference.prooftree.ProoftreeRuleNode;
 
 public class DebugView extends ViewPart {
 
@@ -114,7 +110,7 @@ public class DebugView extends ViewPart {
 	 * The constructor.
 	 */
 	public DebugView() {
-		contentProvider = RuleDebugContentProvider.getInstance();
+		contentProvider = new RuleDebugContentProvider(eventBus);
 		contentProvider.setView(this);
 		singleton = this;
 	}
@@ -214,9 +210,9 @@ public class DebugView extends ViewPart {
 			makeBindingsList(data);
 
 			if (contentProvider.getDependsOnMode() == RuleDebugContentProvider.DEPENDS_MODE_PROOFTREE) {
-				createProoftree(data);
+				new ProoftreeGroup(data,showProoftree_b,eventBus, contentProvider);
 			} else if (contentProvider.getDependsOnMode() == RuleDebugContentProvider.DEPENDS_MODE_RULES) {
-				makeDependsOnList(data);
+				new DependsOnGroup(data,eventBus,contentProvider);
 			}
 
 			Point point = clauses.computeSize(SWT.DEFAULT, SWT.DEFAULT);
@@ -261,35 +257,6 @@ public class DebugView extends ViewPart {
 	}
 
 
-	private void createProoftree(Composite data) {
-		Group bindings = new Group(data, SWT.NONE);
-		bindings.setText("Prooftree");
-//		bindings.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH | GridData.GRAB_VERTICAL));
-		bindings.setLayout(new FillLayout());
-
-		if (showProoftree_b) {
-			pView = new ProoftreeTreeViewer(bindings);
-			pView.addDoubleClickListener(new IDoubleClickListener() {
-				public void doubleClick(DoubleClickEvent event) {
-					IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-					ProoftreeNode node = (ProoftreeNode) sel.getFirstElement();
-					if (node instanceof ProoftreeRuleNode) {
-						contentProvider.selectRule(((ProoftreeRuleNode)node).getRule().getName());						
-					}
-				}
-			});
-			pView.displayProoftree( contentProvider.getCurrentResult().getProoftree());
-			lastResult = contentProvider.getCurrentResult();
-		} else {
-			bindings.setLayout(new RowLayout(SWT.HORIZONTAL));
-			bindings.setEnabled(false);
-			Label label = new Label(bindings, SWT.NONE);
-			label.setImage(DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_PROOFTREE));
-			Label label2 = new Label(bindings, SWT.WRAP);
-			label2.setText("Enable \"Show Prooftree\" to see the inference \nchain that led to the current result.");
-		}
-	}
-
 	private void makeBindingsList(Composite parent) {
 		Result result = contentProvider.getBindings();
 		String[] sortedVariables = result.getSortedVariableNames().toArray(new String[0]);
@@ -297,7 +264,6 @@ public class DebugView extends ViewPart {
 		Group bindings = new Group(parent, SWT.NONE);
 		if (contentProvider.getCurrentClause() != null) bindings.setText("The Selected Rule Part Fires For: ");
 		else bindings.setText("The Current Rule Fires For: ");
-//		bindings.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH | GridData.GRAB_VERTICAL));
 
 		if (dynamic_b == true) {
 			GridLayout layout = new GridLayout();
@@ -371,55 +337,6 @@ public class DebugView extends ViewPart {
 		}
 	}
 
-
-	private void makeDependsOnList(Composite parent) {
-		IStructuredContentProvider listContentProvider = contentProvider.getDependsOnContentProvider();
-
-		Group dependsOn = new Group(parent, SWT.NONE);
-		dependsOn.setText("Depends on");
-		GridLayout layout = new GridLayout();
-		layout.horizontalSpacing = 0;
-		layout.verticalSpacing = 0;
-		dependsOn.setLayout(layout);
-
-		ToolBar toolbar = new ToolBar(dependsOn, SWT.FLAT);
-		GridData toolbarGD = new GridData();
-		toolbarGD.horizontalAlignment = GridData.END;
-		toolbarGD.grabExcessHorizontalSpace = true;
-		toolbar.setLayoutData(toolbarGD);
-		ToolItem deselect = new ToolItem(toolbar, SWT.NONE);
-		deselect.addSelectionListener(new SelectionListener() {
-
-			public void widgetSelected(SelectionEvent e) {
-				if (!dependsOnViewer.getSelection().isEmpty()) {
-					dependsOnViewer.setSelection(StructuredSelection.EMPTY);
-				}
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				;
-			}
-		});
-		deselect.setImage(DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_DESELECT));
-		deselect.setToolTipText("Deselect variable Bindings");
-
-		Composite holder = new Composite(dependsOn, SWT.NONE);
-		holder.setLayout(new FillLayout());
-		holder.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH));
-
-		dependsOnViewer = new TableViewer(holder);
-		dependsOnViewer.setContentProvider(listContentProvider);
-		dependsOnViewer.setLabelProvider(new DependsOnLabelProvider(contentProvider.getCurrentRule().getRulesThatSupplyBindings()));
-		dependsOnViewer.setInput("something");
-		dependsOnViewer.addDoubleClickListener(new IDoubleClickListener() {
-
-			public void doubleClick(DoubleClickEvent event) {
-				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-				DebuggerRule ruleId = (DebuggerRule) sel.getFirstElement();
-				contentProvider.selectRule(ruleId.getName());
-			}
-		});
-	}
 
 	private void makeHeadClauses(StyledTextView parent) {
 		DebuggerRule currentRule = contentProvider.getCurrentRule();
@@ -519,7 +436,7 @@ public class DebugView extends ViewPart {
 		forward.setToolTipText("Forward");
 		mgr.add(forward);
 		mgr.add(new Separator());
-		mgr.add(new SelectRuleDropDownAction(contentProvider, this));
+		mgr.add(new SelectRuleDropDownAction(contentProvider, this,eventBus));
 		mgr.add(new Separator());
 		mgr.add(refresh);
 	}

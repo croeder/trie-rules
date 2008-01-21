@@ -20,11 +20,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.dialogs.ListDialog;
 
-
 import de.fzi.ipe.trie.debugger.DebugView;
 import de.fzi.ipe.trie.debugger.DebuggerPlugin;
 import de.fzi.ipe.trie.debugger.gui.RuleDebugContentProvider;
 import de.fzi.ipe.trie.debugger.gui.RuleListContentProvider;
+import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
+import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
 
 
@@ -36,11 +37,13 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator {
     private Menu fMenu;
 
     private RuleDebugContentProvider contentProvider;
+    private DebuggerEventBus eventBus;
     
     
-    public SelectRuleDropDownAction(RuleDebugContentProvider contentProvider, DebugView viewPart) {
+    public SelectRuleDropDownAction(RuleDebugContentProvider contentProvider, DebugView viewPart, DebuggerEventBus eventBus) {
         this.viewPart = viewPart;
         this.contentProvider = contentProvider;
+        this.eventBus = eventBus;
         fMenu = null;
         setToolTipText("Select rule");
         setText("Select Rule");
@@ -83,7 +86,6 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator {
     }
 
     public void run() {
-        
         ListDialog listDialog = new ListDialog(viewPart.getShell());
         listDialog.setBlockOnOpen(true);
         
@@ -108,7 +110,7 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator {
         listDialog.setMessage("Please choose the rule that you want to debug.");
         int code = listDialog.open();
         if ((code == Dialog.OK) && (listDialog.getResult().length > 0)){
-            contentProvider.selectRule(((DebuggerRule)(listDialog.getResult()[0])).getName());
+        	eventBus.sendEvent(new SelectedRuleEvent((DebuggerRule)listDialog.getResult()[0]));
         }
     }
     
@@ -120,7 +122,7 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator {
             this.rule = rule;
         }
         public void run() {
-            contentProvider.selectRule(rule.getName());
+        	eventBus.sendEvent(new SelectedRuleEvent(rule));
         }
     }
     

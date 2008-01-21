@@ -7,6 +7,10 @@ import java.util.Iterator;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 
 import de.fzi.ipe.trie.debugger.DebugView;
+import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
+import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
+import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
+import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.model.DebuggerAtom;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
 import de.fzi.ipe.trie.debugger.model.DebuggerRuleStore;
@@ -14,7 +18,7 @@ import de.fzi.ipe.trie.inference.Result;
 
 
 
-public class RuleDebugContentProvider {
+public class RuleDebugContentProvider implements DebuggerEventBusListener {
     
     public static int DEPENDS_MODE_NONE = 0; //show nothing
     public static int DEPENDS_MODE_RULES = 1; //the depends on part should display a list of rules
@@ -23,7 +27,6 @@ public class RuleDebugContentProvider {
     
     private static DebuggerRule[] EMPTY_LIST = new DebuggerRule[0];
     
-    private static RuleDebugContentProvider instance;
     private DebugView viewPart;
     
     private RuleHistory backRules = new RuleHistory(), forwardRules = new RuleHistory();
@@ -33,9 +36,8 @@ public class RuleDebugContentProvider {
     private DebuggerAtom currentClause = null;
     private ResultLineProvider currentResult = null;
     
-    public static RuleDebugContentProvider getInstance() {
-        if (instance == null) instance = new RuleDebugContentProvider();
-        return instance;
+    public RuleDebugContentProvider(DebuggerEventBus eventBus) {
+    	eventBus.addListener(this);
     }
     
     public int getDependsOnMode() {
@@ -84,11 +86,7 @@ public class RuleDebugContentProvider {
             setupRule(rule.getName());
         }
     }
-        
-    private RuleDebugContentProvider() {
-        instance = this;
-    }
-    
+            
     public void setView(DebugView viewPart) {
         this.viewPart = viewPart;
     }
@@ -220,6 +218,15 @@ public class RuleDebugContentProvider {
     public DebuggerAtom getCurrentClause() {
         return currentClause;
     }
+
+	public void eventNotification(DebuggerEvent event) {
+		if (event instanceof SelectedRuleEvent) {
+			SelectedRuleEvent sre = (SelectedRuleEvent) event;
+        	selectRule(sre.getRule().getName());
+			
+		}
+		
+	}
     
 
 }

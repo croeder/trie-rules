@@ -1,4 +1,4 @@
-package de.fzi.ipe.trie.debugger.gui;
+package de.fzi.ipe.trie.debugger.gui.dependsOn;
 
 import java.util.HashSet;
 import java.util.Set;
