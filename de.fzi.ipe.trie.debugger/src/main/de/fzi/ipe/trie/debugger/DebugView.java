@@ -44,17 +44,18 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.hp.hpl.jena.shared.JenaException;
 
-import de.fzi.ipe.trie.debugger.gui.BackAction;
 import de.fzi.ipe.trie.debugger.gui.BindingsTableContentProvider;
 import de.fzi.ipe.trie.debugger.gui.BindingsTableLabelProvider;
 import de.fzi.ipe.trie.debugger.gui.DebugLabelProvider;
 import de.fzi.ipe.trie.debugger.gui.DependsOnLabelProvider;
-import de.fzi.ipe.trie.debugger.gui.ForwardAction;
 import de.fzi.ipe.trie.debugger.gui.ResultLineProvider;
 import de.fzi.ipe.trie.debugger.gui.RuleDebugContentProvider;
 import de.fzi.ipe.trie.debugger.gui.SelectRuleDropDownAction;
 import de.fzi.ipe.trie.debugger.gui.StyledTextView;
 import de.fzi.ipe.trie.debugger.gui.TextPart;
+import de.fzi.ipe.trie.debugger.gui.actions.BackAction;
+import de.fzi.ipe.trie.debugger.gui.actions.ForwardAction;
+import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.prooftree.ProoftreeTreeViewer;
 import de.fzi.ipe.trie.debugger.model.DebuggerAtom;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
@@ -88,6 +89,9 @@ public class DebugView extends ViewPart {
 	private RuleDebugContentProvider contentProvider;
 
 	private static DebugView singleton;
+	
+	private DebuggerEventBus eventBus = new DebuggerEventBus(); 
+	
 
 	private Composite mainComposite, parent;
 	private ScrolledComposite scrolledComposite;

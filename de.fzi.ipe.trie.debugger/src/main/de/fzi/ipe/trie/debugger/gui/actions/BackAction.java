@@ -1,8 +1,9 @@
-package de.fzi.ipe.trie.debugger.gui;
+package de.fzi.ipe.trie.debugger.gui.actions;
 
 import org.eclipse.jface.action.Action;
 
 import de.fzi.ipe.trie.debugger.DebuggerPlugin;
+import de.fzi.ipe.trie.debugger.gui.RuleDebugContentProvider;
 
 
 public class BackAction extends Action {
