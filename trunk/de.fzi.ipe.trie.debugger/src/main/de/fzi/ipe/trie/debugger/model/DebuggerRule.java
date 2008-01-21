@@ -30,6 +30,9 @@ public class DebuggerRule  {
 		return rule.getName();
 	}
 	
+	public Rule getRule() {
+		return rule;
+	}
 	
 	public boolean hasCalculatedBindingForAllLiterals() { 
 		for (DebuggerAtom atom: bodyClauses) { 
@@ -44,7 +47,7 @@ public class DebuggerRule  {
 		}		
 	}
 	
-	public DebuggerRule(Rule rule) {
+	protected DebuggerRule(Rule rule) {
 		this.rule = rule;
 		for (Atom a: rule.getHead()) {
 			headClauses.add(new DebuggerAtom(a,this));

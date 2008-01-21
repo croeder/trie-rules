@@ -1,10 +1,11 @@
-package de.fzi.ipe.trie.debugger.gui;
+package de.fzi.ipe.trie.debugger.gui.bindings;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import de.fzi.ipe.trie.debugger.DebugView;
+import de.fzi.ipe.trie.debugger.gui.ResultLineProvider;
 
 
 public class BindingsTableLabelProvider implements ITableLabelProvider{

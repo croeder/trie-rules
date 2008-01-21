@@ -1,8 +1,9 @@
-package de.fzi.ipe.trie.debugger.gui;
+package de.fzi.ipe.trie.debugger.gui.bindings;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+import de.fzi.ipe.trie.debugger.gui.ResultLineProvider;
 import de.fzi.ipe.trie.inference.Result;
 
 
