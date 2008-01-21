@@ -21,7 +21,6 @@ import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeRule;
 import de.fzi.ipe.trie.proceduraldebugger.gui.labelProvider.LabelUtil;
-import de.fzi.ipe.trie.proceduraldebugger.model.SuspendListener;
 
 public class CurrentRuleWidget implements ILabelProviderListener, ISelectionChangedListener{
 
