@@ -7,13 +7,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionEvent;
@@ -24,16 +18,11 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
@@ -48,16 +37,15 @@ import de.fzi.ipe.trie.debugger.gui.StyledTextView;
 import de.fzi.ipe.trie.debugger.gui.TextPart;
 import de.fzi.ipe.trie.debugger.gui.actions.BackAction;
 import de.fzi.ipe.trie.debugger.gui.actions.ForwardAction;
+import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleAction;
 import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleDropDownAction;
-import de.fzi.ipe.trie.debugger.gui.bindings.BindingsTableContentProvider;
-import de.fzi.ipe.trie.debugger.gui.bindings.BindingsTableLabelProvider;
+import de.fzi.ipe.trie.debugger.gui.bindings.BindingsGroup;
 import de.fzi.ipe.trie.debugger.gui.dependsOn.DependsOnGroup;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.prooftree.ProoftreeGroup;
 import de.fzi.ipe.trie.debugger.gui.prooftree.ProoftreeTreeViewer;
 import de.fzi.ipe.trie.debugger.model.DebuggerAtom;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
-import de.fzi.ipe.trie.inference.Result;
 
 public class DebugView extends ViewPart {
 
@@ -207,16 +195,21 @@ public class DebugView extends ViewPart {
 			dataGD.heightHint = 200;
 			data.setLayoutData(dataGD);
 			data.setLayout(new FillLayout(SWT.HORIZONTAL));
-			makeBindingsList(data);
 
-			if (contentProvider.getDependsOnMode() == RuleDebugContentProvider.DEPENDS_MODE_PROOFTREE) {
-				new ProoftreeGroup(data,showProoftree_b,eventBus, contentProvider);
-			} else if (contentProvider.getDependsOnMode() == RuleDebugContentProvider.DEPENDS_MODE_RULES) {
-				new DependsOnGroup(data,eventBus,contentProvider);
-			}
+			new BindingsGroup(data,dynamic_b,contentProvider,eventBus);
 
 			Point point = clauses.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-			scrolledComposite.setMinSize(Math.max(point.x, 500), point.y + 350);
+			scrolledComposite.setMinSize(Math.max(point.x, 500), point.y + 600);
+
+			Composite data2 = new Composite(mainComposite,SWT.NONE);
+			GridData data2GD = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
+			data2GD.heightHint = 200;
+			data2.setLayoutData(data2GD);
+			FillLayout data2Layout = new FillLayout(SWT.HORIZONTAL);
+			data2Layout.spacing = 4;
+			data2.setLayout(data2Layout);
+			new DependsOnGroup(data2,eventBus,contentProvider);
+			new ProoftreeGroup(data2,showProoftree_b,eventBus, contentProvider);
 		}
 	}
 	
@@ -254,87 +247,6 @@ public class DebugView extends ViewPart {
 			headline.setText("No Rule Selected");
 		}
 
-	}
-
-
-	private void makeBindingsList(Composite parent) {
-		Result result = contentProvider.getBindings();
-		String[] sortedVariables = result.getSortedVariableNames().toArray(new String[0]);
-		
-		Group bindings = new Group(parent, SWT.NONE);
-		if (contentProvider.getCurrentClause() != null) bindings.setText("The Selected Rule Part Fires For: ");
-		else bindings.setText("The Current Rule Fires For: ");
-
-		if (dynamic_b == true) {
-			GridLayout layout = new GridLayout();
-			layout.horizontalSpacing = 0;
-			layout.verticalSpacing = 0;
-			bindings.setLayout(layout);
-			ToolBar toolbar = new ToolBar(bindings, SWT.FLAT);
-			GridData toolbarGD = new GridData();
-			toolbarGD.horizontalAlignment = GridData.END;
-			toolbarGD.grabExcessHorizontalSpace = true;
-			toolbar.setLayoutData(toolbarGD);
-			ToolItem deselect = new ToolItem(toolbar, SWT.NONE);
-			deselect.addSelectionListener(new SelectionListener() {
-
-				public void widgetSelected(SelectionEvent e) {
-					if (!bindingsViewer.getSelection().isEmpty()) {
-						contentProvider.deselectResult();
-					}
-				}
-
-				public void widgetDefaultSelected(SelectionEvent e) {
-					;
-				}
-			});
-			deselect.setImage(DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_DESELECT));
-			deselect.setToolTipText("Deselect variable Bindings");
-
-			Composite holder = new Composite(bindings, SWT.NONE);
-			holder.setLayout(new FillLayout());
-			holder.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH));
-
-			Table table = new Table(holder, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
-			table.setLayout(new TableLayout());
-			bindingsViewer = new TableViewer(table);
-
-			if (sortedVariables != null) {
-				bindingsViewer.setColumnProperties(sortedVariables);
-				for (int i = 0; i < sortedVariables.length; i++) {
-					TableColumn column = new TableColumn(table, SWT.NONE, i);
-					column.setText(sortedVariables[i]);
-					column.setWidth(100);
-				}
-			}
-
-			bindingsViewer.setContentProvider(new BindingsTableContentProvider());
-			bindingsViewer.setLabelProvider(new BindingsTableLabelProvider(sortedVariables));
-
-			bindingsViewer.setSorter(new ViewerSorter());
-
-			bindingsViewer.setInput(result);
-			bindingsViewer.getTable().setLinesVisible(true);
-			bindingsViewer.getTable().setHeaderVisible(true);
-
-			if (contentProvider.getCurrentResult() != null) {
-				bindingsViewer.setSelection(new StructuredSelection(contentProvider.getCurrentResult()));
-			}
-			bindingsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-				public void selectionChanged(SelectionChangedEvent event) {
-					IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-					ResultLineProvider node = (ResultLineProvider) sel.getFirstElement();
-					contentProvider.selectResult(node);
-				}
-			});
-		} else {
-			bindings.setLayout(new RowLayout(SWT.HORIZONTAL));
-			bindings.setEnabled(false);
-			Label label = new Label(bindings, SWT.NONE);
-			label.setImage(DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_DYNAMIC));
-			Label label2 = new Label(bindings, SWT.NONE);
-			label2.setText("Enable \"Dynamic Relations\" to show variable bindings");
-		}
 	}
 
 
@@ -462,9 +374,8 @@ public class DebugView extends ViewPart {
 		DebuggerRule[] rules = contentProvider.getAllRules();
 		ruleActions = new Action[rules.length];
 		for (int i = 0; i < rules.length; i++) {
-			ruleActions[i] = new SelectRuleAction(rules[i]);
+			ruleActions[i] = new SelectRuleAction(rules[i],eventBus);
 		}
-
 	}
 
 	/**
@@ -534,19 +445,6 @@ public class DebugView extends ViewPart {
 		 */
 		public void widgetDefaultSelected(SelectionEvent e) {
 			;
-		}
-	}
-
-	private class SelectRuleAction extends Action {
-		DebuggerRule rule;
-
-		SelectRuleAction(DebuggerRule rule) {
-			super(rule.getName());
-			this.rule = rule;
-		}
-
-		public void run() {
-			contentProvider.selectRule(rule.getName());
 		}
 	}
 

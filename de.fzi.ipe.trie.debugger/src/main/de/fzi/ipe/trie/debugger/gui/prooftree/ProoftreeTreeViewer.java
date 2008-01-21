@@ -24,9 +24,13 @@ public class ProoftreeTreeViewer extends TreeViewer{
 	
 	class MyTreeContentProvider implements ITreeContentProvider {
 
+		private final String[] placeholder = {"Please select a result to show the prooftree for it"};
+		
+		
 		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof TreeViewRoot) {
 				parentElement = ((TreeViewRoot)parentElement).getRootNode();
+				if (parentElement == null) return placeholder;
 			}
 			if(parentElement instanceof ProoftreeNode) {
 				if (parentElement instanceof ProoftreeRuleNode || parentElement instanceof ProoftreeQueryNode) {
@@ -77,7 +81,7 @@ public class ProoftreeTreeViewer extends TreeViewer{
 			    }
 			    else return DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_RULE_GREEN);
 			}
-			return null;
+			else return null;
 		}
 
 		public String getText(Object element) {
@@ -88,6 +92,9 @@ public class ProoftreeTreeViewer extends TreeViewer{
 			else if(element instanceof ProoftreeNode) {
 			    ProoftreeNode node = (ProoftreeNode) element;
 			    return node.getName();
+			}
+			else if (element instanceof String) {
+				return (String) element;
 			}
 			else return "?";
 		}

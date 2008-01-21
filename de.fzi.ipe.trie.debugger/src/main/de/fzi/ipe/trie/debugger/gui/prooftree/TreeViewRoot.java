@@ -10,7 +10,10 @@ public class TreeViewRoot {
 	
 
 	public TreeViewRoot(Prooftree rootNode) {
-		this.rootNode = rootNode.getRootNode();
+		if (rootNode != null) {
+			this.rootNode = rootNode.getRootNode();
+		}
+		else rootNode = null;
 	}	
 	
 	public ProoftreeNode getRootNode() {
