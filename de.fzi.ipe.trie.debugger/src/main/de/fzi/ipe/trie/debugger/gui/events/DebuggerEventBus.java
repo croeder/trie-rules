@@ -26,11 +26,11 @@ public class DebuggerEventBus implements Runnable {
 	}
 	
 	public void addListener(DebuggerEventBusListener listener) {
-		this.listeners.add(listener);
+		listeners.add(listener);
 	}
 	
 	public void removeListener(DebuggerEventBusListener listener) {
-		this.listeners.remove(listener);
+		listeners.remove(listener);
 	}
 	
 	public void run() {

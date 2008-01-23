@@ -1,7 +1,11 @@
 package de.fzi.ipe.trie.debugger.gui.bindings;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Image;
 
 import de.fzi.ipe.trie.debugger.DebugView;
@@ -11,12 +15,19 @@ import de.fzi.ipe.trie.debugger.gui.ResultLineProvider;
 public class BindingsTableLabelProvider implements ITableLabelProvider{
     
     private String[] sortedVariables;
+    private Set<ILabelProviderListener> listeners = new HashSet<ILabelProviderListener>();
     
-    
-    public BindingsTableLabelProvider(String[] sortedVariables) {
-        this.sortedVariables = sortedVariables;
+    public BindingsTableLabelProvider() {
+    	;
     }
 
+    public void setSortedVariables(String[] sortedVariables) {
+    	this.sortedVariables = sortedVariables;
+    	for (ILabelProviderListener l:listeners) {
+    		l.labelProviderChanged(new LabelProviderChangedEvent(this));
+    	}
+    }
+    
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
      */
@@ -48,7 +59,7 @@ public class BindingsTableLabelProvider implements ITableLabelProvider{
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
     public void addListener(ILabelProviderListener listener) {
-        ;        
+        listeners.add(listener);
     }
 
     /* (non-Javadoc)
@@ -69,7 +80,7 @@ public class BindingsTableLabelProvider implements ITableLabelProvider{
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
     public void removeListener(ILabelProviderListener listener) {
-        ;
+        listeners.remove(listener);
     }
 
 }

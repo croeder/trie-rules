@@ -7,11 +7,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
@@ -20,8 +17,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
@@ -31,25 +26,26 @@ import org.eclipse.ui.part.ViewPart;
 import com.hp.hpl.jena.shared.JenaException;
 
 import de.fzi.ipe.trie.debugger.gui.DebugLabelProvider;
+import de.fzi.ipe.trie.debugger.gui.HeadlineComposite;
 import de.fzi.ipe.trie.debugger.gui.ResultLineProvider;
 import de.fzi.ipe.trie.debugger.gui.RuleDebugContentProvider;
-import de.fzi.ipe.trie.debugger.gui.StyledTextView;
-import de.fzi.ipe.trie.debugger.gui.TextPart;
 import de.fzi.ipe.trie.debugger.gui.actions.BackAction;
 import de.fzi.ipe.trie.debugger.gui.actions.ForwardAction;
 import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleAction;
 import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleDropDownAction;
 import de.fzi.ipe.trie.debugger.gui.bindings.BindingsGroup;
-import de.fzi.ipe.trie.debugger.gui.dependsOn.DependsOnGroup;
+import de.fzi.ipe.trie.debugger.gui.events.AfterSelectedRuleEvent;
+import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
-import de.fzi.ipe.trie.debugger.gui.prooftree.ProoftreeGroup;
+import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
+import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.gui.prooftree.ProoftreeTreeViewer;
-import de.fzi.ipe.trie.debugger.model.DebuggerAtom;
+import de.fzi.ipe.trie.debugger.gui.ruleDetails.RuleDetailsGroup;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
 
-public class DebugView extends ViewPart {
+public class DebugView extends ViewPart implements DebuggerEventBusListener {
 
-	protected static final Font FONT_HEADLINE = new Font(null, "Tahoma", 14, SWT.BOLD);
+
 	protected static final Font FONT_CLAUSES = new Font(null, "Tahoma", 10, SWT.BOLD);
 	protected static final Font FONT_SYMBOLS = new Font(null, "Tahoma", 10, SWT.BOLD);
 	protected static final Font FONT_BUILTIN_HEADLINE = FONT_CLAUSES;
@@ -58,14 +54,9 @@ public class DebugView extends ViewPart {
 	protected static final Font FONT_CONTEXT_HEADLINE = new Font(null, "Tahoma", 10, SWT.NONE);
 	protected static final Font Font_CONTEXT_NAME = new Font(null, "Tahoma", 10, SWT.NONE);
 
-	protected static final Color COLOR_CLAUSE_NOT_SATISFIED = new Color(Display.getDefault(), 255, 0, 0);
-	protected static final Color COLOR_CLAUSE_NO_BINDINGS = new Color(Display.getDefault(), 185, 30, 66);
+
 	protected static final Color COLOR_BLACK = new Color(Display.getDefault(), 0, 0, 0);
 	protected static final Color COLOR_DISABLED = new Color(Display.getDefault(), 120, 120, 120);
-	protected static final Color COLOR_LABEL_SELECTED = new Color(Display.getDefault(),0 , 0, 160);
-	protected static final Color COLOR_LABEL_SELECTED_FOREGROUND = new Color(Display.getDefault(), 255, 255, 255);
-	protected static final Color COLOR_LABEL_SELECTABLE = new Color(Display.getDefault(), 255, 255, 255);
-	protected static final Color COLOR_BUILTIN = new Color(Display.getDefault(), 0, 128, 255);
 
 	public static final String VIEW_ID = "de.fzi.ipe.trie.debugger.InferenceExplorer";
 	
@@ -76,11 +67,8 @@ public class DebugView extends ViewPart {
 	
 	private DebuggerEventBus eventBus = new DebuggerEventBus(); 
 	
-
 	private Composite mainComposite, parent;
 	private ScrolledComposite scrolledComposite;
-	private Label headline;
-	private TableViewer bindingsViewer, dependsOnViewer;
 	private ProoftreeTreeViewer pView;
 	private ResultLineProvider lastResult; //stores that last result that was selected, used to decide if the 
 	// state of the prooftreeview should be restored
@@ -101,6 +89,7 @@ public class DebugView extends ViewPart {
 		contentProvider = new RuleDebugContentProvider(eventBus);
 		contentProvider.setView(this);
 		singleton = this;
+		eventBus.addListener(this);
 	}
 
 	public static DebugView getInstance() { 
@@ -185,10 +174,12 @@ public class DebugView extends ViewPart {
 		mainLayout.verticalSpacing = 15;
 		mainComposite.setLayout(mainLayout);
 
-		createHeadline(mainComposite);
+		new HeadlineComposite(mainComposite,eventBus);
 
-		if (contentProvider.getCurrentRule() != null) {
-			Composite clauses = createRuleDetails();
+//		if (contentProvider.getCurrentRule() != null) {
+			RuleDetailsGroup ruleDetails = new RuleDetailsGroup(mainComposite,eventBus);
+			Point point = ruleDetails.getSize();
+			scrolledComposite.setMinSize(Math.max(point.x, 500), point.y + 600);
 			
 			Composite data = new Composite(mainComposite, SWT.NONE);
 			GridData dataGD = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
@@ -198,120 +189,18 @@ public class DebugView extends ViewPart {
 
 			new BindingsGroup(data,dynamic_b,contentProvider,eventBus);
 
-			Point point = clauses.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-			scrolledComposite.setMinSize(Math.max(point.x, 500), point.y + 600);
-
-			Composite data2 = new Composite(mainComposite,SWT.NONE);
-			GridData data2GD = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
-			data2GD.heightHint = 200;
-			data2.setLayoutData(data2GD);
-			FillLayout data2Layout = new FillLayout(SWT.HORIZONTAL);
-			data2Layout.spacing = 4;
-			data2.setLayout(data2Layout);
-			new DependsOnGroup(data2,eventBus,contentProvider);
-			new ProoftreeGroup(data2,showProoftree_b,eventBus, contentProvider);
-		}
+//			Composite data2 = new Composite(mainComposite,SWT.NONE);
+//			GridData data2GD = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
+//			data2GD.heightHint = 200;
+//			data2.setLayoutData(data2GD);
+//			FillLayout data2Layout = new FillLayout(SWT.HORIZONTAL);
+//			data2Layout.spacing = 4;
+//			data2.setLayout(data2Layout);
+//			new DependsOnGroup(data2,eventBus,contentProvider);
+//			new ProoftreeGroup(data2,showProoftree_b,eventBus, contentProvider);
+//		}
 	}
 	
-	private Composite createRuleDetails() {
-		Group clauses = new Group(mainComposite, SWT.NONE);
-		clauses.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL));
-		clauses.setText("Rule Details");
-		clauses.setLayout(new GridLayout());
-
-		StyledTextView styledText = new StyledTextView();
-
-		makeHeadClauses(styledText);
-		styledText.addNewLine();
-		TextPart ifPart = new TextPart("IF ");
-		styledText.add(ifPart);
-		styledText.addNewLine();
-
-		makeBodyClauses(styledText);
-		styledText.createStyledText(clauses);
-		return clauses;
-
-	}
-
-	private void createHeadline(Composite mainComposite) {
-		Composite headlineComposite = new Composite(mainComposite, SWT.NONE);
-		headlineComposite.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL));
-		headlineComposite.setLayout(new GridLayout(2, true));
-
-		headline = new Label(headlineComposite, SWT.NONE);
-		headline.setFont(FONT_HEADLINE);
-		if (contentProvider.getCurrentRule() != null) {
-			headline.setText(contentProvider.getCurrentRule().getName());
-		}
-		else {
-			headline.setText("No Rule Selected");
-		}
-
-	}
-
-
-	private void makeHeadClauses(StyledTextView parent) {
-		DebuggerRule currentRule = contentProvider.getCurrentRule();
-		if (currentRule != null) {
-			DebuggerAtom[] headPredicates = currentRule.getHeadClauses();
-			for (int i = 0; i < headPredicates.length; i++) {
-				DebuggerAtom currentClause = headPredicates[i];
-
-				TextPart currentLabel = new TextPart(currentClause.toString());
-				parent.add(currentLabel);
-
-				if (i < (headPredicates.length - 1)) {
-					TextPart and = new TextPart(" AND ");
-					parent.add(and);
-				}
-				parent.addNewLine();
-			}
-		}
-	}
-
-	private void makeBodyClauses(StyledTextView parent){
-		DebuggerRule currentRule = contentProvider.getCurrentRule();
-		if (currentRule != null) {
-			DebuggerAtom[] bodyPredicates = currentRule.getBodyClauses();
-			for (int i = 0; i < bodyPredicates.length; i++) {
-				final DebuggerAtom currentClause = bodyPredicates[i];
-				TextPart currentTextPart = new TextPart(currentClause.toString());
-				currentTextPart.addSelectionListener(new ClauseSelectionListener(currentClause));
-				parent.add(currentTextPart);
-
-				if ((contentProvider.getCurrentClause() != null) && (contentProvider.getCurrentClause().equals(currentClause))) {
-					currentTextPart.setBackground(COLOR_LABEL_SELECTED);
-					currentTextPart.setForeground(COLOR_LABEL_SELECTED_FOREGROUND);
-				} else {
-					currentTextPart.setBackground(COLOR_LABEL_SELECTABLE);
-					if ((doDynamic()) && (currentRule.hasCalculatedBindingForAllLiterals())) {
-						colorBodyClause(currentClause, currentTextPart); 
-					}
-				}
-				if (i < (bodyPredicates.length - 1)) {
-					TextPart and = new TextPart(" AND ");
-					parent.add(and);
-				}
-				parent.addNewLine();
-			}
-		}
-	}
-
-	private void colorBodyClause(final DebuggerAtom currentClause, TextPart currentTextPart) {
-		//color body clauses based on satisfiability.
-		if (currentClause.getBindings().numberResults() == 0) {
-			if (currentClause.getPossibilities().length == 0) {
-				currentTextPart.setForeground(COLOR_CLAUSE_NOT_SATISFIED);
-				currentTextPart.setToolTipText("This term currently has no variable bindings and there is no rule that could supply one");
-			} else {
-				currentTextPart.setForeground(COLOR_CLAUSE_NO_BINDINGS);
-				currentTextPart.setToolTipText("This term currently has no variable bindings");
-			}
-		} else {
-			currentTextPart.setToolTipText("This term has variable binding");
-		}
-	}
-
 	public void createMenu() {
 		IMenuManager mgr = getViewSite().getActionBars().getMenuManager();
 		mgr.add(refresh);
@@ -419,33 +308,16 @@ public class DebugView extends ViewPart {
 		}
 	}
 
-	private class ClauseSelectionListener implements SelectionListener {
-
-		DebuggerAtom currentClause;
-		boolean selected = false;
-
-		public ClauseSelectionListener(DebuggerAtom currentClause) {
-			this.currentClause = currentClause;
-			if ((contentProvider.getCurrentClause() != null) && (contentProvider.getCurrentClause().equals(currentClause))) {
-				selected = true;
-			}
+	public void eventNotification(DebuggerEvent event) {
+		if (event instanceof SelectedRuleEvent) {
+			eventBus.sendEvent(new AfterSelectedRuleEvent());
 		}
-
-		public void widgetSelected(SelectionEvent e) {
-			if (selected) {
-				selected = false;
-				contentProvider.deselectClause();
-			} else {
-				contentProvider.selectClause(currentClause);
-			}
-		}
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
-		 */
-		public void widgetDefaultSelected(SelectionEvent e) {
-			;
+		else if (event instanceof AfterSelectedRuleEvent) {
+			parent.redraw();
+			mainComposite.pack(true);
+			parent.layout(true);
 		}
 	}
+
 
 }

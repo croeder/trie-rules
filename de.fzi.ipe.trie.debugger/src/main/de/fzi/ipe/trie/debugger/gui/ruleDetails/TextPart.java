@@ -1,5 +1,5 @@
 
-package de.fzi.ipe.trie.debugger.gui;
+package de.fzi.ipe.trie.debugger.gui.ruleDetails;
 
 import java.util.HashSet;
 import java.util.Iterator;

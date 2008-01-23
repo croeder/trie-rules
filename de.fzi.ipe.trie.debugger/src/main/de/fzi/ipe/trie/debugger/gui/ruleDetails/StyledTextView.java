@@ -1,4 +1,4 @@
-package de.fzi.ipe.trie.debugger.gui;
+package de.fzi.ipe.trie.debugger.gui.ruleDetails;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Display;
 
 
 
+
 public class StyledTextView {
 
     private static final Cursor ARROW_CURSOR = new Cursor(Display.getCurrent(),SWT.CURSOR_ARROW);
@@ -28,6 +29,32 @@ public class StyledTextView {
     private int[] offsetIndex;
     private StyledText styledText;
     
+    public StyledTextView(Composite parent) {
+		styledText = new StyledText(parent,SWT.READ_ONLY | SWT.WRAP);    	
+		formatStyledText(parent, styledText);
+    }
+    
+    public void reset() {
+    	text = new StringBuffer();
+    	textParts = new ArrayList<TextPart>();
+    }
+    
+    public void updateTextText() {
+		styledText.setText(text.toString());		
+
+		addStyleRanges(styledText);
+		prepareOffsetIndex();
+		addMouseListener(styledText);
+		addMouseMoveListener();
+		
+		
+//		styledText.setSize(new Point(500,100));
+    }
+
+    public Point getSize() {
+		return styledText.computeSize(SWT.DEFAULT,SWT.DEFAULT);
+    }
+    
     public void add(TextPart part) {
         textParts.add(part);
         text.append(part.getText());
@@ -36,16 +63,6 @@ public class StyledTextView {
     
     public void addNewLine() {
         if (text.length() > 0) text.setCharAt(text.length()-1, '\n');
-    }
-
-    public void createStyledText(Composite parent) {
-		styledText = new StyledText(parent,SWT.READ_ONLY | SWT.WRAP);
-		styledText.setText(text.toString());		
-		formatStyledText(parent, styledText);
-		addStyleRanges(styledText);
-		prepareOffsetIndex();
-		addMouseListener(styledText);
-		addMouseMoveListener();
     }
     
     private void addMouseMoveListener() {        
