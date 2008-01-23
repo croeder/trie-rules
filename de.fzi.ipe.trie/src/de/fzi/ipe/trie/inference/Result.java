@@ -83,7 +83,8 @@ public class Result {
 	}
 	
 	public GroundTerm getBinding(Variable var, int resultLine) {
-		return results[resultLine][variableToIndex.get(var)];
+		if (var==null||resultLine>=results.length || variableToIndex.get(var)>=results[resultLine].length) return null;
+		else return results[resultLine][variableToIndex.get(var)];
 	}
 	
 	public GroundTerm getBinding(String varName, int resultLine) {
