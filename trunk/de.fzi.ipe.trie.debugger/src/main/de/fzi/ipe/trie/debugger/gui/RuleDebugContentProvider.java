@@ -57,7 +57,7 @@ public class RuleDebugContentProvider implements DebuggerEventBusListener {
         else currentRule = null;
         currentClause = null;
         currentResult = null;
-        viewPart.refresh();        
+//        viewPart.refresh(); 
     }
         
     public void back() {
@@ -176,30 +176,7 @@ public class RuleDebugContentProvider implements DebuggerEventBusListener {
     public ResultLineProvider getCurrentResult() {
         return currentResult;
     }
-    
-    /**
-     * @param currentClause
-     */
-    public void deselectClause() {
-        currentClause = null;
-        currentResult = null;
-        viewPart.refresh();
-    }
-
-    
-    public void deselectResult() {
-        currentResult = null;
-        viewPart.refresh();
-    }
-    /**
-     * @param currentClause
-     */
-    public void selectClause(DebuggerAtom currentClause) {
-        this.currentClause = currentClause;
-        currentResult = null;
-        viewPart.refresh();
-    }
-    
+        
     public DebuggerAtom getCurrentClause() {
         return currentClause;
     }

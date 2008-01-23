@@ -10,7 +10,8 @@ public class DebugLabelProvider {
 	
 	
 	public String getLabel(Term term) {
-		if (hideBeforeHash && term instanceof GroundTerm) {
+		if (term == null) return null;
+		else if (hideBeforeHash && term instanceof GroundTerm) {
 			String temp = term.toString();
 			if (temp.indexOf('#') != -1) return temp.substring(temp.indexOf('#')+1);
 			else return temp;
