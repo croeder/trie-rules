@@ -87,7 +87,6 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 	 */
 	public DebugView() {
 		contentProvider = new RuleDebugContentProvider(eventBus);
-		contentProvider.setView(this);
 		singleton = this;
 		eventBus.addListener(this);
 	}

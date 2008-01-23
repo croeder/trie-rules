@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 
-import de.fzi.ipe.trie.debugger.DebugView;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
@@ -25,8 +24,6 @@ public class RuleDebugContentProvider implements DebuggerEventBusListener {
     public static int DEPENDS_MODE_BUILTIN = 2; //the depends on part should display the description of a builtin
     
     private static DebuggerRule[] EMPTY_LIST = new DebuggerRule[0];
-    
-    private DebugView viewPart;
     
     private RuleHistory backRules = new RuleHistory(), forwardRules = new RuleHistory();
     
@@ -75,11 +72,7 @@ public class RuleDebugContentProvider implements DebuggerEventBusListener {
             setupRule(rule.getName());
         }
     }
-            
-    public void setView(DebugView viewPart) {
-        this.viewPart = viewPart;
-    }
-    
+                
     public DebuggerRule getCurrentRule() {
         return currentRule;
     }
