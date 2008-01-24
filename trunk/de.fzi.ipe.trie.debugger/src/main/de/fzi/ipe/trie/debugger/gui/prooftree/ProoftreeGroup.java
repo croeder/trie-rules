@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.Label;
 
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.debugger.DebuggerPlugin;
-import de.fzi.ipe.trie.debugger.gui.RuleDebugContentProvider;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
@@ -27,7 +26,7 @@ public class ProoftreeGroup implements DebuggerEventBusListener {
 	private ProoftreeTreeViewer prooftreeTreeViewer;
 	private DebuggerEventBus eventBus;
 	
-	public ProoftreeGroup(Composite parent, boolean showProoftree, DebuggerEventBus eventBus, final RuleDebugContentProvider contentProvider) {
+	public ProoftreeGroup(Composite parent, boolean showProoftree, DebuggerEventBus eventBus) {
 		this.eventBus = eventBus;
 		eventBus.addListener(this);
 		
@@ -48,12 +47,7 @@ public class ProoftreeGroup implements DebuggerEventBusListener {
 					}
 				}
 			});
-			if (contentProvider.getCurrentResult()!= null) {
-				prooftreeTreeViewer.displayProoftree( contentProvider.getCurrentResult().getProoftree());
-			}
-			else {
-				prooftreeTreeViewer.displayProoftree(null);
-			}
+			prooftreeTreeViewer.displayProoftree(null);
 		} else {
 			bindings.setLayout(new RowLayout(SWT.HORIZONTAL));
 			bindings.setEnabled(false);
@@ -68,6 +62,9 @@ public class ProoftreeGroup implements DebuggerEventBusListener {
 		if (event instanceof SelectedResultLineEvent) {
 			SelectedResultLineEvent resultLineEvent = (SelectedResultLineEvent) event;
 			prooftreeTreeViewer.displayProoftree(resultLineEvent.getResultLineProvider().getProoftree());
+		}
+		else if (event instanceof SelectedRuleEvent) {
+			prooftreeTreeViewer.displayProoftree(null);
 		}
 	}
 	

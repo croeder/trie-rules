@@ -77,12 +77,11 @@ public class DebuggerRuleStore implements KnowledgeBaseListener {
 		return toReturn;
 	}
 	
-	public static DebuggerRule[] getRules() {
+	public static Collection<DebuggerRule> getRules() {
+		Set<DebuggerRule> toReturn = new HashSet<DebuggerRule>();
 		Collection<Rule> allRules = dm.getKnowledgeBase().getRuleBase().getAllRules();
-		for (Rule r:allRules) {
-			getRule(r);
-		}
-		return ruleCache.values().toArray(new DebuggerRule[ruleCache.values().size()]);
+		for (Rule r:allRules) toReturn.add(getRule(r));
+		return toReturn;
 	}
 
 

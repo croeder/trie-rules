@@ -3,12 +3,11 @@ package de.fzi.ipe.trie.debugger.gui.bindings;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -18,8 +17,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 
 import de.fzi.ipe.trie.debugger.DebuggerPlugin;
 import de.fzi.ipe.trie.debugger.gui.ResultLineProvider;
@@ -42,8 +39,7 @@ public class BindingsGroup implements DebuggerEventBusListener{
 		this.eventBus = eventBus;
 		eventBus.addListener(this);
 		Group bindings = new Group(parent, SWT.NONE);
-		if (contentProvider.getCurrentClause() != null) bindings.setText("The Selected Rule Part Fires For: ");
-		else bindings.setText("The Current Rule Fires For: ");
+		bindings.setText("The Current Rule Fires For: ");
 
 		if (dynamic_b == true) {
 			makeBindingsTable(contentProvider, bindings);
@@ -57,7 +53,6 @@ public class BindingsGroup implements DebuggerEventBusListener{
 		layout.horizontalSpacing = 0;
 		layout.verticalSpacing = 0;
 		bindings.setLayout(layout);
-		makeToolbar(contentProvider, bindings);
 
 		Composite holder = new Composite(bindings, SWT.NONE);
 		holder.setLayout(new FillLayout());
@@ -83,7 +78,6 @@ public class BindingsGroup implements DebuggerEventBusListener{
 		for (TableColumn tc:bindingsViewer.getTable().getColumns()) {
 			tc.dispose();
 		}
-//		bindingsViewer.getTable().removeAll();
 		if (sortedVariables != null) {
 			bindingsViewer.setColumnProperties(sortedVariables);
 			for (int i = 0; i < sortedVariables.length; i++) {
@@ -92,32 +86,11 @@ public class BindingsGroup implements DebuggerEventBusListener{
 				column.setWidth(100);
 			}
 		}
-		
 		bindingsViewer.setInput(result);
+		Object elementAt = bindingsViewer.getElementAt(0);
+		bindingsViewer.setSelection(new StructuredSelection(elementAt));
 	}
 
-	private void makeToolbar(final RuleDebugContentProvider contentProvider, Group bindings) {
-		ToolBar toolbar = new ToolBar(bindings, SWT.FLAT);
-		GridData toolbarGD = new GridData();
-		toolbarGD.horizontalAlignment = GridData.END;
-		toolbarGD.grabExcessHorizontalSpace = true;
-		toolbar.setLayoutData(toolbarGD);
-		ToolItem deselect = new ToolItem(toolbar, SWT.NONE);
-		deselect.addSelectionListener(new SelectionListener() {
-
-			public void widgetSelected(SelectionEvent e) {
-				if (!bindingsViewer.getSelection().isEmpty()) {
-					eventBus.sendEvent(new SelectedResultLineEvent(null));
-				}
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				;
-			}
-		});
-		deselect.setImage(DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_DESELECT));
-		deselect.setToolTipText("Deselect variable Bindings");
-	}
 
 	private void makeNonDynamicMessage(Group bindings) {
 		bindings.setLayout(new RowLayout(SWT.HORIZONTAL));

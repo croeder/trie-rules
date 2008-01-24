@@ -1,10 +1,9 @@
 package de.fzi.ipe.trie.debugger.gui.actions;
 
 
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -12,38 +11,40 @@ import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.dialogs.ListDialog;
 
 import de.fzi.ipe.trie.debugger.DebugView;
 import de.fzi.ipe.trie.debugger.DebuggerPlugin;
-import de.fzi.ipe.trie.debugger.gui.RuleDebugContentProvider;
 import de.fzi.ipe.trie.debugger.gui.RuleListContentProvider;
+import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
+import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
+import de.fzi.ipe.trie.debugger.model.DebuggerRuleStore;
 
 
-public class SelectRuleDropDownAction extends Action implements IMenuCreator {
+public class SelectRuleDropDownAction extends Action implements IMenuCreator, DebuggerEventBusListener {
 
     private static final int MAX_NUMBER_RULES = 10;
     
     private DebugView viewPart;
     private Menu fMenu;
 
-    private RuleDebugContentProvider contentProvider;
     private DebuggerEventBus eventBus;
     
+    private LastAccessedHistory history = new LastAccessedHistory(MAX_NUMBER_RULES);
     
-    public SelectRuleDropDownAction(RuleDebugContentProvider contentProvider, DebugView viewPart, DebuggerEventBus eventBus) {
+    
+    public SelectRuleDropDownAction(DebugView viewPart, DebuggerEventBus eventBus) {
         this.viewPart = viewPart;
-        this.contentProvider = contentProvider;
         this.eventBus = eventBus;
+        
+        eventBus.addListener(this);
+        
         fMenu = null;
         setToolTipText("Select rule");
         setText("Select Rule");
@@ -51,6 +52,13 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator {
         setMenuCreator(this);
     }
 
+	public void eventNotification(DebuggerEvent event) {
+		if (event instanceof SelectedRuleEvent) {
+			SelectedRuleEvent sel = (SelectedRuleEvent) event;
+			history.accessedRule(sel.getRule());
+		}
+	}
+    
     public Menu getMenu(Menu parent) {
         return null;
     }
@@ -60,20 +68,17 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator {
             fMenu.dispose();
         }
         fMenu = new Menu(parent);
-        DebuggerRule[] rules = contentProvider.getLastRules(MAX_NUMBER_RULES);
-        for (int i = 0; i < rules.length; i++) {
-            Action action = new SelectRuleAction(rules[i]);
-            ActionContributionItem item = new ActionContributionItem(action);
-            item.fill(fMenu, -1);
+        for (DebuggerRule r:history.getLastAccessedRules()) {
+        	Action action = new SelectRuleAction(r);
+        	ActionContributionItem item = new ActionContributionItem(action);
+        	item.fill(fMenu, -1);
         }
-        if (rules.length == MAX_NUMBER_RULES) {
-            IContributionItem item = new Separator();
-            item.fill(fMenu,-1);
-            Action action = new Action() { public void run() {SelectRuleDropDownAction.this.run(); }};
-            action.setText("More Rules ... ");
-            ActionContributionItem a_item = new ActionContributionItem(action);
-            a_item.fill(fMenu,-1);
-        }
+        IContributionItem item = new Separator();
+        item.fill(fMenu,-1);
+        Action action = new Action() { public void run() {SelectRuleDropDownAction.this.run(); }};
+        action.setText("Select Rule ... ");
+        ActionContributionItem a_item = new ActionContributionItem(action);
+        a_item.fill(fMenu,-1);
         
         return fMenu;
     }
@@ -89,23 +94,9 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator {
         ListDialog listDialog = new ListDialog(viewPart.getShell());
         listDialog.setBlockOnOpen(true);
         
-        //sort rule List
-        ArrayList<DebuggerRule> temp = new ArrayList<DebuggerRule>();
-        DebuggerRule[] allRules = contentProvider.getAllRules();
-        for (int i=0;i<allRules.length;i++) temp.add(allRules[i]);
-        Collections.sort(temp, new Comparator<DebuggerRule>() {
-
-			public int compare(DebuggerRule o1, DebuggerRule o2) {
-				DebuggerRule r1 = (DebuggerRule) o1; 
-				DebuggerRule r2 = (DebuggerRule) o2;
-				return r1.getName().compareTo(r2.getName());
-			}});
-        allRules = (DebuggerRule[]) temp.toArray(new DebuggerRule[allRules.length]);
-        
-        IStructuredContentProvider listContentProvider = new RuleListContentProvider(allRules);
-        listDialog.setContentProvider(listContentProvider);
+        listDialog.setContentProvider(new RuleListContentProvider());
         listDialog.setLabelProvider(new RuleListLabelProvider());
-        listDialog.setInput("egal");
+        listDialog.setInput(DebuggerRuleStore.getRules());
         listDialog.setTitle("Choose Rule");
         listDialog.setMessage("Please choose the rule that you want to debug.");
         int code = listDialog.open();
@@ -126,34 +117,55 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator {
         }
     }
     
-    private class RuleListLabelProvider implements ILabelProvider {
-
-            public Image getImage(Object element) {
-                return null;
-            }
-
-            public String getText(Object element) {
-                return ((DebuggerRule)element).getName();
-            }
-
-            public void addListener(ILabelProviderListener listener) {
-                ;
-            }
-
-            public void dispose() {
-                ;
-            }
-
-            public boolean isLabelProperty(Object element, String property) {
-                return true;
-            }
-
-            public void removeListener(ILabelProviderListener listener) {
-                ;
-                
-            }
+    private static class RuleListLabelProvider extends LabelProvider {
+        public String getText(Object element) {
+            return ((DebuggerRule)element).getName();
+        }
     }
         
+    
+    /**
+     * Small class that stores information about the n last accessed rules. The most recently accessed 
+     * is returned first.
+     */    
+    private static class LastAccessedHistory {
+
+    	private DebuggerRule currentRule = null;
+    	private LinkedList<DebuggerRule> lastAccessedRules = new LinkedList<DebuggerRule>();
+    	private int max_size;
+    	
+    	LastAccessedHistory(int size) {
+    		this.max_size = size;
+    		initialRulesForRuleHistory();
+    	}
+
+		private void initialRulesForRuleHistory() {
+			Iterator<DebuggerRule> rules = DebuggerRuleStore.getRules().iterator();
+    		int i=0;
+    		while (rules.hasNext()) {
+    			lastAccessedRules.add((DebuggerRule)rules.next());
+    			i++;
+    			if (i==MAX_NUMBER_RULES) break;
+    		}
+		}
+    	
+    	void accessedRule(DebuggerRule rule) {
+    		if (currentRule != rule) {
+    			if (currentRule != null) {
+	    			lastAccessedRules.remove(currentRule);
+	    			lastAccessedRules.add(0,currentRule);
+	    			if (lastAccessedRules.size() > max_size) lastAccessedRules.removeLast();
+    			}
+    			currentRule = rule;
+    		}
+    	}
+    	
+    	public List<DebuggerRule> getLastAccessedRules() {
+    		return lastAccessedRules;
+    	}
+    	
+    }
+    
     
     
 }

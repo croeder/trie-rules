@@ -27,19 +27,19 @@ import com.hp.hpl.jena.shared.JenaException;
 
 import de.fzi.ipe.trie.debugger.gui.DebugLabelProvider;
 import de.fzi.ipe.trie.debugger.gui.HeadlineComposite;
-import de.fzi.ipe.trie.debugger.gui.ResultLineProvider;
 import de.fzi.ipe.trie.debugger.gui.RuleDebugContentProvider;
 import de.fzi.ipe.trie.debugger.gui.actions.BackAction;
 import de.fzi.ipe.trie.debugger.gui.actions.ForwardAction;
 import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleAction;
 import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleDropDownAction;
 import de.fzi.ipe.trie.debugger.gui.bindings.BindingsGroup;
+import de.fzi.ipe.trie.debugger.gui.dependsOn.DependsOnGroup;
 import de.fzi.ipe.trie.debugger.gui.events.AfterSelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
-import de.fzi.ipe.trie.debugger.gui.prooftree.ProoftreeTreeViewer;
+import de.fzi.ipe.trie.debugger.gui.prooftree.ProoftreeGroup;
 import de.fzi.ipe.trie.debugger.gui.ruleDetails.RuleDetailsGroup;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
 
@@ -69,9 +69,6 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 	
 	private Composite mainComposite, parent;
 	private ScrolledComposite scrolledComposite;
-	private ProoftreeTreeViewer pView;
-	private ResultLineProvider lastResult; //stores that last result that was selected, used to decide if the 
-	// state of the prooftreeview should be restored
 
 	public static DebugLabelProvider labelProvider = new DebugLabelProvider();
 	
@@ -188,16 +185,15 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 
 			new BindingsGroup(data,dynamic_b,contentProvider,eventBus);
 
-//			Composite data2 = new Composite(mainComposite,SWT.NONE);
-//			GridData data2GD = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
-//			data2GD.heightHint = 200;
-//			data2.setLayoutData(data2GD);
-//			FillLayout data2Layout = new FillLayout(SWT.HORIZONTAL);
-//			data2Layout.spacing = 4;
-//			data2.setLayout(data2Layout);
-//			new DependsOnGroup(data2,eventBus,contentProvider);
-//			new ProoftreeGroup(data2,showProoftree_b,eventBus, contentProvider);
-//		}
+			Composite data2 = new Composite(mainComposite,SWT.NONE);
+			GridData data2GD = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
+			data2GD.heightHint = 200;
+			data2.setLayoutData(data2GD);
+			FillLayout data2Layout = new FillLayout(SWT.HORIZONTAL);
+			data2Layout.spacing = 4;
+			data2.setLayout(data2Layout);
+			new DependsOnGroup(data2,eventBus);
+			new ProoftreeGroup(data2,showProoftree_b,eventBus);
 	}
 	
 	public void createMenu() {
@@ -236,7 +232,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 		forward.setToolTipText("Forward");
 		mgr.add(forward);
 		mgr.add(new Separator());
-		mgr.add(new SelectRuleDropDownAction(contentProvider, this,eventBus));
+		mgr.add(new SelectRuleDropDownAction(this,eventBus));
 		mgr.add(new Separator());
 		mgr.add(refresh);
 	}
@@ -277,7 +273,6 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 	 * Refresh what is shown.
 	 */
 	public void refresh() {
-		Object[] proofTreeCache = null; 
 		if (mainComposite != null) {
 			if (Display.findDisplay(Thread.currentThread()) == null) { //not a UI thread?
 				Display.getCurrent().asyncExec(new Runnable() {
@@ -286,8 +281,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 					}
 				}); //call method from ui thread
 			}
-			if (pView != null) proofTreeCache = pView.getExpandedElements();
-			pView = null;
+
 
 			scrolledComposite.dispose();
 
@@ -300,9 +294,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 			if (forward != null) forward.refresh();
 			if (back != null) back.refresh();
 			createPartControl();
-			if ((pView != null) && (proofTreeCache != null) && (lastResult != null) && (lastResult == contentProvider.getCurrentResult())) {
-				pView.setExpandedElements(proofTreeCache);
-			}
+
 			parent.layout(true);
 		}
 	}
