@@ -10,9 +10,13 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Caret;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -30,7 +34,18 @@ public class StyledTextView {
     private StyledText styledText;
     
     public StyledTextView(Composite parent) {
-		styledText = new StyledText(parent,SWT.READ_ONLY | SWT.WRAP);    	
+		styledText = new StyledText(parent,SWT.READ_ONLY | SWT.WRAP); 
+		
+		styledText.addPaintListener(new PaintListener() {
+		      public void paintControl(PaintEvent e) {
+		          // Do some drawing
+		          Rectangle rect = ((Canvas) e.widget).getBounds();
+		          e.gc.setForeground(e.display.getSystemColor(SWT.COLOR_RED));
+		          e.gc.drawFocus(5, 5, rect.width - 10, rect.height - 10);
+		          e.gc.drawText("You can draw text directly on a canvas", 10, 10);
+		        }
+		      });
+		
 		formatStyledText(parent, styledText);
     }
     
@@ -46,8 +61,6 @@ public class StyledTextView {
 		prepareOffsetIndex();
 		addMouseListener(styledText);
 		addMouseMoveListener();
-		
-		
 //		styledText.setSize(new Point(500,100));
     }
 

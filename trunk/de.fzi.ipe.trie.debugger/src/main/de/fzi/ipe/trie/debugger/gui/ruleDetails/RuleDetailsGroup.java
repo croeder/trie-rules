@@ -33,7 +33,10 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 		clauses = new Group(parent, SWT.NONE);
 		clauses.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL));
 		clauses.setText("Rule Details");
-		clauses.setLayout(new FillLayout());
+		FillLayout layout = new FillLayout();
+		layout.marginWidth = 10;
+		layout.marginHeight = 10;
+		clauses.setLayout(layout);
 		
 		styledText = new StyledTextView(clauses);
 	}

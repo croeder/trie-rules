@@ -83,7 +83,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 	 * The constructor.
 	 */
 	public DebugView() {
-		contentProvider = new RuleDebugContentProvider(eventBus);
+		contentProvider = new RuleDebugContentProvider();
 		singleton = this;
 		eventBus.addListener(this);
 	}
@@ -142,7 +142,8 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 
 	public static void handleException(Exception e, String msg) {
 		MessageDialog.openError(singleton.getShell(), "Rule Debugger Error", msg);
-		singleton.contentProvider.selectRule(null);
+		SelectedRuleEvent event = new SelectedRuleEvent(null);
+		singleton.eventBus.sendEvent(event);
 	}
 
 	public static void handleException(Exception e) {
@@ -225,10 +226,10 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 	public void createToolbar() {
 		IToolBarManager mgr = getViewSite().getActionBars().getToolBarManager();
 
-		back = new BackAction(contentProvider);
+		back = new BackAction(eventBus);
 		back.setToolTipText("Back to last rule");
 		mgr.add(back);
-		forward = new ForwardAction(contentProvider);
+		forward = new ForwardAction(eventBus);
 		forward.setToolTipText("Forward");
 		mgr.add(forward);
 		mgr.add(new Separator());
