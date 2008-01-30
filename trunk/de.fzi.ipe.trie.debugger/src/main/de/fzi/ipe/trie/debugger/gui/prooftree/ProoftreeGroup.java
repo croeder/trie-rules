@@ -61,7 +61,8 @@ public class ProoftreeGroup implements DebuggerEventBusListener {
 	public void eventNotification(DebuggerEvent event) {
 		if (event instanceof SelectedResultLineEvent) {
 			SelectedResultLineEvent resultLineEvent = (SelectedResultLineEvent) event;
-			prooftreeTreeViewer.displayProoftree(resultLineEvent.getResultLineProvider().getProoftree());
+			if (resultLineEvent.getResultLineProvider() != null) prooftreeTreeViewer.displayProoftree(resultLineEvent.getResultLineProvider().getProoftree());
+			else prooftreeTreeViewer.displayProoftree(null);
 		}
 		else if (event instanceof SelectedRuleEvent) {
 			prooftreeTreeViewer.displayProoftree(null);

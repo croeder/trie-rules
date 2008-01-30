@@ -14,6 +14,8 @@ public class DebuggerAtom {
 	private Atom atom;
 	private DebuggerRule rule;
 	
+	private boolean isActive = true;
+	
 	private DebuggerRule[] possibilities;
 	private Result results;
 	
@@ -25,6 +27,14 @@ public class DebuggerAtom {
 	
 	public boolean hasCalculatedBinding() {
 		return hasCalculatedBindings;
+	}
+	
+	public boolean isActive() {
+		return isActive;
+	}
+	
+	public void setIsActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 	
 	public DebuggerRule getRule() {

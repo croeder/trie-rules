@@ -2,11 +2,11 @@ package de.fzi.ipe.trie.debugger.gui.events;
 
 import de.fzi.ipe.trie.debugger.model.DebuggerAtom;
 
-public class AtomSelectedEvent implements DebuggerEvent {
-
+public class AtomActivatedEvent implements DebuggerEvent {
+	
 	private DebuggerAtom atom;
 	
-	public AtomSelectedEvent(DebuggerAtom atom) {
+	public AtomActivatedEvent(DebuggerAtom atom) {
 		this.atom = atom;
 	}
 	
@@ -14,4 +14,5 @@ public class AtomSelectedEvent implements DebuggerEvent {
 		return atom;
 	}
 	
+
 }

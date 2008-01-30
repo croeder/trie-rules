@@ -39,6 +39,12 @@ public class DebuggerPlugin extends AbstractUIPlugin implements IStartup{
     public static final String IMAGE_JUMP_TO_RULE = "jumpToRule.gif";
     public static final String IMAGE_SNAIL_RED = "snail_red.gif";
     public static final String IMAGE_SNAIL = "snail.gif";
+
+    public static final String IMAGE_PLUS = "plus.png";
+    public static final String IMAGE_MINUS = "minus.png";
+    public static final String IMAGE_PLUS_GREEN = "plus_green.png";
+    public static final String IMAGE_REMOVE_GRAY_SMALL = "remove_gray.png";
+    public static final String IMAGE_FOCUS_PURPLE = "focus_purple.png";
 	
 
 	private static DebuggerPlugin singleton;
