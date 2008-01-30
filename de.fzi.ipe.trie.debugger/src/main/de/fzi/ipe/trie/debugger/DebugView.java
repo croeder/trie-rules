@@ -305,9 +305,9 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 			eventBus.sendEvent(new AfterSelectedRuleEvent());
 		}
 		else if (event instanceof AfterSelectedRuleEvent) {
-			parent.redraw();
 			mainComposite.pack(true);
 			parent.layout(true);
+			parent.redraw();
 		}
 	}
 

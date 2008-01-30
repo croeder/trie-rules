@@ -12,7 +12,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
-import de.fzi.ipe.trie.debugger.gui.events.AtomSelectedEvent;
+import de.fzi.ipe.trie.debugger.gui.events.AtomFocussedEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
@@ -38,19 +38,18 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 		layout.marginHeight = 10;
 		clauses.setLayout(layout);
 		
-		styledText = new StyledTextView(clauses);
+		styledText = new StyledTextView(clauses,eventBus);
 	}
 
 
 	private void updateDisplay(DebuggerRule rule) {
 		styledText.reset();
 		makeHeadClauses(styledText,rule);
-		styledText.addNewLine();
-		TextPart ifPart = new TextPart("IF ");
-		styledText.add(ifPart);
+		TextPart ifPart = new TextPartWord("IF ");
+		styledText.addClause(ifPart, null);
 		styledText.addNewLine();
 		makeBodyClauses(styledText,rule);
-		styledText.updateTextText();
+		styledText.updateText();
 	}
 	
 	private void makeHeadClauses(StyledTextView parent, DebuggerRule currentRule) {
@@ -59,12 +58,12 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 			for (int i = 0; i < headPredicates.length; i++) {
 				DebuggerAtom currentClause = headPredicates[i];
 
-				TextPart currentLabel = new TextPart(currentClause.toString());
-				parent.add(currentLabel);
+				TextPart currentLabel = new TextPartWord(currentClause.toString());
+				parent.addClause(currentLabel,null);
 
 				if (i < (headPredicates.length - 1)) {
-					TextPart and = new TextPart(" AND ");
-					parent.add(and);
+					TextPart and = new TextPartWord(" AND ");
+					parent.addClause(and,null);
 				}
 				parent.addNewLine();
 			}
@@ -76,9 +75,9 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 			DebuggerAtom[] bodyPredicates = currentRule.getBodyClauses();
 			for (int i = 0; i < bodyPredicates.length; i++) {
 				final DebuggerAtom currentClause = bodyPredicates[i];
-				TextPart currentTextPart = new TextPart(currentClause.toString());
+				TextPartWord currentTextPart = new TextPartWord(currentClause.toString());
 				currentTextPart.addSelectionListener(new ClauseSelectionListener(currentClause));
-				parent.add(currentTextPart);
+				parent.addClause(currentTextPart,currentClause);
 
 //TODO
 //				if ((contentProvider.getCurrentClause() != null) && (contentProvider.getCurrentClause().equals(currentClause))) {
@@ -91,15 +90,15 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 //					}
 //				}
 				if (i < (bodyPredicates.length - 1)) {
-					TextPart and = new TextPart(" AND ");
-					parent.add(and);
+					TextPart and = new TextPartWord(" AND ");
+					parent.addClause(and,null);
+					parent.addNewLine();
 				}
-				parent.addNewLine();
 			}
 		}
 	}
 
-	private void colorBodyClause(final DebuggerAtom currentClause, TextPart currentTextPart) {
+	private void colorBodyClause(final DebuggerAtom currentClause, TextPartWord currentTextPart) {
 		//color body clauses based on satisfiability.
 		if (currentClause.getBindings().numberResults() == 0) {
 			if (currentClause.getPossibilities().length == 0) {
@@ -146,9 +145,9 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 		public void widgetSelected(SelectionEvent e) {
 			if (selected) {
 				selected = false;
-				eventBus.sendEvent(new AtomSelectedEvent(null));
+				eventBus.sendEvent(new AtomFocussedEvent(null));
 			} else {
-				eventBus.sendEvent(new AtomSelectedEvent(currentClause));
+				eventBus.sendEvent(new AtomFocussedEvent(currentClause));
 				selected = true;
 			}
 		}
