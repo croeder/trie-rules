@@ -12,19 +12,11 @@ import org.eclipse.ui.ISelectionListener;
 public class TextPartWord implements TextPart {
 
 	private String text, tooltip;
-	private Color foreground;
-	private Color background;
-	private Set<SelectionListener> selectionListener = new HashSet<SelectionListener>();
 	private int begin;
 
-	public TextPartWord(String text, Color foreground, Color background) {
-		this.text = text;
-		setForeground(foreground);
-		setBackground(background);
-	}
 
 	public TextPartWord(String text) {
-		this(text, null, null);
+		this.text = text;
 	}
 
 	public String getText() {
@@ -40,29 +32,9 @@ public class TextPartWord implements TextPart {
 	}
 
 	public StyleRange getStyleRange() {
-		StyleRange currentStyleRange = new StyleRange();
-		currentStyleRange.start = begin;
-		currentStyleRange.length = text.length();
-		currentStyleRange.foreground = foreground;
-		currentStyleRange.background = background;
-		return currentStyleRange;
+		return null;
 	}
 
-	public void setForeground(Color foreground) {
-		this.foreground = (foreground != null) ? foreground : COLOR_DEFAULT_FOREGROUND;
-	}
-
-	public void setBackground(Color background) {
-		this.background = (background != null) ? background : COLOR_DEFAULT_BACKGROUND;
-	}
-
-	public void addSelectionListener(SelectionListener listener) {
-		selectionListener.add(listener);
-	}
-
-	public void removeSelectionListener(ISelectionListener listener) {
-		selectionListener.remove(listener);
-	}
 
 	public void setToolTipText(String tooltip) {
 		this.tooltip = tooltip;
@@ -73,15 +45,15 @@ public class TextPartWord implements TextPart {
 	}
 
 	public void clicked() {
-		Iterator listeners = selectionListener.iterator();
-		while (listeners.hasNext()) {
-			SelectionListener current = (SelectionListener) listeners.next();
-			current.widgetSelected(null);
-		}
+		;
 	}
 
 	public int getLength() {
 		return text.length();
+	}
+	
+	public void deregister() {
+		;
 	}
 
 }

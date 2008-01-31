@@ -34,10 +34,10 @@ import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleAction;
 import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleDropDownAction;
 import de.fzi.ipe.trie.debugger.gui.bindings.BindingsGroup;
 import de.fzi.ipe.trie.debugger.gui.dependsOn.DependsOnGroup;
-import de.fzi.ipe.trie.debugger.gui.events.AfterSelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
+import de.fzi.ipe.trie.debugger.gui.events.RedrawEvent;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.gui.prooftree.ProoftreeGroup;
 import de.fzi.ipe.trie.debugger.gui.ruleDetails.RuleDetailsGroup;
@@ -302,9 +302,9 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 
 	public void eventNotification(DebuggerEvent event) {
 		if (event instanceof SelectedRuleEvent) {
-			eventBus.sendEvent(new AfterSelectedRuleEvent());
+			eventBus.sendEvent(RedrawEvent.DEBUG_VIEW);
 		}
-		else if (event instanceof AfterSelectedRuleEvent) {
+		else if (event == RedrawEvent.DEBUG_VIEW) {
 			mainComposite.pack(true);
 			parent.layout(true);
 			parent.redraw();

@@ -14,4 +14,8 @@ public class AtomFocussedEvent implements DebuggerEvent {
 		return atom;
 	}
 	
+	public String toString() {
+		return "- AtomFocussedEvent "+atom;
+	}
+	
 }

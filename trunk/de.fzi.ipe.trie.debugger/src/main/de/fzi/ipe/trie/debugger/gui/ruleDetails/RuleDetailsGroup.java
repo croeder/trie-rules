@@ -1,18 +1,12 @@
 package de.fzi.ipe.trie.debugger.gui.ruleDetails;
 
-import static de.fzi.ipe.trie.debugger.gui.DebugGuiUtil.COLOR_CLAUSE_NOT_SATISFIED;
-import static de.fzi.ipe.trie.debugger.gui.DebugGuiUtil.COLOR_CLAUSE_NO_BINDINGS;
-
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
-import de.fzi.ipe.trie.debugger.gui.events.AtomFocussedEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
@@ -75,11 +69,17 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 			DebuggerAtom[] bodyPredicates = currentRule.getBodyClauses();
 			for (int i = 0; i < bodyPredicates.length; i++) {
 				final DebuggerAtom currentClause = bodyPredicates[i];
-				TextPartWord currentTextPart = new TextPartWord(currentClause.toString());
-				currentTextPart.addSelectionListener(new ClauseSelectionListener(currentClause));
+				TextPartWord currentTextPart = new TextPartAtom(currentClause,eventBus);
 				parent.addClause(currentTextPart,currentClause);
 
-//TODO
+//				colorBodyClause(currentClause, currentTextPart);
+				
+//				if (currentClause.isActive()) {
+//					currentTextPart.setBackground(DebugGuiUtil.COLOR_LABEL_SELECTED);
+//					currentTextPart.setForeground(DebugGuiUtil.COLOR_LABEL_SELECTED_FOREGROUND);				
+//				}
+				
+				//TODO
 //				if ((contentProvider.getCurrentClause() != null) && (contentProvider.getCurrentClause().equals(currentClause))) {
 //					currentTextPart.setBackground(COLOR_LABEL_SELECTED);
 //					currentTextPart.setForeground(COLOR_LABEL_SELECTED_FOREGROUND);
@@ -98,20 +98,20 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 		}
 	}
 
-	private void colorBodyClause(final DebuggerAtom currentClause, TextPartWord currentTextPart) {
-		//color body clauses based on satisfiability.
-		if (currentClause.getBindings().numberResults() == 0) {
-			if (currentClause.getPossibilities().length == 0) {
-				currentTextPart.setForeground(COLOR_CLAUSE_NOT_SATISFIED);
-				currentTextPart.setToolTipText("This term currently has no variable bindings and there is no rule that could supply one");
-			} else {
-				currentTextPart.setForeground(COLOR_CLAUSE_NO_BINDINGS);
-				currentTextPart.setToolTipText("This term currently has no variable bindings");
-			}
-		} else {
-			currentTextPart.setToolTipText("This term has variable binding");
-		}
-	}
+//	private void colorBodyClause(final DebuggerAtom currentClause, TextPartWord currentTextPart) {
+//		//color body clauses based on satisfiability.
+//		if (currentClause.getBindings().numberResults() == 0) {
+//			if (currentClause.getPossibilities().length == 0) {
+//				currentTextPart.setForeground(COLOR_CLAUSE_NOT_SATISFIED);
+//				currentTextPart.setToolTipText("This term currently has no variable bindings and there is no rule that could supply one");
+//			} else {
+//				currentTextPart.setForeground(COLOR_CLAUSE_NO_BINDINGS);
+//				currentTextPart.setToolTipText("This term currently has no variable bindings");
+//			}
+//		} else {
+//			currentTextPart.setToolTipText("This term has variable binding");
+//		}
+//	}
 	
 	private boolean doDynamic() {
 		return true;
@@ -133,31 +133,5 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 		}
 	}
 
-	private class ClauseSelectionListener implements SelectionListener {
-
-		DebuggerAtom currentClause;
-		boolean selected = false;
-
-		public ClauseSelectionListener(DebuggerAtom currentClause) {
-			this.currentClause = currentClause;
-		}
-
-		public void widgetSelected(SelectionEvent e) {
-			if (selected) {
-				selected = false;
-				eventBus.sendEvent(new AtomFocussedEvent(null));
-			} else {
-				eventBus.sendEvent(new AtomFocussedEvent(currentClause));
-				selected = true;
-			}
-		}
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
-		 */
-		public void widgetDefaultSelected(SelectionEvent e) {
-			;
-		}
-	}
 	
 }

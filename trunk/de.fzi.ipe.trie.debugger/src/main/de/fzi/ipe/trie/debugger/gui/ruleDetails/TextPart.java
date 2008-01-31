@@ -26,4 +26,6 @@ public interface TextPart {
     
     public void clicked();
     
+    public void deregister();
+    
 }

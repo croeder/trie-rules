@@ -4,62 +4,63 @@ import org.eclipse.swt.graphics.Point;
 
 import de.fzi.ipe.trie.debugger.DebuggerPlugin;
 import de.fzi.ipe.trie.debugger.gui.events.AtomActivatedEvent;
+import de.fzi.ipe.trie.debugger.gui.events.AtomDeactivatedEvent;
 import de.fzi.ipe.trie.debugger.gui.events.AtomFocussedEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
+import de.fzi.ipe.trie.debugger.gui.events.RedrawEvent;
 import de.fzi.ipe.trie.debugger.model.DebuggerAtom;
 
-public class ClauseFocusButton extends CustomButton implements DebuggerEventBusListener {
+public class AtomActivateButton extends CustomButton implements DebuggerEventBusListener{
 
 	private DebuggerAtom atom;
-	private boolean isFocussed = false;
+	private boolean isActive = true;
 	private DebuggerEventBus eventBus;
 	
 	
-	
-	public ClauseFocusButton(Point upperLeftCorner,DebuggerAtom atom, DebuggerEventBus eventBus) {
-		super(upperLeftCorner, "Focus on this clause");
+	public AtomActivateButton(Point upperLeftCorner, DebuggerAtom atom, DebuggerEventBus eventBus) {
+		super(upperLeftCorner,"(De-)Activate this atom");
 		this.atom = atom;
+		isActive = atom.isActive();
 		this.eventBus = eventBus;
 		eventBus.addListener(this);
-		setImage(DebuggerPlugin.IMAGE_FOCUS_PURPLE);
+		setImage(DebuggerPlugin.IMAGE_MINUS);
 	}
-
+	
 	@Override
 	public void click() {
-		isFocussed = !isFocussed;
-		if (isFocussed) {
-			setImage(DebuggerPlugin.IMAGE_REMOVE_GRAY_SMALL);
-			eventBus.sendEvent(new AtomFocussedEvent(atom));
+		isActive = !isActive;
+		if (isActive) {
+			setImage(DebuggerPlugin.IMAGE_MINUS);
+			eventBus.sendEvent(new AtomActivatedEvent(atom));
+			eventBus.sendEvent(RedrawEvent.RULE_DETAILS);
 		}
 		else {
-			setImage(DebuggerPlugin.IMAGE_FOCUS_PURPLE);
-			eventBus.sendEvent(new AtomFocussedEvent(null));
+			setImage(DebuggerPlugin.IMAGE_PLUS);
+			eventBus.sendEvent(new AtomDeactivatedEvent(atom));
+			eventBus.sendEvent(RedrawEvent.RULE_DETAILS);
 		}
 	}
-
+		
 	public void eventNotification(DebuggerEvent event) {
 		if (event instanceof AtomFocussedEvent) {
 			AtomFocussedEvent ase = (AtomFocussedEvent) event;
 			if (ase.getAtom() == null) {
-				atom.setIsActive(true);
-				setImage(DebuggerPlugin.IMAGE_FOCUS_PURPLE);
-				isFocussed = false;
+				setImage(DebuggerPlugin.IMAGE_MINUS);
+				eventBus.sendEvent(RedrawEvent.RULE_DETAILS);
+				isActive= true;
 			}
 			else if (ase.getAtom() != null && ase.getAtom() != atom) {
-				atom.setIsActive(false);
-				setImage(DebuggerPlugin.IMAGE_FOCUS_PURPLE);
+				isActive = false;
+				setImage(DebuggerPlugin.IMAGE_PLUS);
+				eventBus.sendEvent(RedrawEvent.RULE_DETAILS);
 			}
-		}
-		else if (event instanceof AtomActivatedEvent) {
-			isFocussed = false;
-			setImage(DebuggerPlugin.IMAGE_FOCUS_PURPLE);
 		}
 	}
 	
 	
-	@Override
+	@Override	
 	public void deregister() {
 		eventBus.removeListener(this);
 	}
