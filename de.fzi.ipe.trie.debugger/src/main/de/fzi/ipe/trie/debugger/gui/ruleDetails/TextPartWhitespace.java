@@ -44,4 +44,9 @@ public class TextPartWhitespace implements TextPart{
 		return offset;
 	}
 
+
+	public void deregister() {
+		;
+	}
+
 }

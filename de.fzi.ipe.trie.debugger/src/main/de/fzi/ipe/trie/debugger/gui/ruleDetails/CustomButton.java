@@ -35,8 +35,7 @@ public class CustomButton {
 	}
 
 	public void click() {
-		// TODO Auto-generated method stub
-		System.out.println("Button pressed "+tooltip);
+		;
 	}
 	
 	/**

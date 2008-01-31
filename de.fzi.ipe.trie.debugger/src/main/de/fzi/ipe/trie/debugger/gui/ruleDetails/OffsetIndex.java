@@ -20,6 +20,7 @@ public class OffsetIndex {
 	}
 
 	public void clear() {
+		for (TextPart tp:textParts) tp.deregister();
 		textParts.clear();
 		currentOffset = 0;
 	}

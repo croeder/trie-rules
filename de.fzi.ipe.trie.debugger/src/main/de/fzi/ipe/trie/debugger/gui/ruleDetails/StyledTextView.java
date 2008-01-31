@@ -12,13 +12,16 @@ import org.eclipse.swt.widgets.Caret;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
+import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
+import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
+import de.fzi.ipe.trie.debugger.gui.events.RedrawEvent;
 import de.fzi.ipe.trie.debugger.model.DebuggerAtom;
 
 
 
 
-public class StyledTextView implements MouseMoveListener, MouseListener{
+public class StyledTextView implements MouseMoveListener, MouseListener, DebuggerEventBusListener{
 
     private static final Cursor ARROW_CURSOR = new Cursor(Display.getCurrent(),SWT.CURSOR_ARROW);
     
@@ -30,6 +33,7 @@ public class StyledTextView implements MouseMoveListener, MouseListener{
     
     public StyledTextView(Composite parent,DebuggerEventBus eventBus) {
     	this.eventBus = eventBus;
+    	eventBus.addListener(this);
 		styledText = new StyledText(parent,SWT.READ_ONLY | SWT.WRAP); 	
 		styledText.addPaintListener(buttons);
 		styledText.addMouseMoveListener(this);
@@ -51,6 +55,7 @@ public class StyledTextView implements MouseMoveListener, MouseListener{
     
     public void reset() {
     	buttons.clearAll();
+    	
     	textParts.clear();
     }
     
@@ -69,10 +74,12 @@ public class StyledTextView implements MouseMoveListener, MouseListener{
     	int endIndex = part.getOffset() + part.getLength();
     	Point locationAtOffset = styledText.getLocationAtOffset(endIndex);
     	if (atom != null) {
-    		buttons.add(new ClauseFocusButton(locationAtOffset,atom,eventBus));
+    		buttons.add(new AtomFocusButton(locationAtOffset,atom,eventBus));
+    		Point locationSecondButton = new Point(locationAtOffset.x+14,locationAtOffset.y);
+    		buttons.add(new AtomActivateButton(locationSecondButton,atom,eventBus));
     	}
     	
-    	textParts.add(new TextPartWhitespace(2));
+    	textParts.add(new TextPartWhitespace(6));
     }
     
     public void addNewLine() {
@@ -98,7 +105,7 @@ public class StyledTextView implements MouseMoveListener, MouseListener{
     }
 
     public void mouseDoubleClick(MouseEvent e) {
-        select(new Point(e.x, e.y));            
+    	;
     }
 
     public void mouseDown(MouseEvent e) {
@@ -115,7 +122,6 @@ public class StyledTextView implements MouseMoveListener, MouseListener{
     		TextPart currentTextPart = getTextPartAtLocation(point);
     		if (currentTextPart != null) currentTextPart.clicked();
     	}
-    	styledText.redraw(); //TODO - will not be necessary after events are implemented fully 
     }
     
     private TextPart getTextPartAtLocation(Point point) {
@@ -127,6 +133,15 @@ public class StyledTextView implements MouseMoveListener, MouseListener{
         }
         return textParts.getTextPartAtOffset(offset);
     }
+
+
+	public void eventNotification(DebuggerEvent event) {
+		if (event == RedrawEvent.RULE_DETAILS) {
+			System.out.println("Updated text"); //TODO
+			updateText();
+		}
+		
+	}
 
     
     

@@ -2,7 +2,7 @@ package de.fzi.ipe.trie.debugger.gui.events;
 
 import de.fzi.ipe.trie.debugger.model.DebuggerAtom;
 
-public class AtomDeactivatedEvent {
+public class AtomDeactivatedEvent implements DebuggerEvent{
 	
 	DebuggerAtom atom;
 	

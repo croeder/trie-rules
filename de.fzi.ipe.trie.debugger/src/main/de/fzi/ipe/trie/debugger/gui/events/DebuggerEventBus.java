@@ -19,12 +19,17 @@ import org.eclipse.swt.widgets.Display;
 public class DebuggerEventBus implements Runnable {
 
 	private Queue<DebuggerEvent> eventsToDistribute = new ConcurrentLinkedQueue<DebuggerEvent>();
+	private Queue<RedrawEvent> redrawEventsToDistribute = new ConcurrentLinkedQueue<RedrawEvent>();
 	private Set<DebuggerEventBusListener> listeners = new HashSet<DebuggerEventBusListener>();
 	
 	private Set<DebuggerEventBusListener> listeners_toAdd = new HashSet<DebuggerEventBusListener>(), listeners_toRemove=new HashSet<DebuggerEventBusListener>();
 	
 	public void sendEvent(DebuggerEvent event) {
-		eventsToDistribute.add(event);
+		if (event instanceof RedrawEvent) {
+			RedrawEvent re  = (RedrawEvent) event;
+			if (!redrawEventsToDistribute.contains(re)) redrawEventsToDistribute.add((RedrawEvent)event);
+		}
+		else eventsToDistribute.add(event);
 		Display.getCurrent().asyncExec(this);
 	}
 	
@@ -51,14 +56,24 @@ public class DebuggerEventBus implements Runnable {
 		DebuggerEvent e = eventsToDistribute.poll();
 		while (e != null) {
 			processListenerAddsRemoves();
-			for (DebuggerEventBusListener l:listeners) {
-				try {
-					l.eventNotification(e);
-				} catch (Throwable t) {
-					t.printStackTrace();
-				}
-			}
+			distributeEvent(e);
 			e = eventsToDistribute.poll();
+		}
+		RedrawEvent rd = redrawEventsToDistribute.poll();
+		while (rd != null) {
+			processListenerAddsRemoves();
+			distributeEvent(rd);
+			rd = redrawEventsToDistribute.poll();
+		}
+	}
+
+	private void distributeEvent(DebuggerEvent e) {
+		for (DebuggerEventBusListener l:listeners) {
+			try {
+				l.eventNotification(e);
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
 		}
 	}
 	

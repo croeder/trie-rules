@@ -33,5 +33,9 @@ public class TextPartNewLine implements TextPart {
 	public int getOffset() {
 		return begin;
 	}
+
+	public void deregister() {
+		;
+	}
 	
 }
