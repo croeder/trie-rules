@@ -65,7 +65,6 @@ public class DebuggerRule  {
 		for (DebuggerAtom a: bodyClauses) {
 			for (DebuggerRule r: a.getPossibilities()) toReturn.add(r);
 		}
-
 		allPossibilities = toReturn.toArray(new DebuggerRule[toReturn.size()]);		
 	}
 	
