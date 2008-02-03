@@ -78,7 +78,6 @@ public class StyledTextView implements MouseMoveListener, MouseListener, Debugge
     		Point locationSecondButton = new Point(locationAtOffset.x+14,locationAtOffset.y);
     		buttons.add(new AtomActivateButton(locationSecondButton,atom,eventBus));
     	}
-    	
     	textParts.add(new TextPartWhitespace(6));
     }
     
