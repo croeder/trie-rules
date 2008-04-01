@@ -31,7 +31,7 @@ public class DebuggerRuleStore implements KnowledgeBaseListener {
 	public static DebuggerRule getRule(Rule rule) {
 		DebuggerRule toReturn = ruleCache.get(rule);
 		if (toReturn == null) {
-			toReturn = new DebuggerRule(rule);
+			toReturn = new CachingDebuggerRule(rule);
 			ruleCache.put(rule,toReturn);
 		}
 		return toReturn;
@@ -66,7 +66,7 @@ public class DebuggerRuleStore implements KnowledgeBaseListener {
 		toDo.push(rule);
 		while (!toDo.empty()) {
 			DebuggerRule current = (DebuggerRule) toDo.pop();
-			DebuggerRule[] allPossibilities = current.getAllPossibilities();
+			DebuggerRule[] allPossibilities = current.getAllPossibilities().toArray(new DebuggerRule[0]);
 			for (int i=0;i<allPossibilities.length;i++) {
 				if (!toReturn.contains(allPossibilities[i])) {
 					toReturn.add(allPossibilities[i]);

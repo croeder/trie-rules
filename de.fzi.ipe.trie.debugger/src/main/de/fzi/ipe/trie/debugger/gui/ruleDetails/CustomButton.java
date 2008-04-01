@@ -7,7 +7,7 @@ import org.eclipse.swt.graphics.Rectangle;
 
 import de.fzi.ipe.trie.debugger.DebuggerPlugin;
 
-public class CustomButton {
+public abstract class CustomButton extends TextPartWhitespace{
 	
 	private String tooltip;
 	
@@ -16,6 +16,7 @@ public class CustomButton {
 	private Image image;
 	
 	CustomButton(Point upperLeftCorner, String tooltip) {
+		super(3);
 		this.tooltip = tooltip;
 		this.upperLeftCorner = upperLeftCorner;
 	} 
@@ -34,8 +35,12 @@ public class CustomButton {
 		return bounds.contains(clickLocation);
 	}
 
-	public void click() {
-		;
+	public abstract void click();
+	
+	
+	@Override
+	public String getToolTipText() {
+		return tooltip;
 	}
 	
 	/**

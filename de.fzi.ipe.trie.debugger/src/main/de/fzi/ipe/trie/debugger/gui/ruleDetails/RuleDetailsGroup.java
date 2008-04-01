@@ -1,5 +1,7 @@
 package de.fzi.ipe.trie.debugger.gui.ruleDetails;
 
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
@@ -48,14 +50,13 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 	
 	private void makeHeadClauses(StyledTextView parent, DebuggerRule currentRule) {
 		if (currentRule != null) {
-			DebuggerAtom[] headPredicates = currentRule.getHeadClauses();
-			for (int i = 0; i < headPredicates.length; i++) {
-				DebuggerAtom currentClause = headPredicates[i];
-
+			List<DebuggerAtom> headPredicates = currentRule.getHeadClauses();
+			for (int i=0;i<headPredicates.size();i++) {
+				DebuggerAtom currentClause = headPredicates.get(i);
 				TextPart currentLabel = new TextPartWord(currentClause.toString());
 				parent.addClause(currentLabel,null);
 
-				if (i < (headPredicates.length - 1)) {
+				if (i < (headPredicates.size ()- 1)) {
 					TextPart and = new TextPartWord(" AND ");
 					parent.addClause(and,null);
 				}
@@ -66,55 +67,19 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 
 	private void makeBodyClauses(StyledTextView parent,DebuggerRule currentRule){
 		if (currentRule != null) {
-			DebuggerAtom[] bodyPredicates = currentRule.getBodyClauses();
-			for (int i = 0; i < bodyPredicates.length; i++) {
-				final DebuggerAtom currentClause = bodyPredicates[i];
+			List<DebuggerAtom> bodyPredicates = currentRule.getBodyClauses();
+			for (int i = 0; i < bodyPredicates.size(); i++) {
+				final DebuggerAtom currentClause = bodyPredicates.get(i);
 				TextPartWord currentTextPart = new TextPartAtom(currentClause,eventBus);
 				parent.addClause(currentTextPart,currentClause);
 
-//				colorBodyClause(currentClause, currentTextPart);
-				
-//				if (currentClause.isActive()) {
-//					currentTextPart.setBackground(DebugGuiUtil.COLOR_LABEL_SELECTED);
-//					currentTextPart.setForeground(DebugGuiUtil.COLOR_LABEL_SELECTED_FOREGROUND);				
-//				}
-				
-				//TODO
-//				if ((contentProvider.getCurrentClause() != null) && (contentProvider.getCurrentClause().equals(currentClause))) {
-//					currentTextPart.setBackground(COLOR_LABEL_SELECTED);
-//					currentTextPart.setForeground(COLOR_LABEL_SELECTED_FOREGROUND);
-//				} else {
-//					currentTextPart.setBackground(COLOR_LABEL_SELECTABLE);
-//					if ((doDynamic()) && (currentRule.hasCalculatedBindingForAllLiterals())) {
-//						colorBodyClause(currentClause, currentTextPart); 
-//					}
-//				}
-				if (i < (bodyPredicates.length - 1)) {
+				if (i < (bodyPredicates.size()- 1)) {
 					TextPart and = new TextPartWord(" AND ");
 					parent.addClause(and,null);
 					parent.addNewLine();
 				}
 			}
 		}
-	}
-
-//	private void colorBodyClause(final DebuggerAtom currentClause, TextPartWord currentTextPart) {
-//		//color body clauses based on satisfiability.
-//		if (currentClause.getBindings().numberResults() == 0) {
-//			if (currentClause.getPossibilities().length == 0) {
-//				currentTextPart.setForeground(COLOR_CLAUSE_NOT_SATISFIED);
-//				currentTextPart.setToolTipText("This term currently has no variable bindings and there is no rule that could supply one");
-//			} else {
-//				currentTextPart.setForeground(COLOR_CLAUSE_NO_BINDINGS);
-//				currentTextPart.setToolTipText("This term currently has no variable bindings");
-//			}
-//		} else {
-//			currentTextPart.setToolTipText("This term has variable binding");
-//		}
-//	}
-	
-	private boolean doDynamic() {
-		return true;
 	}
 
 	public Point getSize() {

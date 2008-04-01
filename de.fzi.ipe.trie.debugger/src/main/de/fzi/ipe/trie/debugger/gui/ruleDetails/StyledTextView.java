@@ -74,18 +74,21 @@ public class StyledTextView implements MouseMoveListener, MouseListener, Debugge
     	int endIndex = part.getOffset() + part.getLength();
     	Point locationAtOffset = styledText.getLocationAtOffset(endIndex);
     	if (atom != null) {
-    		buttons.add(new AtomFocusButton(locationAtOffset,atom,eventBus));
+    		AtomFocusButton atomFocusButton = new AtomFocusButton(locationAtOffset,atom,eventBus);
+    		buttons.add(atomFocusButton);
+    		textParts.add(atomFocusButton);
     		Point locationSecondButton = new Point(locationAtOffset.x+14,locationAtOffset.y);
-    		buttons.add(new AtomActivateButton(locationSecondButton,atom,eventBus));
+    		AtomActivateButton atomActivateButton = new AtomActivateButton(locationSecondButton,atom,eventBus);
+    		buttons.add(atomActivateButton);
+    		textParts.add(atomActivateButton);
     	}
-    	textParts.add(new TextPartWhitespace(6));
     }
     
     public void addNewLine() {
     	textParts.add(new TextPartNewLine());
     }
     
-    public void mouseMove(MouseEvent e) {
+    public void mouseMove(MouseEvent e) {	
     	TextPart currentTextPart = getTextPartAtLocation(new Point(e.x,e.y));
 		if (currentTextPart != null)  {
 		    String newText = currentTextPart.getToolTipText();
@@ -95,7 +98,7 @@ public class StyledTextView implements MouseMoveListener, MouseListener, Debugge
 		    }
 		}
 		else { 
-		    String newText = "Move mouse over colored text to get more information";
+		    String newText = "";
 		    if (!newText.equals(styledText.getToolTipText())) {
 		        styledText.setToolTipText(newText);
 		    }
@@ -136,7 +139,6 @@ public class StyledTextView implements MouseMoveListener, MouseListener, Debugge
 
 	public void eventNotification(DebuggerEvent event) {
 		if (event == RedrawEvent.RULE_DETAILS) {
-			System.out.println("Updated text"); //TODO
 			updateText();
 		}
 		

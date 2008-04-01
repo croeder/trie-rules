@@ -57,6 +57,22 @@ public class AtomActivateButton extends CustomButton implements DebuggerEventBus
 				eventBus.sendEvent(RedrawEvent.RULE_DETAILS);
 			}
 		}
+		else if (event instanceof AtomActivatedEvent) {
+			AtomActivatedEvent aae = (AtomActivatedEvent) event;
+			if (aae.getAtom() == atom && !isActive) {
+				isActive = true;
+				setImage(DebuggerPlugin.IMAGE_MINUS);
+				eventBus.sendEvent(RedrawEvent.RULE_DETAILS);
+			}
+		}
+		else if (event instanceof AtomDeactivatedEvent) {
+			AtomDeactivatedEvent ade = (AtomDeactivatedEvent) event;
+			if (ade.getAtom() == atom && isActive) {
+				isActive = false;
+				setImage(DebuggerPlugin.IMAGE_PLUS);
+				eventBus.sendEvent(RedrawEvent.RULE_DETAILS);
+			}
+		}
 	}
 	
 	

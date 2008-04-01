@@ -25,7 +25,6 @@ public class TextPartAtom extends TextPartWord implements DebuggerEventBusListen
 
 	
 	private DebuggerAtom atom;
-	private Color background = COLOR_DEFAULT_BACKGROUND;
 	private DebuggerEventBus eventBus;
 	
 	
@@ -41,7 +40,7 @@ public class TextPartAtom extends TextPartWord implements DebuggerEventBusListen
 		currentStyleRange.start = getOffset();
 		currentStyleRange.length = getLength();
 		currentStyleRange.foreground = getForeground();
-		currentStyleRange.background = background;
+		currentStyleRange.background = getBackground();
 		return currentStyleRange;
 	}
 
@@ -64,7 +63,14 @@ public class TextPartAtom extends TextPartWord implements DebuggerEventBusListen
 	}
 
 	public void clicked() {
-		//TODO
+		if (!atom.isActive()) {
+			eventBus.sendEvent(new AtomActivatedEvent(atom));
+			eventBus.sendEvent(RedrawEvent.RULE_DETAILS);
+		}
+		else {
+			eventBus.sendEvent(new AtomDeactivatedEvent(atom));
+			eventBus.sendEvent(RedrawEvent.RULE_DETAILS);
+		}
 	}
 	
 	@Override

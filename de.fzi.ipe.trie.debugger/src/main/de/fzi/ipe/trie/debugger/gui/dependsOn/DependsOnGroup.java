@@ -12,18 +12,26 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
 import de.fzi.ipe.trie.debugger.gui.RuleListContentProvider;
+import de.fzi.ipe.trie.debugger.gui.events.AtomActivatedEvent;
+import de.fzi.ipe.trie.debugger.gui.events.AtomDeactivatedEvent;
+import de.fzi.ipe.trie.debugger.gui.events.AtomFocussedEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
+import de.fzi.ipe.trie.debugger.gui.events.RedrawEvent;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
 
 public class DependsOnGroup implements DebuggerEventBusListener{
 
+	private DebuggerRule rule;
+	private DebuggerEventBus eventBus;
+	
 	private TableViewer dependsOnViewer;
 	private DependsOnLabelProvider labelProvider = new DependsOnLabelProvider();
 	
 	public DependsOnGroup(Composite parent, final DebuggerEventBus eventBus) {
+		this.eventBus = eventBus;
 		eventBus.addListener(this);
 		
 		Group dependsOn = new Group(parent, SWT.NONE);
@@ -52,10 +60,31 @@ public class DependsOnGroup implements DebuggerEventBusListener{
 	}
 
 	public void eventNotification(DebuggerEvent event) {
+		if (event == RedrawEvent.DEPENDS_ON) {
+			if (rule != null) {
+				dependsOnViewer.setInput(rule.getAllPossibilities());
+				labelProvider.setRulesThatSupplyBindings(rule.getRulesThatSupplyBindings());
+			}
+		}
 		if (event instanceof SelectedRuleEvent) {
-			SelectedRuleEvent sre = (SelectedRuleEvent) event;
-			dependsOnViewer.setInput(sre.getRule().getAllPossibilities());
-			labelProvider.setRulesThatSupplyBindings(sre.getRule().getRulesThatSupplyBindings());
+			SelectedRuleEvent eventS = (SelectedRuleEvent) event;
+			rule = eventS.getRule();
+			eventBus.sendEvent(RedrawEvent.DEPENDS_ON);
+		}
+		else if (event instanceof AtomFocussedEvent) {
+			AtomFocussedEvent afe = (AtomFocussedEvent) event;
+			rule = afe.getRule();
+			eventBus.sendEvent(RedrawEvent.DEPENDS_ON);
+		}
+		else if (event instanceof AtomActivatedEvent) {
+			AtomActivatedEvent ave = (AtomActivatedEvent) event;
+			rule = ave.getAtom().getRule();
+			eventBus.sendEvent(RedrawEvent.DEPENDS_ON);
+		}
+		else if (event instanceof AtomDeactivatedEvent) {
+			AtomDeactivatedEvent ave = (AtomDeactivatedEvent) event;
+			rule = ave.getAtom().getRule();
+			eventBus.sendEvent(RedrawEvent.DEPENDS_ON);
 		}
 	}
 	
