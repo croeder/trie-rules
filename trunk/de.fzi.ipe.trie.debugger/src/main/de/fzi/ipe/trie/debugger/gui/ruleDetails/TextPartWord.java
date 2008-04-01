@@ -1,13 +1,6 @@
 package de.fzi.ipe.trie.debugger.gui.ruleDetails;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.ui.ISelectionListener;
 
 public class TextPartWord implements TextPart {
 

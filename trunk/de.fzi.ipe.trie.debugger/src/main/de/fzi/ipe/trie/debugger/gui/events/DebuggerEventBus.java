@@ -12,7 +12,9 @@ import org.eclipse.swt.widgets.Display;
  *  - the notification methods are all called from the UI thread
  *  - that all elements receive the events in the same order
  * 
- * Its a bit tricky to have it work even if listeners are added during event distribution (frequently encountered in this program)
+ * Its a bit tricky to have it work even if listeners are added during event distribution 
+ * (frequently encountered in this program) - which explains the odd listeners_toAdd and toRemove 
+ * sets. 
  * @author zach
  *
  */

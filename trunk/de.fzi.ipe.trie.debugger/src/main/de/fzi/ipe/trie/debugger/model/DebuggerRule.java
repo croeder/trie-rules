@@ -15,17 +15,13 @@ import de.fzi.ipe.trie.inference.prooftree.ProoftreeRuleNode;
 
 /**
  * @author zach
+ * ! This class isn't caching anything, its strongly recommended to use the CachingDebuggerRule subclass. 
  */
 public class DebuggerRule  {
 	
 	private Rule rule;
 	private List<DebuggerAtom> bodyClauses = new ArrayList<DebuggerAtom>(),headClauses=new ArrayList<DebuggerAtom>();	
-	private Result result;
 		
-	private Set<DebuggerRule> rulesThatSupplyBindings = new HashSet<DebuggerRule>();	
-	private DebuggerRule[] allPossibilities;	
-	
-	
 	public String getName() {
 		return rule.getName();
 	}
@@ -33,20 +29,7 @@ public class DebuggerRule  {
 	public Rule getRule() {
 		return rule;
 	}
-	
-	public boolean hasCalculatedBindingForAllLiterals() { 
-		for (DebuggerAtom atom: bodyClauses) { 
-			if (atom.hasCalculatedBinding()) return false;
-		}
-		return true;
-	}
-
-	public void calculateBindingsForAllLiterals() {
-		for (DebuggerAtom atom: bodyClauses) {
-			atom.getBindings();
-		}		
-	}
-	
+		
 	protected DebuggerRule(Rule rule) {
 		this.rule = rule;
 		for (Atom a: rule.getHead()) {
@@ -56,31 +39,37 @@ public class DebuggerRule  {
 			bodyClauses.add(new DebuggerAtom(a,this));
 		}	
 	}
-			
-	protected void init() {
-		for (DebuggerAtom a: headClauses) a.getPossibilities();
-		for (DebuggerAtom a: bodyClauses) a.getPossibilities();
-
-		HashSet<DebuggerRule> toReturn = new HashSet<DebuggerRule>();
-		for (DebuggerAtom a: bodyClauses) {
-			for (DebuggerRule r: a.getPossibilities()) toReturn.add(r);
+				
+	/**
+	 * Returns the bindings for the variables only of the active literals. 
+	 * @return
+	 */
+	public Result getBindings() {
+		SimpleBackwardChainer reasoner = new SimpleBackwardChainer(DebuggerRuleStore.getKnowledgeBase());
+		
+		List<Atom> activeBodyAtoms = new ArrayList<Atom>();
+		for (DebuggerAtom da: bodyClauses) {
+			if (da.isActive()) activeBodyAtoms.add(da.getAtom());
 		}
-		allPossibilities = toReturn.toArray(new DebuggerRule[toReturn.size()]);		
+		Result toReturn = reasoner.hasProof(activeBodyAtoms.toArray(new Atom[0]));
+		return toReturn; 
 	}
 	
-	public Result getBindings() {
-		if (result != null) {
-			return result;
+	public List<DebuggerRule> getAllPossibilities() {
+		List<DebuggerRule> allPossibilities = new ArrayList<DebuggerRule>();
+		HashSet<DebuggerRule> toReturn = new HashSet<DebuggerRule>();
+		for (DebuggerAtom a: bodyClauses) {
+			if (a.isActive()) {
+				for (DebuggerRule r: a.getPossibilities()) toReturn.add(r);
+			}
 		}
-		else {
-			SimpleBackwardChainer reasoner = new SimpleBackwardChainer(DebuggerRuleStore.getKnowledgeBase());
-			result = reasoner.hasProof(rule.getBody());
-			calculateRulesThatSupplyBindings();
-			return result;
-		}
+		allPossibilities.addAll(toReturn);
+		return allPossibilities;
 	}
-
-	private void calculateRulesThatSupplyBindings() {
+		
+	public Set<DebuggerRule> getRulesThatSupplyBindings() {
+		Set<DebuggerRule> rulesThatSupplyBindings = new HashSet<DebuggerRule>();
+		Result result = getBindings();
 		for (int i=0;i<result.numberResults();i++) {
 			Prooftree prooftree = result.getProoftree(i);
 			List<ProoftreeNode> children = prooftree.getRootNode().getChildren();
@@ -92,29 +81,15 @@ public class DebuggerRule  {
 				}
 			}
 		}
+		return rulesThatSupplyBindings;
+	}
+		
+	public List<DebuggerAtom> getBodyClauses() {
+	    return bodyClauses;
 	}
 	
-	public DebuggerRule[] getAllPossibilities() {
-	    if (allPossibilities == null) init();
-		return allPossibilities;
-	}
-	
-	
-	public ProoftreeNode getProofTreeRoot(int resultLine) {
-		return result.getProoftree(resultLine).getRootNode();
-	}
-
-	
-	public Set<DebuggerRule> getRulesThatSupplyBindings() {
-	    return rulesThatSupplyBindings;
-	}
-	
-	public DebuggerAtom[] getBodyClauses() {
-	    return bodyClauses.toArray(new DebuggerAtom[bodyClauses.size()]);
-	}
-	
-	public DebuggerAtom[] getHeadClauses() {
-	    return headClauses.toArray(new DebuggerAtom[headClauses.size()]);
+	public List<DebuggerAtom> getHeadClauses() {
+	    return headClauses;
 	}
 	
 	

@@ -37,7 +37,7 @@ public class AtomFocusButton extends CustomButton implements DebuggerEventBusLis
 		}
 		else {
 			setImage(DebuggerPlugin.IMAGE_FOCUS_PURPLE);
-			eventBus.sendEvent(new AtomFocussedEvent(null));
+			eventBus.sendEvent(new AtomFocussedEvent(null,atom.getRule()));
 			eventBus.sendEvent(RedrawEvent.RULE_DETAILS);
 		}
 	}

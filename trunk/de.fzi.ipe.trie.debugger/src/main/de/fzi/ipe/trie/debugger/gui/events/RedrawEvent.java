@@ -13,6 +13,8 @@ public class RedrawEvent implements DebuggerEvent{
 
 	public static final RedrawEvent DEBUG_VIEW = new RedrawEvent("DEBUG_VIEW");
 	public static final RedrawEvent RULE_DETAILS = new RedrawEvent("RULE_DETAILS");
+	public static final RedrawEvent RULE_BINDINGS = new RedrawEvent("RULE_BINDINGS");
+	public static final RedrawEvent DEPENDS_ON = new RedrawEvent("DEPENDS_ON");
 	
 	
 	private String type;

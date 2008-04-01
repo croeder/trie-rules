@@ -38,7 +38,8 @@ public class OffsetIndex {
 	}
 	
 	public TextPart getTextPartAtOffset(int offset) {
-		return textParts.get(offset);
+		if (offset>-1 && offset < textParts.size()) return textParts.get(offset);
+		else return null;
 	}
 	
 	public StyleRange[] getStyleRanges() {
