@@ -3,7 +3,7 @@
 <schema targetNamespace="de.fzi.ipe.trie.fileManagement">
 <annotation>
       <appInfo>
-         <meta.schema plugin="de.fzi.ipe.trie.fileManagement" id="de.fzi.ipe.trie.fileManagement.knowledgeBaseListener" name="Knowledge Base Listener"/>
+         <meta.schema plugin="de.fzi.ipe.trie.fileManagement" id="de.fzi.ipe.trie.fileManagement.fileManagementListener" name="File Management Listener"/>
       </appInfo>
       <documentation>
          Plugins can extend this extension point to optain the knowledge base managed by the fileManagement plugin.
