@@ -5,7 +5,9 @@
 [Rule_Results:
 	(x,x,x)
 <-
-    (?A,rdf:type,zach:father)]
+    (?A,rdf:type,zach:father)
+    (?A,rdf:type,?B)
+]
     
 [Rule_Father:
     (?A,rdf:type,zach:father)
