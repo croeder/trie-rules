@@ -1,6 +1,7 @@
 package de.fzi.ipe.trie.debugger;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -27,7 +28,6 @@ import com.hp.hpl.jena.shared.JenaException;
 
 import de.fzi.ipe.trie.debugger.gui.DebugLabelProvider;
 import de.fzi.ipe.trie.debugger.gui.HeadlineComposite;
-import de.fzi.ipe.trie.debugger.gui.RuleDebugContentProvider;
 import de.fzi.ipe.trie.debugger.gui.actions.BackAction;
 import de.fzi.ipe.trie.debugger.gui.actions.ForwardAction;
 import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleAction;
@@ -42,6 +42,7 @@ import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.gui.prooftree.ProoftreeGroup;
 import de.fzi.ipe.trie.debugger.gui.ruleDetails.RuleDetailsGroup;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
+import de.fzi.ipe.trie.debugger.model.DebuggerRuleStore;
 
 public class DebugView extends ViewPart implements DebuggerEventBusListener {
 
@@ -61,7 +62,6 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 	public static final String VIEW_ID = "de.fzi.ipe.trie.debugger.InferenceExplorer";
 	
 	
-	private RuleDebugContentProvider contentProvider;
 
 	private static DebugView singleton;
 	
@@ -83,7 +83,6 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 	 * The constructor.
 	 */
 	public DebugView() {
-		contentProvider = new RuleDebugContentProvider();
 		singleton = this;
 		eventBus.addListener(this);
 	}
@@ -184,7 +183,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 			data.setLayoutData(dataGD);
 			data.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-			new BindingsGroup(data,dynamic_b,contentProvider,eventBus);
+			new BindingsGroup(data,dynamic_b,eventBus);
 
 			Composite data2 = new Composite(mainComposite,SWT.NONE);
 			GridData data2GD = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
@@ -243,8 +242,9 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 		refresh = new Action("Refresh") {
 			public void run() {
 				try {
-					contentProvider.reload();
-				} catch (JenaException je) {
+			    	DebuggerRuleStore.clearCache();
+			    	DebuggerRuleStore.reload();
+			    } catch (JenaException je) {
 					handleException(je, "Could not reload files");
 				} catch (IOException e) {
 					handleException(e, "Could not reload files - "+ e.getMessage());
@@ -256,10 +256,12 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 	}
 
 	private void createRuleActions() {
-		DebuggerRule[] rules = contentProvider.getAllRules();
-		ruleActions = new Action[rules.length];
-		for (int i = 0; i < rules.length; i++) {
-			ruleActions[i] = new SelectRuleAction(rules[i],eventBus);
+		Collection<DebuggerRule> rules = DebuggerRuleStore.getRules();
+		ruleActions = new Action[rules.size()];
+		int i=0;
+		for (DebuggerRule rule:rules) {
+			 ruleActions[i] = new SelectRuleAction(rule,eventBus);
+			 i++;
 		}
 	}
 

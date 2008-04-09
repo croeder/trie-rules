@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import de.fzi.ipe.trie.debugger.DebuggerPlugin;
 import de.fzi.ipe.trie.debugger.gui.ResultLineProvider;
-import de.fzi.ipe.trie.debugger.gui.RuleDebugContentProvider;
 import de.fzi.ipe.trie.debugger.gui.events.AtomActivatedEvent;
 import de.fzi.ipe.trie.debugger.gui.events.AtomDeactivatedEvent;
 import de.fzi.ipe.trie.debugger.gui.events.AtomFocussedEvent;
@@ -41,20 +40,20 @@ public class BindingsGroup implements DebuggerEventBusListener{
 	
 	private DebuggerRule rule;
 	
-	public BindingsGroup(Composite parent, boolean dynamic_b, final RuleDebugContentProvider contentProvider, DebuggerEventBus eventBus) {
+	public BindingsGroup(Composite parent, boolean dynamic_b, DebuggerEventBus eventBus) {
 		this.eventBus = eventBus;
 		eventBus.addListener(this);
 		Group bindings = new Group(parent, SWT.NONE);
 		bindings.setText("The Current Rule Fires For: ");
 
 		if (dynamic_b == true) {
-			makeBindingsTable(contentProvider, bindings);
+			makeBindingsTable(bindings);
 		} else {
 			makeNonDynamicMessage(bindings);
 		}
 	}
 
-	private void makeBindingsTable(final RuleDebugContentProvider contentProvider, Group bindings) {
+	private void makeBindingsTable(Group bindings) {
 		GridLayout layout = new GridLayout();
 		layout.horizontalSpacing = 0;
 		layout.verticalSpacing = 0;
