@@ -34,6 +34,7 @@ import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleAction;
 import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleDropDownAction;
 import de.fzi.ipe.trie.debugger.gui.bindings.BindingsGroup;
 import de.fzi.ipe.trie.debugger.gui.dependsOn.DependsOnGroup;
+import de.fzi.ipe.trie.debugger.gui.events.DataReloadEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
@@ -175,7 +176,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 
 		new HeadlineComposite(mainComposite,eventBus);
 
-		RuleDetailsGroup ruleDetails = new RuleDetailsGroup(mainComposite,eventBus);
+		RuleDetailsGroup ruleDetails = new RuleDetailsGroup(mainComposite,debuggerRuleStore,eventBus);
 		Point point = ruleDetails.getSize();
 		scrolledComposite.setMinSize(Math.max(point.x, 500), point.y + 600);
 		
@@ -250,6 +251,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 				} catch (IOException e) {
 					handleException(e, "Could not reload files - "+ e.getMessage());
 				}
+				eventBus.sendEvent(new DataReloadEvent());
 			}
 		};
 		refresh.setImageDescriptor(DebuggerPlugin.loadImage(DebuggerPlugin.IMAGE_REFRESH));
@@ -270,7 +272,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 	 * Passing the focus request to the viewer's control.
 	 */
 	public void setFocus() {
-		//		viewer.getControl().setFocus();
+		//	viewer.getControl().setFocus();
 	}
 
 	/**

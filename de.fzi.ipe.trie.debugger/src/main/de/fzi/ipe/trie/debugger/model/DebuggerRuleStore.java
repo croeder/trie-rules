@@ -27,7 +27,7 @@ public class DebuggerRuleStore implements KnowledgeBaseListener{
 	}
 	
 	
-	public DebuggerRule getRule(Rule rule) {
+	private DebuggerRule getRule(Rule rule) {
 		DebuggerRule toReturn = ruleCache.get(rule);
 		if (toReturn == null) {
 			toReturn = new CachingDebuggerRule(rule,this);
