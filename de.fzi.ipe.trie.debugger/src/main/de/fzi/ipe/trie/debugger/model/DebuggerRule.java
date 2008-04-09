@@ -21,7 +21,8 @@ public class DebuggerRule  {
 	
 	private Rule rule;
 	private List<DebuggerAtom> bodyClauses = new ArrayList<DebuggerAtom>(),headClauses=new ArrayList<DebuggerAtom>();	
-		
+	private DebuggerRuleStore debuggerRuleStore;
+	
 	public String getName() {
 		return rule.getName();
 	}
@@ -30,7 +31,8 @@ public class DebuggerRule  {
 		return rule;
 	}
 		
-	protected DebuggerRule(Rule rule) {
+	protected DebuggerRule(Rule rule, DebuggerRuleStore debuggerRuleStore) {
+		this.debuggerRuleStore = debuggerRuleStore;
 		this.rule = rule;
 		for (Atom a: rule.getHead()) {
 			headClauses.add(new DebuggerAtom(a,this));
@@ -39,13 +41,17 @@ public class DebuggerRule  {
 			bodyClauses.add(new DebuggerAtom(a,this));
 		}	
 	}
-				
+	
+	protected DebuggerRuleStore getDebuggerRuleStore() {
+		return debuggerRuleStore;
+	}
+	
 	/**
 	 * Returns the bindings for the variables only of the active literals. 
 	 * @return
 	 */
 	public Result getBindings() {
-		SimpleBackwardChainer reasoner = new SimpleBackwardChainer(DebuggerRuleStore.getKnowledgeBase());
+		SimpleBackwardChainer reasoner = new SimpleBackwardChainer(debuggerRuleStore.getKnowledgeBase());
 		
 		List<Atom> activeBodyAtoms = new ArrayList<Atom>();
 		for (DebuggerAtom da: bodyClauses) {
@@ -76,7 +82,7 @@ public class DebuggerRule  {
 			for (ProoftreeNode pn: children) {
 				for (ProoftreeNode candidate: pn.getChildren()) {
 					if (candidate instanceof ProoftreeRuleNode) {
-						rulesThatSupplyBindings.add(DebuggerRuleStore.getRule(((ProoftreeRuleNode)candidate).getRule()));
+						rulesThatSupplyBindings.add(debuggerRuleStore.getRule(((ProoftreeRuleNode)candidate).getRule()));
 					}
 				}
 			}

@@ -15,8 +15,8 @@ public class CachingDebuggerRule extends DebuggerRule {
 	private boolean[] atomActiveStatus; 
 	
 	
-	protected CachingDebuggerRule(Rule rule) {
-		super(rule);
+	protected CachingDebuggerRule(Rule rule, DebuggerRuleStore debuggerRuleStore) {
+		super(rule,debuggerRuleStore);
 		atomActiveStatus = new boolean[getBodyClauses().size()];
 	}
 
