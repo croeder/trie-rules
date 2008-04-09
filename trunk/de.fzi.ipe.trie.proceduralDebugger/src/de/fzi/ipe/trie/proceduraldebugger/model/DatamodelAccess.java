@@ -1,10 +1,10 @@
 package de.fzi.ipe.trie.proceduraldebugger.model;
 
 import de.fzi.ipe.trie.filemanagement.extensionPoint.Datamodel;
-import de.fzi.ipe.trie.filemanagement.extensionPoint.KnowledgeBaseListener;
+import de.fzi.ipe.trie.filemanagement.extensionPoint.FileManagementListener;
 import de.fzi.ipe.trie.inference.KnowledgeBase;
 
-public class DatamodelAccess implements KnowledgeBaseListener{
+public class DatamodelAccess implements FileManagementListener{
 
 	private static Datamodel dm;
 	
