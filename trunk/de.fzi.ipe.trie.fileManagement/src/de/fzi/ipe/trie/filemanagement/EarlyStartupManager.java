@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IStartup;
 
-import de.fzi.ipe.trie.filemanagement.extensionPoint.KnowledgeBaseListener;
+import de.fzi.ipe.trie.filemanagement.extensionPoint.FileManagementListener;
 
 public class EarlyStartupManager implements IStartup{
 
@@ -23,7 +23,7 @@ public class EarlyStartupManager implements IStartup{
 			for (IExtension ext: extensions) {
 				IConfigurationElement[] configurationElements = ext.getConfigurationElements();
 				for (IConfigurationElement confi: configurationElements) {
-					KnowledgeBaseListener list = (KnowledgeBaseListener) confi.createExecutableExtension("ClassName");
+					FileManagementListener list = (FileManagementListener) confi.createExecutableExtension("ClassName");
 					list.setDatamodel(instance);
 				}
 			}

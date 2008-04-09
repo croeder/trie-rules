@@ -17,19 +17,19 @@ import com.hp.hpl.jena.rdf.model.ModelMaker;
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.RuleParser;
 import de.fzi.ipe.trie.filemanagement.extensionPoint.Datamodel;
-import de.fzi.ipe.trie.filemanagement.extensionPoint.KnowledgeBaseListener;
+import de.fzi.ipe.trie.filemanagement.extensionPoint.FileManagementListener;
 import de.fzi.ipe.trie.inference.KnowledgeBase;
 
 
 /**
- * Holds information about the rdf and rule files of the debugger.
+ * Holds information about the RDF and rule files of the debugger.
  */
 public class SourceFiles implements Datamodel{
 	
 	private static SourceFiles instance = new SourceFiles();
 	
 	private KnowledgeBase knowledgeBase = new KnowledgeBase();
-	private Set<KnowledgeBaseListener> listeners = new HashSet<KnowledgeBaseListener>();
+	private Set<FileManagementListener> listeners = new HashSet<FileManagementListener>();
 	private Set<File> ruleFiles = new HashSet<File>();
 	private Set<File> rdfFiles = new HashSet<File>();
 	
@@ -43,7 +43,7 @@ public class SourceFiles implements Datamodel{
 	}
 	
 	/**
-	 * Stors the location of all files currently active - used to reload these files the next time the program 
+	 * Stores the location of all files currently active - used to reload these files the next time the program 
 	 * is opened. 
 	 * @see SourceFiles#loadFiles()
 	 */
@@ -109,14 +109,10 @@ public class SourceFiles implements Datamodel{
 		return toReturn;
 	}
 	
-	public void addListener(KnowledgeBaseListener list) {
+	public void addListener(FileManagementListener list) {
 		listeners.add(list);
 	}
-	
-	private void notifyListeners() {
-		for (KnowledgeBaseListener lis: listeners) lis.knowledgeBaseChanged();
-	}
-	
+		
 	public KnowledgeBase getKnowledgeBase() {
 		return knowledgeBase;
 	}
@@ -129,7 +125,6 @@ public class SourceFiles implements Datamodel{
 		for (File f:ruleFiles) {
 			addRuleToKB(f);
 		}	
-		notifyListeners();
 	}
 	
 	public Set<File> getRuleFiles() {
@@ -144,7 +139,6 @@ public class SourceFiles implements Datamodel{
 		if (!rdfFiles.contains(file)) {
 			addRDFToKB(file);
 			rdfFiles.add(file);
-			notifyListeners();
 		}
 	}
 	
@@ -152,7 +146,6 @@ public class SourceFiles implements Datamodel{
 		if (!ruleFiles.contains(file)) {
 			addRuleToKB(file);
 			ruleFiles.add(file);
-			notifyListeners();
 		}
 	}
 	
