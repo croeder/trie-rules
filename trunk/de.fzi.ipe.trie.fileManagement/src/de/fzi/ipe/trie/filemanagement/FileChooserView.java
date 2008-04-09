@@ -26,10 +26,9 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.hp.hpl.jena.shared.JenaException;
 
-import de.fzi.ipe.trie.filemanagement.extensionPoint.Datamodel;
-import de.fzi.ipe.trie.filemanagement.extensionPoint.FileManagementListener;
 import de.fzi.ipe.trie.filemanagement.gui.FileLabelProvider;
 import de.fzi.ipe.trie.filemanagement.gui.FileSetContentProvider;
+import de.fzi.ipe.trie.inference.KnowledgeBaseListener;
 
 public class FileChooserView extends ViewPart {
 
@@ -49,16 +48,14 @@ public class FileChooserView extends ViewPart {
 		createRDFFileFields(parent);
 		createRuleFileFields(parent);
 		
-		SourceFiles.getInstance().addListener(new FileManagementListener() {
+		SourceFiles.getInstance().getKnowledgeBase().addListener(new KnowledgeBaseListener() {
 
 			public void knowledgeBaseChanged() {
 				if (rdfFileList != null) rdfFileList.refresh();
 				if (ruleFileList != null) ruleFileList.refresh();
 			}
-
-			public void setDatamodel(Datamodel dm) {
-				;
-			}});
+			
+			});
 	}
 
 	private void createRuleFileFields(final Composite parent) {

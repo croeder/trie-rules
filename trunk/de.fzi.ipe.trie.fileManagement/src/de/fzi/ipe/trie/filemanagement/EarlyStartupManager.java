@@ -18,7 +18,7 @@ public class EarlyStartupManager implements IStartup{
 		
 		try {
 			IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
-			IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint("de.fzi.ipe.trie.fileManagement.knowledgeBaseListener");
+			IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint("de.fzi.ipe.trie.fileManagement.fileManagementListener");
 			IExtension[] extensions = extensionPoint.getExtensions();
 			for (IExtension ext: extensions) {
 				IConfigurationElement[] configurationElements = ext.getConfigurationElements();
