@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -28,17 +30,30 @@ public class KnowledgeBase {
 	private Model model;
 	private RuleBase ruleBase = new RuleBase();
 
-	
+	private Set<KnowledgeBaseListener> listeners = new HashSet<KnowledgeBaseListener>();
 	
 	public KnowledgeBase() {
 		ModelMaker maker = ModelFactory.createMemModelMaker();
 		model = maker.createDefaultModel();		
 	}
 	
+	public void addListener(KnowledgeBaseListener listener) {
+		listeners.add(listener);
+	}
+	
+	public void removeListener(KnowledgeBaseListener listener) {
+		listeners.add(listener);
+	}
+	
+	private void notifyListeners() {
+		for (KnowledgeBaseListener l:listeners) l.knowledgeBaseChanged();
+	}
+	
 	public void clear() {
 		ModelMaker maker = ModelFactory.createMemModelMaker();
 		model = maker.createDefaultModel();		
 		ruleBase = new RuleBase();
+		notifyListeners(); 
 	}
 	
 	public KnowledgeBase(Model model, Collection<Rule> rules) {
@@ -49,6 +64,7 @@ public class KnowledgeBase {
 	
 	public void addModel(Model model) {
 		this.model.add(model);
+		notifyListeners();
 	}
 	
 	public void addModel(String path) throws IOException {
@@ -56,16 +72,19 @@ public class KnowledgeBase {
 		Model model = maker.createDefaultModel();
 		model.read(new FileInputStream(path), null, "TURTLE");
 		this.model.add(model);
+		notifyListeners();
 	}
 	
 	public void addRules(String path) throws IOException {
 		File file = new File(path);
 		Collection<Rule> rules = RuleParser.readRules(file);
 		this.ruleBase.addRules(rules);
+		notifyListeners();
 	}
 	
 	public void addRules(Collection<Rule> rules) {
 		ruleBase.addRules(rules);
+		notifyListeners();
 	}
 	
 	public RuleBase getRuleBase() {
