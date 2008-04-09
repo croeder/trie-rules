@@ -13,9 +13,10 @@ import java.util.Stack;
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.filemanagement.extensionPoint.Datamodel;
 import de.fzi.ipe.trie.inference.KnowledgeBase;
+import de.fzi.ipe.trie.inference.KnowledgeBaseListener;
 
 
-public class DebuggerRuleStore {
+public class DebuggerRuleStore implements KnowledgeBaseListener{
 
 	private Datamodel dm;
 	private Map<Rule,DebuggerRule> ruleCache = new HashMap<Rule,DebuggerRule>();
