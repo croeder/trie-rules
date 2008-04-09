@@ -19,7 +19,7 @@ public class RuleHistory {
     
     public void add(DebuggerRule string) {
         if (string != null) {
-            Iterator it = list.iterator();
+            Iterator<DebuggerRule> it = list.iterator();
             while (it.hasNext()) {
                 if (it.next().equals(string)) it.remove();
             }

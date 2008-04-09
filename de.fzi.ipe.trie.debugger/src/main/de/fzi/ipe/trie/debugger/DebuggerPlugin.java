@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -72,7 +73,7 @@ public class DebuggerPlugin extends AbstractUIPlugin implements IStartup{
 	
 	public static URL getFile(String path_s) {
 	    Path path = new Path(path_s);
-	    URL url = singleton.find(path);
+	    URL url = FileLocator.find(singleton.getBundle(), path, null);
 	    return url;	    
 	}
 	
@@ -90,7 +91,7 @@ public class DebuggerPlugin extends AbstractUIPlugin implements IStartup{
         if (toReturn == null) {
 	        String iconPath = "icons/";
 	        Path path = new Path(iconPath + relativePath);
-	        URL url = singleton.find(path);
+		    URL url = FileLocator.find(singleton.getBundle(), path, null);
 	        toReturn = ImageDescriptor.createFromURL(url);
 	        imageDescriptors.put(relativePath, toReturn);
         }
