@@ -16,7 +16,9 @@
          point="org.eclipse.ui.startup">
    </extension>
    <extension
-         point="de.fzi.ipe.trie.fileManagement.knowledgeBaseListener">
-      <Listener ClassName="de.fzi.ipe.trie.debugger.model.DebuggerRuleStore"/>
+         point="de.fzi.ipe.trie.fileManagement.fileManagementListener">
+      <Listener
+            ClassName="de.fzi.ipe.trie.debugger.DatamodelAccess">
+      </Listener>
    </extension>
 </plugin>

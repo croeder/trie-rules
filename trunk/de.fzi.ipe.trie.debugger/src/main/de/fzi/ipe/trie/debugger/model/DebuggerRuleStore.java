@@ -12,15 +12,18 @@ import java.util.Stack;
 
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.filemanagement.extensionPoint.Datamodel;
-import de.fzi.ipe.trie.filemanagement.extensionPoint.KnowledgeBaseListener;
 import de.fzi.ipe.trie.inference.KnowledgeBase;
 
 
-public class DebuggerRuleStore implements KnowledgeBaseListener {
+public class DebuggerRuleStore {
 
-	private static Datamodel dm;
+	private Datamodel dm;
 	private Map<Rule,DebuggerRule> ruleCache = new HashMap<Rule,DebuggerRule>();
 
+	
+	public DebuggerRuleStore(Datamodel dm) {
+		this.dm = dm;
+	}
 	
 	
 	public DebuggerRule getRule(Rule rule) {
@@ -83,12 +86,6 @@ public class DebuggerRuleStore implements KnowledgeBaseListener {
 	public void knowledgeBaseChanged() {
 		ruleCache.clear();
 	}
-
-
-	public void setDatamodel(Datamodel dm) {
-		DebuggerRuleStore.dm = dm;
-	}
-
 
 	public void reload() throws IOException {
 		ruleCache.clear();
