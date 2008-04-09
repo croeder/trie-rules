@@ -4,7 +4,6 @@ Bundle-Name: Rcp Plug-in
 Bundle-SymbolicName: de.fzi.ipe.trie.rcp; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: de.fzi.ipe.trie.rcp.Activator
-Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  de.fzi.ipe.trie,
