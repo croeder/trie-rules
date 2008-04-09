@@ -2,7 +2,7 @@ package de.fzi.ipe.trie.inference;
 
 import de.fzi.ipe.trie.Term;
 
-public class ProofVariable extends Term implements Comparable {
+public class ProofVariable extends Term implements Comparable<ProofVariable> {
 	
 	static int counter=0;
 	
@@ -22,8 +22,8 @@ public class ProofVariable extends Term implements Comparable {
 		return "?"+id;
 	}
 
-	public int compareTo(Object other) {
-		return (id - ((ProofVariable)other).id);
+	public int compareTo(ProofVariable other) {
+		return (id - other.id);
 		
 	}
 	
