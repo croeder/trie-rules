@@ -2,7 +2,7 @@
 @prefix zach: <http://www.fzi.de/ipe/zach#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 
-[Rule_Result:
+[Rule_Results:
 	(x,x,x)
 <-
     (?A,rdf:type,zach:father)]
