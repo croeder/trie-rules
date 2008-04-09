@@ -25,7 +25,12 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="de.fzi.ipe.trie.rcp.InferenceExplorer"
-            name="Inference Explorer"/>
+            name="Inference Explorer">
+         <property
+               name="appName"
+               value="Inference Explorer">
+         </property>
+      </product>
    </extension>
 
    
