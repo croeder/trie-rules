@@ -1,4 +1,4 @@
-package de.fzi.ipe	.trie.debugger.model;
+package de.fzi.ipe.trie.debugger.model;
 
 
 import java.io.IOException;
