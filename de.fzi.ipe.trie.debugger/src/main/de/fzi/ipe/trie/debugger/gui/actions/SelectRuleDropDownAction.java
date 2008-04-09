@@ -37,13 +37,15 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator, De
     private DebuggerEventBus eventBus;
     private DebuggerRuleStore ruleStore;
     
-    private LastAccessedHistory history = new LastAccessedHistory(MAX_NUMBER_RULES);
+    private LastAccessedHistory history;
     
     
     public SelectRuleDropDownAction(DebugView viewPart, DebuggerRuleStore ruleStore, DebuggerEventBus eventBus) {
         this.viewPart = viewPart;
         this.ruleStore = ruleStore;
         this.eventBus = eventBus;
+        
+        history = new LastAccessedHistory(MAX_NUMBER_RULES);
         
         eventBus.addListener(this);
         

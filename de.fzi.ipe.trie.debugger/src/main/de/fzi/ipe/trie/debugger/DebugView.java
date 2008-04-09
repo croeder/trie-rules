@@ -152,7 +152,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 
 	public void createPartControl(Composite parent) {
 		this.parent = parent;
-		debuggerRuleStore = new DebuggerRuleStore();
+		debuggerRuleStore = new DebuggerRuleStore(DatamodelAccess.getDatamodel());
 		
 		createActions();
 		createMenu();
