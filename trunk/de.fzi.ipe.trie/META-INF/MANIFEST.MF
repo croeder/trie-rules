@@ -21,7 +21,6 @@ Bundle-ClassPath: Trie.jar,
  lib/wstx-asl-3.0.0.jar,
  lib/xercesImpl.jar,
  lib/xml-apis.jar
-Bundle-Localization: plugin
 Export-Package: .,
  EDU.oswego.cs.dl.util.concurrent,
  antlr,
