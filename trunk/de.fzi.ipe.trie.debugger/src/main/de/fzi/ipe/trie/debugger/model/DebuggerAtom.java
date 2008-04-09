@@ -55,7 +55,7 @@ public class DebuggerAtom {
 
 	public DebuggerRule[] getPossibilities() {
 		if (possibilities == null) {
-			Set<DebuggerRule> possibilities2 = DebuggerRuleStore.getPossibilities(this);
+			Set<DebuggerRule> possibilities2 = rule.getDebuggerRuleStore().getPossibilities(this);
 			possibilities = possibilities2.toArray(new DebuggerRule[possibilities2.size()]);
 		}
 		return possibilities;
@@ -66,7 +66,7 @@ public class DebuggerAtom {
 			return results;
 		}
 		else {
-			SimpleBackwardChainer reasoner = new SimpleBackwardChainer(DebuggerRuleStore.getKnowledgeBase());
+			SimpleBackwardChainer reasoner = new SimpleBackwardChainer(rule.getDebuggerRuleStore().getKnowledgeBase());
 			results = reasoner.hasProof(new Atom[] {atom});
 			return results;
 		}

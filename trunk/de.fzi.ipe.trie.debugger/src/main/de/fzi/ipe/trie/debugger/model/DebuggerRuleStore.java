@@ -19,34 +19,29 @@ import de.fzi.ipe.trie.inference.KnowledgeBase;
 public class DebuggerRuleStore implements KnowledgeBaseListener {
 
 	private static Datamodel dm;
-	private static Map<Rule,DebuggerRule> ruleCache = new HashMap<Rule,DebuggerRule>();
+	private Map<Rule,DebuggerRule> ruleCache = new HashMap<Rule,DebuggerRule>();
 
 	
 	
-	public static void clearCache() {
-		ruleCache.clear();
-	}
-
-
-	public static DebuggerRule getRule(Rule rule) {
+	public DebuggerRule getRule(Rule rule) {
 		DebuggerRule toReturn = ruleCache.get(rule);
 		if (toReturn == null) {
-			toReturn = new CachingDebuggerRule(rule);
+			toReturn = new CachingDebuggerRule(rule,this);
 			ruleCache.put(rule,toReturn);
 		}
 		return toReturn;
 	}
 	
-	public static DebuggerRule getRule(String ruleName) {
+	public DebuggerRule getRule(String ruleName) {
 		Rule rule = dm.getKnowledgeBase().getRuleBase().getRule(ruleName);
 		return getRule(rule);
 	}
 	
-	public static KnowledgeBase getKnowledgeBase() {
+	public KnowledgeBase getKnowledgeBase() {
 		return dm.getKnowledgeBase();
 	}
 	
-	public static Set<DebuggerRule> getPossibilities(DebuggerAtom bodyClause) {
+	public Set<DebuggerRule> getPossibilities(DebuggerAtom bodyClause) {
 		List<Rule> matchingRules = dm.getKnowledgeBase().getRuleBase().getMatchingRules(bodyClause.getAtom());
 		Set<DebuggerRule> toReturn = new HashSet<DebuggerRule>();
 		for (Rule r:matchingRules) {
@@ -60,7 +55,7 @@ public class DebuggerRuleStore implements KnowledgeBaseListener {
 	 * @param rule
 	 * @return
 	 */
-	public static Set<DebuggerRule> getCompleteRuleExtent(DebuggerRule rule) {
+	public Set<DebuggerRule> getCompleteRuleExtent(DebuggerRule rule) {
 		Set<DebuggerRule> toReturn = new HashSet<DebuggerRule>();
 		Stack<DebuggerRule> toDo = new Stack<DebuggerRule>();
 		toDo.push(rule);
@@ -77,7 +72,7 @@ public class DebuggerRuleStore implements KnowledgeBaseListener {
 		return toReturn;
 	}
 	
-	public static Collection<DebuggerRule> getRules() {
+	public Collection<DebuggerRule> getRules() {
 		Set<DebuggerRule> toReturn = new HashSet<DebuggerRule>();
 		Collection<Rule> allRules = dm.getKnowledgeBase().getRuleBase().getAllRules();
 		for (Rule r:allRules) toReturn.add(getRule(r));
@@ -86,7 +81,7 @@ public class DebuggerRuleStore implements KnowledgeBaseListener {
 
 
 	public void knowledgeBaseChanged() {
-		clearCache();
+		ruleCache.clear();
 	}
 
 
@@ -95,7 +90,8 @@ public class DebuggerRuleStore implements KnowledgeBaseListener {
 	}
 
 
-	public static void reload() throws IOException {
+	public void reload() throws IOException {
+		ruleCache.clear();
 		dm.reload();
 	}
 

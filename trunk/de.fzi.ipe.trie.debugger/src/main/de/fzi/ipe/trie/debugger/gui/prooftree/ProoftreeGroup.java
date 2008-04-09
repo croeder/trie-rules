@@ -25,9 +25,11 @@ public class ProoftreeGroup implements DebuggerEventBusListener {
 
 	private ProoftreeTreeViewer prooftreeTreeViewer;
 	private DebuggerEventBus eventBus;
+	private DebuggerRuleStore ruleStore;
 	
-	public ProoftreeGroup(Composite parent, boolean showProoftree, DebuggerEventBus eventBus) {
+	public ProoftreeGroup(Composite parent, boolean showProoftree, DebuggerRuleStore ruleStore, DebuggerEventBus eventBus) {
 		this.eventBus = eventBus;
+		this.ruleStore = ruleStore;
 		eventBus.addListener(this);
 		
 		Group bindings = new Group(parent, SWT.NONE);
@@ -42,7 +44,7 @@ public class ProoftreeGroup implements DebuggerEventBusListener {
 					ProoftreeNode node = (ProoftreeNode) sel.getFirstElement();
 					if (node instanceof ProoftreeRuleNode) {
 						Rule rule = ((ProoftreeRuleNode) node).getRule();
-						SelectedRuleEvent e = new SelectedRuleEvent(DebuggerRuleStore.getRule(rule));
+						SelectedRuleEvent e = new SelectedRuleEvent(ProoftreeGroup.this.ruleStore.getRule(rule));
 						ProoftreeGroup.this.eventBus.sendEvent(e);
 					}
 				}

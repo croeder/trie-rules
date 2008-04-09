@@ -35,12 +35,14 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator, De
     private Menu fMenu;
 
     private DebuggerEventBus eventBus;
+    private DebuggerRuleStore ruleStore;
     
     private LastAccessedHistory history = new LastAccessedHistory(MAX_NUMBER_RULES);
     
     
-    public SelectRuleDropDownAction(DebugView viewPart, DebuggerEventBus eventBus) {
+    public SelectRuleDropDownAction(DebugView viewPart, DebuggerRuleStore ruleStore, DebuggerEventBus eventBus) {
         this.viewPart = viewPart;
+        this.ruleStore = ruleStore;
         this.eventBus = eventBus;
         
         eventBus.addListener(this);
@@ -96,7 +98,7 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator, De
         
         listDialog.setContentProvider(new RuleListContentProvider());
         listDialog.setLabelProvider(new RuleListLabelProvider());
-        listDialog.setInput(DebuggerRuleStore.getRules());
+        listDialog.setInput(ruleStore.getRules());
         listDialog.setTitle("Choose Rule");
         listDialog.setMessage("Please choose the rule that you want to debug.");
         int code = listDialog.open();
@@ -128,7 +130,7 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator, De
      * Small class that stores information about the n last accessed rules. The most recently accessed 
      * is returned first.
      */    
-    private static class LastAccessedHistory {
+    private class LastAccessedHistory {
 
     	private DebuggerRule currentRule = null;
     	private LinkedList<DebuggerRule> lastAccessedRules = new LinkedList<DebuggerRule>();
@@ -140,7 +142,7 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator, De
     	}
 
 		private void initialRulesForRuleHistory() {
-			Iterator<DebuggerRule> rules = DebuggerRuleStore.getRules().iterator();
+			Iterator<DebuggerRule> rules = ruleStore.getRules().iterator();
     		int i=0;
     		while (rules.hasNext()) {
     			lastAccessedRules.add((DebuggerRule)rules.next());

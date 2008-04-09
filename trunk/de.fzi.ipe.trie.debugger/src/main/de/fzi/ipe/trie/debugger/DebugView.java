@@ -66,6 +66,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 	private static DebugView singleton;
 	
 	private DebuggerEventBus eventBus = new DebuggerEventBus(); 
+	private DebuggerRuleStore debuggerRuleStore;
 	
 	private Composite mainComposite, parent;
 	private ScrolledComposite scrolledComposite;
@@ -151,6 +152,8 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 
 	public void createPartControl(Composite parent) {
 		this.parent = parent;
+		debuggerRuleStore = new DebuggerRuleStore();
+		
 		createActions();
 		createMenu();
 		createToolbar();
@@ -172,28 +175,27 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 
 		new HeadlineComposite(mainComposite,eventBus);
 
-//		if (contentProvider.getCurrentRule() != null) {
-			RuleDetailsGroup ruleDetails = new RuleDetailsGroup(mainComposite,eventBus);
-			Point point = ruleDetails.getSize();
-			scrolledComposite.setMinSize(Math.max(point.x, 500), point.y + 600);
-			
-			Composite data = new Composite(mainComposite, SWT.NONE);
-			GridData dataGD = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
-			dataGD.heightHint = 200;
-			data.setLayoutData(dataGD);
-			data.setLayout(new FillLayout(SWT.HORIZONTAL));
+		RuleDetailsGroup ruleDetails = new RuleDetailsGroup(mainComposite,eventBus);
+		Point point = ruleDetails.getSize();
+		scrolledComposite.setMinSize(Math.max(point.x, 500), point.y + 600);
+		
+		Composite data = new Composite(mainComposite, SWT.NONE);
+		GridData dataGD = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
+		dataGD.heightHint = 200;
+		data.setLayoutData(dataGD);
+		data.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-			new BindingsGroup(data,dynamic_b,eventBus);
+		new BindingsGroup(data,dynamic_b,eventBus);
 
-			Composite data2 = new Composite(mainComposite,SWT.NONE);
-			GridData data2GD = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
-			data2GD.heightHint = 200;
-			data2.setLayoutData(data2GD);
-			FillLayout data2Layout = new FillLayout(SWT.HORIZONTAL);
-			data2Layout.spacing = 4;
-			data2.setLayout(data2Layout);
-			new DependsOnGroup(data2,eventBus);
-			new ProoftreeGroup(data2,showProoftree_b,eventBus);
+		Composite data2 = new Composite(mainComposite,SWT.NONE);
+		GridData data2GD = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
+		data2GD.heightHint = 200;
+		data2.setLayoutData(data2GD);
+		FillLayout data2Layout = new FillLayout(SWT.HORIZONTAL);
+		data2Layout.spacing = 4;
+		data2.setLayout(data2Layout);
+		new DependsOnGroup(data2,eventBus);
+		new ProoftreeGroup(data2,showProoftree_b,debuggerRuleStore, eventBus);
 	}
 	
 	public void createMenu() {
@@ -232,7 +234,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 		forward.setToolTipText("Forward");
 		mgr.add(forward);
 		mgr.add(new Separator());
-		mgr.add(new SelectRuleDropDownAction(this,eventBus));
+		mgr.add(new SelectRuleDropDownAction(this,debuggerRuleStore, eventBus));
 		mgr.add(new Separator());
 		mgr.add(refresh);
 	}
@@ -242,8 +244,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 		refresh = new Action("Refresh") {
 			public void run() {
 				try {
-			    	DebuggerRuleStore.clearCache();
-			    	DebuggerRuleStore.reload();
+			    	debuggerRuleStore.reload();
 			    } catch (JenaException je) {
 					handleException(je, "Could not reload files");
 				} catch (IOException e) {
@@ -256,7 +257,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 	}
 
 	private void createRuleActions() {
-		Collection<DebuggerRule> rules = DebuggerRuleStore.getRules();
+		Collection<DebuggerRule> rules = debuggerRuleStore.getRules();
 		ruleActions = new Action[rules.size()];
 		int i=0;
 		for (DebuggerRule rule:rules) {
