@@ -82,7 +82,7 @@ public class DebuggerRule  {
 			for (ProoftreeNode pn: children) {
 				for (ProoftreeNode candidate: pn.getChildren()) {
 					if (candidate instanceof ProoftreeRuleNode) {
-						rulesThatSupplyBindings.add(debuggerRuleStore.getRule(((ProoftreeRuleNode)candidate).getRule()));
+						rulesThatSupplyBindings.add(debuggerRuleStore.getRule(((ProoftreeRuleNode)candidate).getRule().getName()));
 					}
 				}
 			}

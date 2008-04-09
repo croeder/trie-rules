@@ -9,22 +9,27 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
+import de.fzi.ipe.trie.debugger.gui.events.DataReloadEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.model.DebuggerAtom;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
+import de.fzi.ipe.trie.debugger.model.DebuggerRuleStore;
 
 public class RuleDetailsGroup implements DebuggerEventBusListener {
 	
 	private DebuggerEventBus eventBus;
+	private DebuggerRuleStore ruleStore; 
+	private DebuggerRule rule;
 	private Group clauses;
 	
 	private StyledTextView styledText;
 	
-	public RuleDetailsGroup(Composite parent, DebuggerEventBus eventBus) {
+	public RuleDetailsGroup(Composite parent, DebuggerRuleStore ruleStore, DebuggerEventBus eventBus) {
 		this.eventBus = eventBus;
+		this.ruleStore = ruleStore;
 		eventBus.addListener(this);
 		clauses = new Group(parent, SWT.NONE);
 		clauses.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL));
@@ -39,6 +44,7 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 
 
 	private void updateDisplay(DebuggerRule rule) {
+		this.rule = rule;
 		styledText.reset();
 		makeHeadClauses(styledText,rule);
 		TextPart ifPart = new TextPartWord("IF ");
@@ -46,6 +52,10 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 		styledText.addNewLine();
 		makeBodyClauses(styledText,rule);
 		styledText.updateText();
+
+		GridData gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
+		gridData.minimumHeight = styledText.getSize().y;
+		gridData.minimumWidth = styledText.getSize().x;
 	}
 	
 	private void makeHeadClauses(StyledTextView parent, DebuggerRule currentRule) {
@@ -92,9 +102,12 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 		if (event instanceof SelectedRuleEvent) {
 			SelectedRuleEvent sEvent = (SelectedRuleEvent) event;
 			updateDisplay(sEvent.getRule());
-			GridData gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
-			gridData.minimumHeight = styledText.getSize().y;
-			gridData.minimumWidth = styledText.getSize().x;
+		}
+		else if (event instanceof DataReloadEvent) {
+			if (rule != null) {
+				DebuggerRule newRule = ruleStore.getRule(rule.getRule().getName());
+				updateDisplay(newRule);
+			}
 		}
 	}
 
