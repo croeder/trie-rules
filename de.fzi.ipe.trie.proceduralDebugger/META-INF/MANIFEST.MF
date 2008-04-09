@@ -4,7 +4,6 @@ Bundle-Name: ProceduralDebugger
 Bundle-SymbolicName: de.fzi.ipe.trie.proceduralDebugger;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: de.fzi.ipe.trie.proceduraldebugger.ProceduralDebuggerPlugin
-Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  de.fzi.ipe.trie,
