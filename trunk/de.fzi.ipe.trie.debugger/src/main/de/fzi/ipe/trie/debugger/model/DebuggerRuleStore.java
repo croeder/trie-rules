@@ -60,7 +60,7 @@ public class DebuggerRuleStore implements KnowledgeBaseListener {
 	 * @param rule
 	 * @return
 	 */
-	public static Set getCompleteRuleExtent(DebuggerRule rule) {
+	public static Set<DebuggerRule> getCompleteRuleExtent(DebuggerRule rule) {
 		Set<DebuggerRule> toReturn = new HashSet<DebuggerRule>();
 		Stack<DebuggerRule> toDo = new Stack<DebuggerRule>();
 		toDo.push(rule);
