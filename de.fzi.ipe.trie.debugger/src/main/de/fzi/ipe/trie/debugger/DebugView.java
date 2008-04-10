@@ -1,7 +1,6 @@
 package de.fzi.ipe.trie.debugger;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -30,19 +29,17 @@ import de.fzi.ipe.trie.debugger.gui.DebugLabelProvider;
 import de.fzi.ipe.trie.debugger.gui.HeadlineComposite;
 import de.fzi.ipe.trie.debugger.gui.actions.BackAction;
 import de.fzi.ipe.trie.debugger.gui.actions.ForwardAction;
-import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleAction;
 import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleDropDownAction;
 import de.fzi.ipe.trie.debugger.gui.bindings.BindingsGroup;
 import de.fzi.ipe.trie.debugger.gui.dependsOn.DependsOnGroup;
-import de.fzi.ipe.trie.debugger.gui.events.ReloadEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
 import de.fzi.ipe.trie.debugger.gui.events.RedrawEvent;
+import de.fzi.ipe.trie.debugger.gui.events.ReloadEvent;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.gui.prooftree.ProoftreeGroup;
 import de.fzi.ipe.trie.debugger.gui.ruleDetails.RuleDetailsGroup;
-import de.fzi.ipe.trie.debugger.model.DebuggerRule;
 import de.fzi.ipe.trie.debugger.model.DebuggerRuleStore;
 
 public class DebugView extends ViewPart implements DebuggerEventBusListener {
@@ -74,7 +71,6 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 
 	public static DebugLabelProvider labelProvider = new DebugLabelProvider();
 	
-	private Action[] ruleActions;
 	private Action refresh;
 	private Action showNamespaces, showModules;
 	private ForwardAction forward;
@@ -228,10 +224,10 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 	public void createToolbar() {
 		IToolBarManager mgr = getViewSite().getActionBars().getToolBarManager();
 
-		back = new BackAction(eventBus);
+		back = new BackAction(debuggerRuleStore, eventBus);
 		back.setToolTipText("Back to last rule");
 		mgr.add(back);
-		forward = new ForwardAction(eventBus);
+		forward = new ForwardAction(debuggerRuleStore,eventBus);
 		forward.setToolTipText("Forward");
 		mgr.add(forward);
 		mgr.add(new Separator());
@@ -241,7 +237,6 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 	}
 
 	public void createActions() {
-		createRuleActions();
 		refresh = new Action("Refresh") {
 			public void run() {
 				try {
@@ -258,15 +253,6 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 		refresh.setToolTipText("Reload Data and Refresh View");
 	}
 
-	private void createRuleActions() {
-		Collection<DebuggerRule> rules = debuggerRuleStore.getRules();
-		ruleActions = new Action[rules.size()];
-		int i=0;
-		for (DebuggerRule rule:rules) {
-			 ruleActions[i] = new SelectRuleAction(rule,eventBus);
-			 i++;
-		}
-	}
 
 	/**
 	 * Passing the focus request to the viewer's control.

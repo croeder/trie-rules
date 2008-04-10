@@ -6,20 +6,24 @@ import de.fzi.ipe.trie.debugger.DebuggerPlugin;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
+import de.fzi.ipe.trie.debugger.gui.events.ReloadEvent;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
+import de.fzi.ipe.trie.debugger.model.DebuggerRuleStore;
 
 
 public class ForwardAction extends Action implements DebuggerEventBusListener{
     
 	private DebuggerEventBus eventBus;
+	private DebuggerRuleStore ruleStore;
 	private DebuggerRule currentRule;
 	private RuleHistory history = new RuleHistory();
 	
     
-    public ForwardAction(DebuggerEventBus eventBus) {
+    public ForwardAction(DebuggerRuleStore ruleStore, DebuggerEventBus eventBus) {
         super("Text ...",Action.AS_PUSH_BUTTON);
         this.eventBus = eventBus;
+        this.ruleStore = ruleStore;
         eventBus.addListener(this);
         setImageDescriptor(DebuggerPlugin.loadImage(DebuggerPlugin.IMAGE_FORWARD));
         setDisabledImageDescriptor(DebuggerPlugin.loadImage(DebuggerPlugin.IMAGE_FORWARD_D));
@@ -51,6 +55,11 @@ public class ForwardAction extends Action implements DebuggerEventBusListener{
 				history.clearAll();
 			}
 			currentRule = sel.getRule();
+			refresh();
+		}
+		else if (event instanceof ReloadEvent) {
+			history.clearAll();
+			if (currentRule != null) currentRule = ruleStore.getRule(currentRule.getName());
 			refresh();
 		}
 	}

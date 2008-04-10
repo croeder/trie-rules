@@ -22,6 +22,7 @@ import de.fzi.ipe.trie.debugger.gui.RuleListContentProvider;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
+import de.fzi.ipe.trie.debugger.gui.events.ReloadEvent;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
 import de.fzi.ipe.trie.debugger.model.DebuggerRuleStore;
@@ -60,6 +61,9 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator, De
 		if (event instanceof SelectedRuleEvent) {
 			SelectedRuleEvent sel = (SelectedRuleEvent) event;
 			history.accessedRule(sel.getRule());
+		}
+		else if (event instanceof ReloadEvent) {
+			history.clear();
 		}
 	}
     
@@ -168,6 +172,11 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator, De
     		return lastAccessedRules;
     	}
     	
+    	public void clear() {
+    		lastAccessedRules.clear();
+    		currentRule = null;
+    		initialRulesForRuleHistory();
+    	}
     }
     
     
