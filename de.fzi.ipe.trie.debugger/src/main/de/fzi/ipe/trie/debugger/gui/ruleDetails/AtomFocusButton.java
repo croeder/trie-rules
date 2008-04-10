@@ -24,7 +24,7 @@ public class AtomFocusButton extends CustomButton implements DebuggerEventBusLis
 		this.atom = atom;
 		this.eventBus = eventBus;
 		eventBus.addListener(this);
-		setImage(DebuggerPlugin.IMAGE_FOCUS_PURPLE);
+		setImage(DebuggerPlugin.IMAGE_FOCUS);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class AtomFocusButton extends CustomButton implements DebuggerEventBusLis
 			eventBus.sendEvent(RedrawEvent.RULE_DETAILS);
 		}
 		else {
-			setImage(DebuggerPlugin.IMAGE_FOCUS_PURPLE);
+			setImage(DebuggerPlugin.IMAGE_FOCUS);
 			eventBus.sendEvent(new AtomFocussedEvent(null,atom.getRule()));
 			eventBus.sendEvent(RedrawEvent.RULE_DETAILS);
 		}
@@ -46,19 +46,19 @@ public class AtomFocusButton extends CustomButton implements DebuggerEventBusLis
 		if (event instanceof AtomFocussedEvent) {
 			AtomFocussedEvent ase = (AtomFocussedEvent) event;
 			if (ase.getAtom() == null) {
-				setImage(DebuggerPlugin.IMAGE_FOCUS_PURPLE);
+				setImage(DebuggerPlugin.IMAGE_FOCUS);
 				eventBus.sendEvent(RedrawEvent.RULE_DETAILS);
 				isFocussed = false;
 			}
 			else if (ase.getAtom() != null && ase.getAtom() != atom) {
 				isFocussed = false;
-				setImage(DebuggerPlugin.IMAGE_FOCUS_PURPLE);
+				setImage(DebuggerPlugin.IMAGE_FOCUS);
 				eventBus.sendEvent(RedrawEvent.RULE_DETAILS);
 			}
 		}
 		else if (event instanceof AtomActivatedEvent) {
 			isFocussed = false;
-			setImage(DebuggerPlugin.IMAGE_FOCUS_PURPLE);
+			setImage(DebuggerPlugin.IMAGE_FOCUS);
 			eventBus.sendEvent(RedrawEvent.RULE_DETAILS);
 		}
 	}
