@@ -34,7 +34,7 @@ import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleAction;
 import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleDropDownAction;
 import de.fzi.ipe.trie.debugger.gui.bindings.BindingsGroup;
 import de.fzi.ipe.trie.debugger.gui.dependsOn.DependsOnGroup;
-import de.fzi.ipe.trie.debugger.gui.events.DataReloadEvent;
+import de.fzi.ipe.trie.debugger.gui.events.ReloadEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
@@ -186,7 +186,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 		data.setLayoutData(dataGD);
 		data.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-		new BindingsGroup(data,dynamic_b,eventBus);
+		new BindingsGroup(data,dynamic_b,debuggerRuleStore,eventBus);
 
 		Composite data2 = new Composite(mainComposite,SWT.NONE);
 		GridData data2GD = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
@@ -195,7 +195,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 		FillLayout data2Layout = new FillLayout(SWT.HORIZONTAL);
 		data2Layout.spacing = 4;
 		data2.setLayout(data2Layout);
-		new DependsOnGroup(data2,eventBus);
+		new DependsOnGroup(data2,debuggerRuleStore, eventBus);
 		new ProoftreeGroup(data2,showProoftree_b,debuggerRuleStore, eventBus);
 	}
 	
@@ -251,7 +251,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 				} catch (IOException e) {
 					handleException(e, "Could not reload files - "+ e.getMessage());
 				}
-				eventBus.sendEvent(new DataReloadEvent());
+				eventBus.sendEvent(new ReloadEvent());
 			}
 		};
 		refresh.setImageDescriptor(DebuggerPlugin.loadImage(DebuggerPlugin.IMAGE_REFRESH));

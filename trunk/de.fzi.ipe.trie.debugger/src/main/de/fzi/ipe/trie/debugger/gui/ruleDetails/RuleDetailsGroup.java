@@ -9,10 +9,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
-import de.fzi.ipe.trie.debugger.gui.events.DataReloadEvent;
+import de.fzi.ipe.trie.debugger.gui.events.ReloadEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
+import de.fzi.ipe.trie.debugger.gui.events.RedrawEvent;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.model.DebuggerAtom;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
@@ -94,7 +95,6 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 
 	public Point getSize() {
 		return clauses.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		
 	}
 	
 	
@@ -103,10 +103,11 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 			SelectedRuleEvent sEvent = (SelectedRuleEvent) event;
 			updateDisplay(sEvent.getRule());
 		}
-		else if (event instanceof DataReloadEvent) {
+		else if (event instanceof ReloadEvent) {
 			if (rule != null) {
 				DebuggerRule newRule = ruleStore.getRule(rule.getRule().getName());
 				updateDisplay(newRule);
+				eventBus.sendEvent(RedrawEvent.DEBUG_VIEW);
 			}
 		}
 	}
