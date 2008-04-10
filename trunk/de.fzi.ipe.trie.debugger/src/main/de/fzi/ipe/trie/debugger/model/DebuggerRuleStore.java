@@ -38,7 +38,7 @@ public class DebuggerRuleStore implements KnowledgeBaseListener{
 	
 	public DebuggerRule getRule(String ruleName) {
 		Rule rule = dm.getKnowledgeBase().getRuleBase().getRule(ruleName);
-		return getRule(rule);
+		return (rule != null) ? getRule(rule) : null;
 	}
 	
 	public KnowledgeBase getKnowledgeBase() {
