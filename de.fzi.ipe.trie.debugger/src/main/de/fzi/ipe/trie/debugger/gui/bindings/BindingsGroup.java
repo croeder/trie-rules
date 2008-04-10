@@ -27,21 +27,25 @@ import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
 import de.fzi.ipe.trie.debugger.gui.events.RedrawEvent;
+import de.fzi.ipe.trie.debugger.gui.events.ReloadEvent;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedResultLineEvent;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
+import de.fzi.ipe.trie.debugger.model.DebuggerRuleStore;
 import de.fzi.ipe.trie.inference.Result;
 
 public class BindingsGroup implements DebuggerEventBusListener{
 
 	private TableViewer bindingsViewer;
 	private DebuggerEventBus eventBus;
+	private DebuggerRuleStore ruleStore;
 	private BindingsTableLabelProvider labelProvider; 
 	
 	private DebuggerRule rule;
 	
-	public BindingsGroup(Composite parent, boolean dynamic_b, DebuggerEventBus eventBus) {
+	public BindingsGroup(Composite parent, boolean dynamic_b, DebuggerRuleStore ruleStore, DebuggerEventBus eventBus) {
 		this.eventBus = eventBus;
+		this.ruleStore = ruleStore;
 		eventBus.addListener(this);
 		Group bindings = new Group(parent, SWT.NONE);
 		bindings.setText("The Current Rule Fires For: ");
@@ -93,7 +97,7 @@ public class BindingsGroup implements DebuggerEventBusListener{
 		}
 		bindingsViewer.setInput(result);
 		Object elementAt = bindingsViewer.getElementAt(0);
-		bindingsViewer.setSelection(new StructuredSelection(elementAt));
+		if (elementAt !=null) bindingsViewer.setSelection(new StructuredSelection(elementAt));
 	}
 
 
@@ -129,6 +133,12 @@ public class BindingsGroup implements DebuggerEventBusListener{
 			AtomDeactivatedEvent ave = (AtomDeactivatedEvent) event;
 			rule = ave.getAtom().getRule();
 			eventBus.sendEvent(RedrawEvent.RULE_BINDINGS);
+		}
+		else if (event instanceof ReloadEvent) {
+			if (rule != null) {
+				rule = ruleStore.getRule(rule.getName());
+				eventBus.sendEvent(RedrawEvent.RULE_BINDINGS);
+			}
 		}
 	}
 	
