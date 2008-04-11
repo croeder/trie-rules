@@ -49,6 +49,7 @@ public class CachingDebuggerRule extends DebuggerRule {
 		if (possibilities == null) possibilities = super.getAllPossibilities();
 		return possibilities;
 	}
+
 	
 	@Override
 	public Set<DebuggerRule> getRulesThatSupplyBindings() {
