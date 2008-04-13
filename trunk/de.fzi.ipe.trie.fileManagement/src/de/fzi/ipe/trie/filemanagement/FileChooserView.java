@@ -1,7 +1,6 @@
 package de.fzi.ipe.trie.filemanagement;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.IStatus;
@@ -104,7 +103,7 @@ public class FileChooserView extends ViewPart {
 				if (fullPath != null) {
 					try {
 						File file = new File(fullPath);
-						SourceFiles.getInstance().addRuleFile(new DebuggerFile(file));
+						SourceFiles.getInstance().addFile(new DebuggerFile(file));
 						saveFileChooserPath(fullPath);	
 					} catch (IOException e1) {
 						showError("Could not read File!", "Could not read file "+e1.getMessage(),e1);
@@ -200,9 +199,9 @@ public class FileChooserView extends ViewPart {
 				if (fullPath != null) {
 					File file = new File(fullPath);
 					try {
-						SourceFiles.getInstance().addRDFFile(new DebuggerFile(file));
+						SourceFiles.getInstance().addFile(new DebuggerFile(file));
 						saveFileChooserPath(fullPath);
-					} catch (FileNotFoundException e1) {
+					} catch (IOException e1) {
 						showError("Could not find File!", "Could not find file "+e1.getMessage(),e1);
 						e1.printStackTrace();					
 					} catch (JenaException e1) {

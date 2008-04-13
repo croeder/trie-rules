@@ -71,8 +71,8 @@ public class SourceFiles implements Datamodel{
 				Set<File> rdfFiles = stringToFileSet(rdfFilesString);
 				for (File f:rdfFiles) {
 					try {
-						addRDFFile(new DebuggerFile(f));
-					} catch (FileNotFoundException e) {
+						addFile(new DebuggerFile(f));
+					} catch (IOException e) {
 						System.err.println("Could not reload file "+f.toString()+" - no big deal. ");
 						e.printStackTrace();
 					} catch (JenaException je) {
@@ -86,7 +86,7 @@ public class SourceFiles implements Datamodel{
 				Set<File> ruleFiles = stringToFileSet(ruleFilesString);
 				for (File f:ruleFiles) {
 					try {
-						addRuleFile(new DebuggerFile(f));						
+						addFile(new DebuggerFile(f));						
 					} catch (IOException e) {
 						System.err.println("Could not reload file "+f.toString()+" - no big deal. ");
 						e.printStackTrace();
@@ -157,22 +157,6 @@ public class SourceFiles implements Datamodel{
 		return Collections.unmodifiableSet(rdfFiles);
 	}
 	
-	public void addRDFFile(DebuggerFile file) throws FileNotFoundException {
-		if (!rdfFiles.contains(file)) {
-			addRDFToKB(file);
-			rdfFiles.add(file);
-			notifyListenerFilesChanged();
-		}
-	}
-	
-	public void addRuleFile(DebuggerFile file) throws IOException {
-		if (!ruleFiles.contains(file)) {
-			addRuleToKB(file);
-			ruleFiles.add(file);
-			notifyListenerFilesChanged();
-		}
-	}
-	
 	private void addRDFToKB(DebuggerFile file) throws FileNotFoundException {
 		ModelMaker maker = ModelFactory.createMemModelMaker();
 		Model model = maker.createDefaultModel();
@@ -191,6 +175,19 @@ public class SourceFiles implements Datamodel{
 		else rdfFiles.remove(toRemove);
 		reload();
 		notifyListenerFilesChanged();
+	}
+
+	public void addFile(DebuggerFile file) throws IOException {
+		if (file.isRuleFile()) {
+			addRuleToKB(file);
+			ruleFiles.add(file);
+		}
+		else {
+			addRDFToKB(file);
+			rdfFiles.add(file);			
+		}
+		notifyListenerFilesChanged();
+		
 	}
 	
 

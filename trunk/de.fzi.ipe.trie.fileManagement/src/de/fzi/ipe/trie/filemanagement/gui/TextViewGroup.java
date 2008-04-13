@@ -1,7 +1,12 @@
 package de.fzi.ipe.trie.filemanagement.gui;
 
+import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -15,24 +20,30 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.hp.hpl.jena.shared.JenaException;
+
+import de.fzi.ipe.trie.filemanagement.Activator;
 import de.fzi.ipe.trie.filemanagement.SourceFiles;
 import de.fzi.ipe.trie.filemanagement.model.DebuggerFile;
 
 public class TextViewGroup implements ModifyListener, KeyListener {
 
+	private Composite parent;
 	private Text text;
 	private DebuggerFile currentFile;
-	private Button save,remove;
+	private Button save,remove,add;
 	private Label errorMessage;
 	
 	private boolean isModified =false;
 	
 	
 	public TextViewGroup(Composite parent) {
+		this.parent = parent;
 		Group root = new Group(parent,SWT.NONE);
 		root.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
 		root.setLayout(new GridLayout(1,false));
@@ -45,12 +56,12 @@ public class TextViewGroup implements ModifyListener, KeyListener {
 		text.addKeyListener(this);
 	}
 
-	private void createGroupAboveText(Group root) {
+	private void createGroupAboveText(final Group root) {
 		Composite buttonGroup = new Composite (root,SWT.NONE);
 		GridData buttonGroupGD = new GridData(SWT.FILL, SWT.DEFAULT,true,false);
 		buttonGroupGD.heightHint = 30;
 		buttonGroup.setLayoutData(buttonGroupGD);
-		buttonGroup.setLayout(new GridLayout(3,false));
+		buttonGroup.setLayout(new GridLayout(4,false));
 
 		save = new Button(buttonGroup,SWT.PUSH);
 		save.setText("Save");
@@ -67,6 +78,36 @@ public class TextViewGroup implements ModifyListener, KeyListener {
 		});
 		save.setEnabled(false);
 		
+		add = new Button(buttonGroup,SWT.PUSH);
+		add.setText("Add");
+		add.setToolTipText("Add a new file to the knowledge base");
+		add.addSelectionListener(new SelectionListener() {
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				;
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				FileDialog fileDialog = new FileDialog(root.getShell());
+				fileDialog.setFileName(getFileChooserPath());
+				fileDialog.setFilterExtensions(new String[] {"*.rule","*.turtle","*.rdf","*.*"});
+				String fullPath = fileDialog.open();
+				if (fullPath != null) {
+					try {
+						DebuggerFile file = new DebuggerFile(new File(fullPath));
+						SourceFiles.getInstance().addFile(file);
+						saveFileChooserPath(fullPath);	
+						setText(file);
+					} catch (IOException e1) {
+						showError("Could not read File!", "Could not read file "+e1.getMessage(),e1);
+						e1.printStackTrace();					
+					} catch (JenaException e1) {
+						showError("Could not parse File!", "Could not parse file "+e1.getMessage(),e1);
+						e1.printStackTrace();
+					}
+				}
+			}});
+		
 		remove = new Button(buttonGroup, SWT.PUSH);
 		remove.setText("Remove");
 		remove.setToolTipText("Removes the current file from the knowledge base");
@@ -82,8 +123,9 @@ public class TextViewGroup implements ModifyListener, KeyListener {
 						SourceFiles.getInstance().removeFile(currentFile);
 						text.setText("");
 						remove.setEnabled(false);
+						save.setEnabled(false);
 					} catch (IOException ioe) {
-						//really an exception that should only happen very seldomly.
+						//really an exception that can happen only under very strange circumstances.
 						throw new RuntimeException(ioe); 
 					}
 				}
@@ -135,9 +177,31 @@ public class TextViewGroup implements ModifyListener, KeyListener {
 				errorMessage.setText(currentFile.compileTest());
 			} 
 		} catch (IOException ioe)  {
-			//TODO exception message
+			showError("Error Saving File", "Could not save file!", ioe);
 		}
 	}
 	
-	
+	private void saveFileChooserPath(String path) {
+		path = new File(path).getParentFile().getPath()+"/";
+		IDialogSettings favoritesSettings = Activator.getInstance().getDialogSettings();
+		IDialogSettings wizardSettings = favoritesSettings.getSection("fileChooser");
+		if (wizardSettings == null) {
+			wizardSettings = favoritesSettings.addNewSection("fileChooser");
+		}
+		wizardSettings.put("path",path);
+	}
+
+	private String getFileChooserPath() {
+		IDialogSettings favoritesSettings = Activator.getInstance().getDialogSettings();
+		IDialogSettings wizardSettings = favoritesSettings.getSection("fileChooser");
+		if (wizardSettings != null) {
+			return wizardSettings.get("path");
+		}
+		else return "";
+	}
+
+	private void showError(String title, String message, Exception exception) {
+		Status status = new Status(IStatus.ERROR,"de.fzi.ipe.trie.debugger",-1,message,exception);
+		ErrorDialog.openError(parent.getShell(), title, message, status);
+	}
 }
