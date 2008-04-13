@@ -3,6 +3,8 @@ package de.fzi.ipe.trie.filemanagement.gui;
 import java.io.IOException;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -17,11 +19,12 @@ import org.eclipse.swt.widgets.Text;
 
 import de.fzi.ipe.trie.filemanagement.model.DebuggerFile;
 
-public class TextViewGroup implements ModifyListener {
+public class TextViewGroup implements ModifyListener, KeyListener {
 
 	private Text text;
 	private DebuggerFile currentFile;
 	private Button save;
+	private boolean isModified =false;
 	
 	
 	public TextViewGroup(Composite parent) {
@@ -34,6 +37,7 @@ public class TextViewGroup implements ModifyListener {
 		text = new Text (root, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
 		text.addModifyListener(this);
+		text.addKeyListener(this);
 	}
 
 	private void createButtonGroup(Group root) {
@@ -52,14 +56,7 @@ public class TextViewGroup implements ModifyListener {
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					if (currentFile != null) {
-						currentFile.setContent(text.getText());
-						save.setEnabled(false);
-					} 
-				} catch (IOException ioe)  {
-					//TODO exception message
-				}
+				saveText();
 			}
 			
 		});
@@ -72,11 +69,34 @@ public class TextViewGroup implements ModifyListener {
 		} catch (IOException e1) {
 			text.setText("Problem Reading File");
 		}
+		isModified = false;
 		save.setEnabled(false);
 	}
 
 	public void modifyText(ModifyEvent e) {
+		isModified = true;
 		save.setEnabled(true);
+	}
+
+	public void keyPressed(KeyEvent e) {
+		;
+	}
+
+	public void keyReleased(KeyEvent e) {
+		//save on ctrl-s
+		if (isModified && e.keyCode == 115 && ((e.stateMask & SWT.CTRL) != 0)) saveText();
+	}
+
+	private void saveText() {
+		try {
+			if (currentFile != null) {
+				currentFile.setContent(text.getText());
+				isModified = false;
+				save.setEnabled(false);
+			} 
+		} catch (IOException ioe)  {
+			//TODO exception message
+		}
 	}
 	
 	
