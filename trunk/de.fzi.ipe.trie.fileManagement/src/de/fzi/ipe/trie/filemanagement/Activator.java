@@ -3,6 +3,8 @@ package de.fzi.ipe.trie.filemanagement;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import de.fzi.ipe.trie.filemanagement.model.SourceFiles;
+
 /**
  * The activator class controls the plug-in life cycle
  */

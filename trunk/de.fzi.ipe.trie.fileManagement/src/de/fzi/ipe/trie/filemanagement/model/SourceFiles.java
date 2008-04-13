@@ -1,10 +1,10 @@
-package de.fzi.ipe.trie.filemanagement;
+package de.fzi.ipe.trie.filemanagement.model;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,8 +16,8 @@ import com.hp.hpl.jena.rdf.model.ModelMaker;
 
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.RuleParser;
+import de.fzi.ipe.trie.filemanagement.Activator;
 import de.fzi.ipe.trie.filemanagement.extensionPoint.Datamodel;
-import de.fzi.ipe.trie.filemanagement.extensionPoint.FileManagementListener;
 import de.fzi.ipe.trie.inference.KnowledgeBase;
 
 
@@ -29,10 +29,10 @@ public class SourceFiles implements Datamodel{
 	private static SourceFiles instance = new SourceFiles();
 	
 	private KnowledgeBase knowledgeBase = new KnowledgeBase();
-	private Set<FileManagementListener> listeners = new HashSet<FileManagementListener>();
-	private Set<File> ruleFiles = new HashSet<File>();
-	private Set<File> rdfFiles = new HashSet<File>();
+	private Set<DebuggerFile> ruleFiles = new HashSet<DebuggerFile>();
+	private Set<DebuggerFile> rdfFiles = new HashSet<DebuggerFile>();
 	
+	private Set<SourceFileListener> listeners = new HashSet<SourceFileListener>();
 
 	public static SourceFiles getInstance() {
 		return instance;
@@ -47,7 +47,7 @@ public class SourceFiles implements Datamodel{
 	 * is opened. 
 	 * @see SourceFiles#loadFiles()
 	 */
-	protected void saveFileLocations() { 
+	public void saveFileLocations() { 
 		IDialogSettings favoritesSettings = Activator.getInstance().getDialogSettings();
 		IDialogSettings wizardSettings = favoritesSettings.getSection("fileChooser");
 		if (wizardSettings == null) {
@@ -60,7 +60,7 @@ public class SourceFiles implements Datamodel{
 	/**
 	 * Loads the files that were active at the time the program was terminated the last time. 
 	 */
-	protected void loadFiles() {
+	public void loadFiles() {
 		IDialogSettings favoritesSettings = Activator.getInstance().getDialogSettings();
 		IDialogSettings wizardSettings = favoritesSettings.getSection("fileChooser");
 		if (wizardSettings != null) {
@@ -69,7 +69,7 @@ public class SourceFiles implements Datamodel{
 				Set<File> rdfFiles = stringToFileSet(rdfFilesString);
 				for (File f:rdfFiles) {
 					try {
-						addRDFFile(f);
+						addRDFFile(new DebuggerFile(f));
 					} catch (FileNotFoundException e) {
 						System.err.println("Could not reload file "+f.toString()+" - no big deal. ");
 						e.printStackTrace();
@@ -81,7 +81,7 @@ public class SourceFiles implements Datamodel{
 				Set<File> ruleFiles = stringToFileSet(ruleFilesString);
 				for (File f:ruleFiles) {
 					try {
-						addRuleFile(f);						
+						addRuleFile(new DebuggerFile(f));						
 					} catch (IOException e) {
 						System.err.println("Could not reload file "+f.toString()+" - no big deal. ");
 						e.printStackTrace();
@@ -89,11 +89,12 @@ public class SourceFiles implements Datamodel{
 				}
 			}
 		}
+		notifyListenersLoaded();
 	}
 	
-	private static String fileSetToString(Set<File> files) {
+	private static String fileSetToString(Set<DebuggerFile> files) {
 		StringBuilder builder = new StringBuilder();
-		for (File f:files) {
+		for (DebuggerFile f:files) {
 			builder.append(f.getAbsolutePath());
 			builder.append(";;");
 		}
@@ -109,68 +110,86 @@ public class SourceFiles implements Datamodel{
 		return toReturn;
 	}
 	
-	public void addListener(FileManagementListener list) {
+	public void addListener(SourceFileListener list) {
 		listeners.add(list);
 	}
-		
+	
+	public void removeListener(SourceFileListener list) {
+		listeners.remove(list);
+	}
+	
+	private void notifyListenerFilesChanged() {
+		for (SourceFileListener l: listeners) l.filesChanged();
+	}
+	
+	private void notifyListenersLoaded() {
+		for (SourceFileListener l:listeners) l.loaded();
+	}
+	
 	public KnowledgeBase getKnowledgeBase() {
 		return knowledgeBase;
 	}
 	
 	public void reload() throws IOException {
 		knowledgeBase.clear();
-		for (File f:rdfFiles) {
+		for (DebuggerFile f:rdfFiles) {
 			addRDFToKB(f);
 		}
-		for (File f:ruleFiles) {
+		for (DebuggerFile f:ruleFiles) {
 			addRuleToKB(f);
-		}	
+		}
+		notifyListenersLoaded();
 	}
 	
-	public Set<File> getRuleFiles() {
-		return ruleFiles;
+	public Set<DebuggerFile> getRuleFiles() {
+		return Collections.unmodifiableSet(ruleFiles);
 	}
 	
-	public Set<File> getRDFFiles() {
-		return rdfFiles;
+	public Set<DebuggerFile> getRDFFiles() {
+		return Collections.unmodifiableSet(rdfFiles);
 	}
 	
-	public void addRDFFile(File file) throws FileNotFoundException {
+	public void addRDFFile(DebuggerFile file) throws FileNotFoundException {
 		if (!rdfFiles.contains(file)) {
 			addRDFToKB(file);
 			rdfFiles.add(file);
+			notifyListenerFilesChanged();
 		}
 	}
 	
-	public void addRuleFile(File file) throws IOException {
+	public void addRuleFile(DebuggerFile file) throws IOException {
 		if (!ruleFiles.contains(file)) {
 			addRuleToKB(file);
 			ruleFiles.add(file);
+			notifyListenerFilesChanged();
 		}
 	}
 	
-	private void addRDFToKB(File file) throws FileNotFoundException {
+	private void addRDFToKB(DebuggerFile file) throws FileNotFoundException {
 		ModelMaker maker = ModelFactory.createMemModelMaker();
 		Model model = maker.createDefaultModel();
-		if (file.getPath().toLowerCase().endsWith(".turtle")) {
-			model.read(new FileInputStream(file), null, "TURTLE");
-		}
-		else model.read(new FileInputStream(file), null, "RDF/XML");
+		if (file.isTurtleFile()) model.read(file.openInputStream(), null, "TURTLE");
+		else model.read(file.openInputStream(), null, "RDF/XML");
 		knowledgeBase.addModel(model); 
 	}
 
-	private void addRuleToKB(File file) throws IOException {
-		Collection<Rule> rules = RuleParser.readRules(file); 
+	private void addRuleToKB(DebuggerFile debuggerFile) throws IOException {
+		Collection<Rule> rules = RuleParser.readRules(debuggerFile.getFile()); 
 		knowledgeBase.addRules(rules); 
 	}
 
 	public void removeRDFFile(File toRemove) throws IOException {
 		rdfFiles.remove(toRemove);
 		reload();
+		notifyListenerFilesChanged();
 	}
 	
 	public void removeRuleFile(File toRemove) throws IOException {
 		ruleFiles.remove(toRemove);
 		reload();
+		notifyListenerFilesChanged();
 	}
+	
+
+	
 }

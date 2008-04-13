@@ -28,6 +28,8 @@ import com.hp.hpl.jena.shared.JenaException;
 
 import de.fzi.ipe.trie.filemanagement.gui.FileLabelProvider;
 import de.fzi.ipe.trie.filemanagement.gui.FileSetContentProvider;
+import de.fzi.ipe.trie.filemanagement.model.DebuggerFile;
+import de.fzi.ipe.trie.filemanagement.model.SourceFiles;
 import de.fzi.ipe.trie.inference.KnowledgeBaseListener;
 
 public class FileChooserView extends ViewPart {
@@ -99,7 +101,7 @@ public class FileChooserView extends ViewPart {
 				if (fullPath != null) {
 					try {
 						File file = new File(fullPath);
-						SourceFiles.getInstance().addRuleFile(file);
+						SourceFiles.getInstance().addRuleFile(new DebuggerFile(file));
 						saveFileChooserPath(fullPath);						
 					} catch (IOException e1) {
 						showError("Could not read File!", "Could not read file "+e1.getMessage(),e1);
@@ -195,7 +197,7 @@ public class FileChooserView extends ViewPart {
 				if (fullPath != null) {
 					File file = new File(fullPath);
 					try {
-						SourceFiles.getInstance().addRDFFile(file);
+						SourceFiles.getInstance().addRDFFile(new DebuggerFile(file));
 						saveFileChooserPath(fullPath);
 					} catch (FileNotFoundException e1) {
 						showError("Could not find File!", "Could not find file "+e1.getMessage(),e1);
