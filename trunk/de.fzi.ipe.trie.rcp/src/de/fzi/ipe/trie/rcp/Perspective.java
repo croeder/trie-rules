@@ -5,7 +5,6 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
 import de.fzi.ipe.trie.debugger.DebugView;
-import de.fzi.ipe.trie.filemanagement.FileChooserView;
 import de.fzi.ipe.trie.filemanagement.FileView;
 import de.fzi.ipe.trie.proceduraldebugger.ProceduralDebugView;
 
@@ -20,7 +19,6 @@ public class Perspective implements IPerspectiveFactory {
 		
 		folder.addView(ProceduralDebugView.VIEW_ID);
 		folder.addView(FileView.VIEW_ID);
-		folder.addView(FileChooserView.VIEW_ID);
 		folder.addView(DebugView.VIEW_ID);
 	}
 
