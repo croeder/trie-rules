@@ -186,14 +186,9 @@ public class SourceFiles implements Datamodel{
 		knowledgeBase.addRules(rules); 
 	}
 
-	public void removeRDFFile(DebuggerFile toRemove) throws IOException {
-		rdfFiles.remove(toRemove);
-		reload();
-		notifyListenerFilesChanged();
-	}
-	
-	public void removeRuleFile(DebuggerFile toRemove) throws IOException {
-		ruleFiles.remove(toRemove);
+	public void removeFile(DebuggerFile toRemove) throws IOException {
+		if (toRemove.isRuleFile()) ruleFiles.remove(toRemove);
+		else rdfFiles.remove(toRemove);
 		reload();
 		notifyListenerFilesChanged();
 	}
