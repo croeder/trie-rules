@@ -17,24 +17,12 @@ import com.hp.hpl.jena.reasoner.rulesys.ClauseEntry;
 
 
 /**
- * Rule parser that utilizes the jena rule parser. Could be made a lot faster by simply implementing 
+ * Rule parser that utilizes the Jena rule parser. Could be made a lot faster by simply implementing 
  * a real parser - to lazy to do that now. Note that Try! currently supports only a subset of the 
- * rules in the jena framework: those without any functors.
+ * rules in the Jena framework: those without any functors.
  */
 public class RuleParser {
 	
-	
-//	public static Collection<Rule> readRules(File file) throws IOException {
-//		StringBuilder builder = new StringBuilder();
-//		BufferedReader reader = new BufferedReader(new FileReader(file));
-//		String temp = reader.readLine();
-//		while (temp != null) {
-//			builder.append(temp);
-//			builder.append("\n");
-//			temp = reader.readLine();
-//		}
-//		return readRules(builder.toString());
-//	}
 	
 	@SuppressWarnings("unchecked")
 	public static Collection<Rule> readRules(File file) throws IOException{
