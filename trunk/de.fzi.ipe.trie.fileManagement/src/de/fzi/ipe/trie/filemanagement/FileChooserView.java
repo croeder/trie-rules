@@ -29,7 +29,7 @@ import com.hp.hpl.jena.shared.JenaException;
 import de.fzi.ipe.trie.filemanagement.gui.FileLabelProvider;
 import de.fzi.ipe.trie.filemanagement.gui.FileSetContentProvider;
 import de.fzi.ipe.trie.filemanagement.model.DebuggerFile;
-import de.fzi.ipe.trie.inference.KnowledgeBaseListener;
+import de.fzi.ipe.trie.filemanagement.model.SourceFileListener;
 
 public class FileChooserView extends ViewPart {
 
@@ -49,11 +49,15 @@ public class FileChooserView extends ViewPart {
 		createRDFFileFields(parent);
 		createRuleFileFields(parent);
 		
-		SourceFiles.getInstance().getKnowledgeBase().addListener(new KnowledgeBaseListener() {
+		SourceFiles.getInstance().addListener(new SourceFileListener() {
 
-			public void knowledgeBaseChanged() {
+			public void filesChanged() {
 				if (rdfFileList != null) rdfFileList.refresh();
 				if (ruleFileList != null) ruleFileList.refresh();
+			}
+
+			public void loaded() {
+				;
 			}
 			
 			});
@@ -101,7 +105,7 @@ public class FileChooserView extends ViewPart {
 					try {
 						File file = new File(fullPath);
 						SourceFiles.getInstance().addRuleFile(new DebuggerFile(file));
-						saveFileChooserPath(fullPath);						
+						saveFileChooserPath(fullPath);	
 					} catch (IOException e1) {
 						showError("Could not read File!", "Could not read file "+e1.getMessage(),e1);
 						e1.printStackTrace();					
@@ -124,7 +128,7 @@ public class FileChooserView extends ViewPart {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection selection = (IStructuredSelection) ruleFileList.getSelection();
 				if (!selection.isEmpty()) {
-					File toRemove = (File) selection.getFirstElement();
+					DebuggerFile toRemove = (DebuggerFile) selection.getFirstElement();
 					try {
 						SourceFiles.getInstance().removeRuleFile(toRemove);						
 					} catch (IOException e1) {
@@ -220,7 +224,7 @@ public class FileChooserView extends ViewPart {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection selection = (IStructuredSelection) rdfFileList.getSelection();
 				if (!selection.isEmpty()) {
-					File toRemove = (File) selection.getFirstElement();
+					DebuggerFile toRemove = (DebuggerFile) selection.getFirstElement();
 					try {
 						SourceFiles.getInstance().removeRDFFile(toRemove);
 					} catch (IOException e1) {

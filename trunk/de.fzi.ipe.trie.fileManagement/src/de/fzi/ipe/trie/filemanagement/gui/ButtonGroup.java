@@ -15,11 +15,12 @@ import org.eclipse.swt.widgets.Group;
 
 import de.fzi.ipe.trie.filemanagement.SourceFiles;
 import de.fzi.ipe.trie.filemanagement.model.DebuggerFile;
+import de.fzi.ipe.trie.filemanagement.model.SourceFileListener;
 
 /**
  * Class that creates and maintains a group that displays a click able List of the current files in the FileView
  */
-public class ButtonGroup {
+public class ButtonGroup implements SourceFileListener{
 	
 	private Group root;
 	private List<FileButton> buttons = new ArrayList<FileButton>();
@@ -33,6 +34,8 @@ public class ButtonGroup {
 		root.setLayout(new RowLayout(SWT.VERTICAL));
 		
 		createButtons();
+		
+		SourceFiles.getInstance().addListener(this);
 	}
 
 	public void setTextViewGroup(TextViewGroup textView) {
@@ -50,7 +53,7 @@ public class ButtonGroup {
 		for (DebuggerFile f: sf.getRDFFiles()) {
 			buttons.add(new FileButton(root,f));
 		}
-		
+		root.layout(true);
 	}
 	
 
@@ -102,6 +105,16 @@ public class ButtonGroup {
 		}
 		
 		
+	}
+
+
+
+	public void filesChanged() {
+		createButtons();
+	}
+
+	public void loaded() {
+		;
 	}
 	
 }
