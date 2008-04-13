@@ -1,4 +1,4 @@
-package de.fzi.ipe.trie.filemanagement.model;
+package de.fzi.ipe.trie.filemanagement;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,11 +13,13 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.ModelMaker;
+import com.hp.hpl.jena.shared.JenaException;
 
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.RuleParser;
-import de.fzi.ipe.trie.filemanagement.Activator;
 import de.fzi.ipe.trie.filemanagement.extensionPoint.Datamodel;
+import de.fzi.ipe.trie.filemanagement.model.DebuggerFile;
+import de.fzi.ipe.trie.filemanagement.model.SourceFileListener;
 import de.fzi.ipe.trie.inference.KnowledgeBase;
 
 
@@ -73,6 +75,9 @@ public class SourceFiles implements Datamodel{
 					} catch (FileNotFoundException e) {
 						System.err.println("Could not reload file "+f.toString()+" - no big deal. ");
 						e.printStackTrace();
+					} catch (JenaException je) {
+						System.err.println("Could not reload file "+f.toString()+" - no big deal. ");
+						je.printStackTrace();						
 					}
 				}
 			}
@@ -85,6 +90,9 @@ public class SourceFiles implements Datamodel{
 					} catch (IOException e) {
 						System.err.println("Could not reload file "+f.toString()+" - no big deal. ");
 						e.printStackTrace();
+					} catch (JenaException e) {
+						System.err.println("Could not reload file "+f.toString()+" - no big deal. ");
+						e.printStackTrace();						
 					}
 				}
 			}

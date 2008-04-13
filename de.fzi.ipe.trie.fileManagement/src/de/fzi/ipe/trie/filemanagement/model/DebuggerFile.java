@@ -10,6 +10,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.ModelMaker;
+import com.hp.hpl.jena.shared.JenaException;
+
+import de.fzi.ipe.trie.RuleParser;
+
 /**
  * Simple extension of file to represent RDF or Rule files in the context of the trie file management.
  *
@@ -73,6 +80,29 @@ public class DebuggerFile {
 		} finally { 
 			reader.close();
 		}
+	}
+	
+	/**
+	 * Tries to compile the current content of the file, returns a string of length 0 
+	 * if compilation succeeds, an error message otherwise.
+	 * @return
+	 * @throws IOException
+	 */
+	public String compileTest() throws IOException{
+		try {
+			if (isRuleFile()) {
+				RuleParser.readRules(getFile());
+			}
+			else {
+				ModelMaker maker = ModelFactory.createMemModelMaker();
+				Model model = maker.createDefaultModel();
+				if (isTurtleFile()) model.read(openInputStream(), null, "TURTLE");
+				else model.read(openInputStream(), null, "RDF/XML");
+			}		
+			return "";
+		} catch (JenaException e) {
+			return e.getMessage();
+		}	
 	}
 
 	

@@ -9,6 +9,8 @@ Require-Bundle: org.eclipse.ui,
  de.fzi.ipe.trie
 Eclipse-LazyStart: true
 Bundle-ClassPath: lib/jena.jar,
- .
+ .,
+ bin/
 Export-Package: de.fzi.ipe.trie.filemanagement,
- de.fzi.ipe.trie.filemanagement.extensionPoint
+ de.fzi.ipe.trie.filemanagement.extensionPoint,
+ de.fzi.ipe.trie.filemanagement.model

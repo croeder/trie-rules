@@ -29,7 +29,6 @@ import com.hp.hpl.jena.shared.JenaException;
 import de.fzi.ipe.trie.filemanagement.gui.FileLabelProvider;
 import de.fzi.ipe.trie.filemanagement.gui.FileSetContentProvider;
 import de.fzi.ipe.trie.filemanagement.model.DebuggerFile;
-import de.fzi.ipe.trie.filemanagement.model.SourceFiles;
 import de.fzi.ipe.trie.inference.KnowledgeBaseListener;
 
 public class FileChooserView extends ViewPart {
