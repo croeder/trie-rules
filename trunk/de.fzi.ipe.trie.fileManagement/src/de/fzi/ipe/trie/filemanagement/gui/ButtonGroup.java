@@ -45,7 +45,8 @@ public class ButtonGroup implements SourceFileListener{
 	private void createButtons() {
 		for (FileButton b: buttons) {
 			b.dispose();
-		}	
+		}
+		buttons.clear();
 		SourceFiles sf = SourceFiles.getInstance();
 		for (DebuggerFile f: sf.getRuleFiles()) {
 			buttons.add(new FileButton(root,f));

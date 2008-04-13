@@ -130,7 +130,7 @@ public class FileChooserView extends ViewPart {
 				if (!selection.isEmpty()) {
 					DebuggerFile toRemove = (DebuggerFile) selection.getFirstElement();
 					try {
-						SourceFiles.getInstance().removeRuleFile(toRemove);						
+						SourceFiles.getInstance().removeFile(toRemove);						
 					} catch (IOException e1) {
 						showError("Encountered error reloading files after file removal!", "Could not read file "+e1.getMessage(),e1);
 						e1.printStackTrace();		
@@ -226,7 +226,7 @@ public class FileChooserView extends ViewPart {
 				if (!selection.isEmpty()) {
 					DebuggerFile toRemove = (DebuggerFile) selection.getFirstElement();
 					try {
-						SourceFiles.getInstance().removeRDFFile(toRemove);
+						SourceFiles.getInstance().removeFile(toRemove);
 					} catch (IOException e1) {
 						showError("Encountered error reloading files after file removal!", "Could not read file "+e1.getMessage(),e1);
 						e1.printStackTrace();		

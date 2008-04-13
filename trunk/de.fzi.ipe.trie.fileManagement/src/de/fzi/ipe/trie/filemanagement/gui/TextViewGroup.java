@@ -19,13 +19,14 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import de.fzi.ipe.trie.filemanagement.SourceFiles;
 import de.fzi.ipe.trie.filemanagement.model.DebuggerFile;
 
 public class TextViewGroup implements ModifyListener, KeyListener {
 
 	private Text text;
 	private DebuggerFile currentFile;
-	private Button save;
+	private Button save,remove;
 	private Label errorMessage;
 	
 	private boolean isModified =false;
@@ -36,7 +37,7 @@ public class TextViewGroup implements ModifyListener, KeyListener {
 		root.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
 		root.setLayout(new GridLayout(1,false));
 
-		createButtonGroup(root);
+		createGroupAboveText(root);
 		
 		text = new Text (root, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
@@ -44,12 +45,12 @@ public class TextViewGroup implements ModifyListener, KeyListener {
 		text.addKeyListener(this);
 	}
 
-	private void createButtonGroup(Group root) {
+	private void createGroupAboveText(Group root) {
 		Composite buttonGroup = new Composite (root,SWT.NONE);
 		GridData buttonGroupGD = new GridData(SWT.FILL, SWT.DEFAULT,true,false);
 		buttonGroupGD.heightHint = 30;
 		buttonGroup.setLayoutData(buttonGroupGD);
-		buttonGroup.setLayout(new GridLayout(2,false));
+		buttonGroup.setLayout(new GridLayout(3,false));
 
 		save = new Button(buttonGroup,SWT.PUSH);
 		save.setText("Save");
@@ -64,12 +65,37 @@ public class TextViewGroup implements ModifyListener, KeyListener {
 			}
 			
 		});
+		save.setEnabled(false);
+		
+		remove = new Button(buttonGroup, SWT.PUSH);
+		remove.setText("Remove");
+		remove.setToolTipText("Removes the current file from the knowledge base");
+		remove.addSelectionListener(new SelectionListener() {
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				;
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				if (currentFile != null) {
+					try {
+						SourceFiles.getInstance().removeFile(currentFile);
+						text.setText("");
+						remove.setEnabled(false);
+					} catch (IOException ioe) {
+						//really an exception that should only happen very seldomly.
+						throw new RuntimeException(ioe); 
+					}
+				}
+			}
+		});
+		remove.setEnabled(false);
 		
 		errorMessage = new Label(buttonGroup,SWT.NONE);
 		GridData gd = new GridData(SWT.FILL,SWT.DEFAULT,true,false);
 		errorMessage.setLayoutData(gd);
 		errorMessage.setForeground(new Color(Display.getCurrent(),200,0,0));
-		errorMessage.setText("Ich bin neu hier");
+		errorMessage.setText("");
 	}
 	
 	public void setText (DebuggerFile file) {
@@ -81,6 +107,7 @@ public class TextViewGroup implements ModifyListener, KeyListener {
 		}
 		isModified = false;
 		save.setEnabled(false);
+		remove.setEnabled(true);
 		errorMessage.setText("");
 	}
 
