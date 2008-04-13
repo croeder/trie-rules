@@ -9,7 +9,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IStartup;
 
 import de.fzi.ipe.trie.filemanagement.extensionPoint.FileManagementListener;
-import de.fzi.ipe.trie.filemanagement.model.SourceFiles;
 
 public class EarlyStartupManager implements IStartup{
 

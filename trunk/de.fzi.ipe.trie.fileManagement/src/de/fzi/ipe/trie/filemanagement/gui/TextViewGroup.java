@@ -9,12 +9,14 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import de.fzi.ipe.trie.filemanagement.model.DebuggerFile;
@@ -24,6 +26,8 @@ public class TextViewGroup implements ModifyListener, KeyListener {
 	private Text text;
 	private DebuggerFile currentFile;
 	private Button save;
+	private Label errorMessage;
+	
 	private boolean isModified =false;
 	
 	
@@ -45,7 +49,7 @@ public class TextViewGroup implements ModifyListener, KeyListener {
 		GridData buttonGroupGD = new GridData(SWT.FILL, SWT.DEFAULT,true,false);
 		buttonGroupGD.heightHint = 30;
 		buttonGroup.setLayoutData(buttonGroupGD);
-		buttonGroup.setLayout(new RowLayout(SWT.HORIZONTAL));
+		buttonGroup.setLayout(new GridLayout(2,false));
 
 		save = new Button(buttonGroup,SWT.PUSH);
 		save.setText("Save");
@@ -60,6 +64,12 @@ public class TextViewGroup implements ModifyListener, KeyListener {
 			}
 			
 		});
+		
+		errorMessage = new Label(buttonGroup,SWT.NONE);
+		GridData gd = new GridData(SWT.FILL,SWT.DEFAULT,true,false);
+		errorMessage.setLayoutData(gd);
+		errorMessage.setForeground(new Color(Display.getCurrent(),200,0,0));
+		errorMessage.setText("Ich bin neu hier");
 	}
 	
 	public void setText (DebuggerFile file) {
@@ -71,6 +81,7 @@ public class TextViewGroup implements ModifyListener, KeyListener {
 		}
 		isModified = false;
 		save.setEnabled(false);
+		errorMessage.setText("");
 	}
 
 	public void modifyText(ModifyEvent e) {
@@ -93,6 +104,8 @@ public class TextViewGroup implements ModifyListener, KeyListener {
 				currentFile.setContent(text.getText());
 				isModified = false;
 				save.setEnabled(false);
+				
+				errorMessage.setText(currentFile.compileTest());
 			} 
 		} catch (IOException ioe)  {
 			//TODO exception message

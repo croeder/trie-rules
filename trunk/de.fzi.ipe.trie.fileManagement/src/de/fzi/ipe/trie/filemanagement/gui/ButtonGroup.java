@@ -13,8 +13,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
+import de.fzi.ipe.trie.filemanagement.SourceFiles;
 import de.fzi.ipe.trie.filemanagement.model.DebuggerFile;
-import de.fzi.ipe.trie.filemanagement.model.SourceFiles;
 
 /**
  * Class that creates and maintains a group that displays a click able List of the current files in the FileView
@@ -42,7 +42,7 @@ public class ButtonGroup {
 	private void createButtons() {
 		for (FileButton b: buttons) {
 			b.dispose();
-		}
+		}	
 		SourceFiles sf = SourceFiles.getInstance();
 		for (DebuggerFile f: sf.getRuleFiles()) {
 			buttons.add(new FileButton(root,f));
