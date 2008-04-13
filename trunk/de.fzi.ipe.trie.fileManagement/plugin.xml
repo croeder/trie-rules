@@ -5,10 +5,6 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            class="de.fzi.ipe.trie.filemanagement.FileChooserView"
-            id="de.fzi.ipe.trie.debugger.FileChooserView"
-            name="File Chooser"/>
-      <view
             class="de.fzi.ipe.trie.filemanagement.FileView"
             id="de.fzi.ipe.trie.debugger.FileView"
             name="FileView">
