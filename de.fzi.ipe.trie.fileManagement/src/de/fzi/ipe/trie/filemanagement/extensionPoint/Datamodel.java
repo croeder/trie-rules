@@ -8,5 +8,6 @@ public interface Datamodel {
 
 	public KnowledgeBase getKnowledgeBase();
 	public void reload() throws IOException;
+	public void addListener(SourceFileListener listener);
 
 }

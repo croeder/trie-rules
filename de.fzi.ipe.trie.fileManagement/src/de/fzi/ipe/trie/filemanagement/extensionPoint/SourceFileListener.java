@@ -1,4 +1,4 @@
-package de.fzi.ipe.trie.filemanagement.model;
+package de.fzi.ipe.trie.filemanagement.extensionPoint;
 
 public interface SourceFileListener {
 

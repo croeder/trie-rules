@@ -14,8 +14,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
 import de.fzi.ipe.trie.filemanagement.SourceFiles;
+import de.fzi.ipe.trie.filemanagement.extensionPoint.SourceFileListener;
 import de.fzi.ipe.trie.filemanagement.model.DebuggerFile;
-import de.fzi.ipe.trie.filemanagement.model.SourceFileListener;
 
 /**
  * Class that creates and maintains a group that displays a click able List of the current files in the FileView

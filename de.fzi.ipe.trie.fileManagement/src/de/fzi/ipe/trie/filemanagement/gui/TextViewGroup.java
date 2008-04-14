@@ -171,6 +171,7 @@ public class TextViewGroup implements ModifyListener, KeyListener {
 		try {
 			if (currentFile != null) {
 				currentFile.setContent(text.getText());
+				SourceFiles.getInstance().reload();
 				isModified = false;
 				save.setEnabled(false);
 				
