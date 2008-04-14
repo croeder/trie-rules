@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Label;
 
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.debugger.DebuggerPlugin;
-import de.fzi.ipe.trie.debugger.gui.events.ReloadEvent;
+import de.fzi.ipe.trie.debugger.gui.events.RefreshEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
@@ -70,7 +70,7 @@ public class ProoftreeGroup implements DebuggerEventBusListener {
 		else if (event instanceof SelectedRuleEvent) {
 			prooftreeTreeViewer.displayProoftree(null);
 		}
-		else if (event instanceof ReloadEvent) {
+		else if (event instanceof RefreshEvent) {
 			prooftreeTreeViewer.displayProoftree(null);
 		}
 	}

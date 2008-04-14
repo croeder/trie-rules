@@ -19,7 +19,7 @@ import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
 import de.fzi.ipe.trie.debugger.gui.events.RedrawEvent;
-import de.fzi.ipe.trie.debugger.gui.events.ReloadEvent;
+import de.fzi.ipe.trie.debugger.gui.events.RefreshEvent;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
 import de.fzi.ipe.trie.debugger.model.DebuggerRuleStore;
@@ -87,7 +87,7 @@ public class DependsOnGroup implements DebuggerEventBusListener{
 			rule = ave.getAtom().getRule();
 			eventBus.sendEvent(RedrawEvent.DEPENDS_ON);
 		}
-		else if (event instanceof ReloadEvent) {
+		else if (event instanceof RefreshEvent) {
 			if (rule != null) {
 				rule = ruleStore.getRule(rule.getName());
 				setRuleInGUIElements();
