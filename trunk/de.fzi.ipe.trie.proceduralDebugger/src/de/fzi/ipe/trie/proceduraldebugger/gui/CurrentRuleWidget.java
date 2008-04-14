@@ -27,6 +27,7 @@ public class CurrentRuleWidget implements ILabelProviderListener, ISelectionChan
 	private Group group;
 	private StyledText ruleText;
 	private Color white = new Color(Display.getDefault(), 255, 255, 255);
+	private Color commentGray = new Color(Display.getDefault(), 220,220,220);
 	private Color highlight = new Color(Display.getDefault(), 232,242,254);
 	
 	private ExecutionTreeElement lastElement;
@@ -41,7 +42,7 @@ public class CurrentRuleWidget implements ILabelProviderListener, ISelectionChan
 	
 	
 	private void createRuleText() {
-		ruleText = new StyledText(group,SWT.BORDER |SWT.MULTI |SWT.H_SCROLL | SWT.V_SCROLL);
+		ruleText = new StyledText(group,SWT.BORDER |SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 		ruleText.setEditable(false);
 		ruleText.setBackground(white);
 	}
@@ -76,6 +77,12 @@ public class CurrentRuleWidget implements ILabelProviderListener, ISelectionChan
 			ruleText.setText(tr.toString());
 			if (tr.getActiveGoalLine() != -1) {
 				ruleText.setLineBackground(tr.getActiveGoalLine(), 1, highlight);
+			}
+			if (tr.getCommentBegin() != -1) {
+				int begin = tr.getCommentBegin();
+				int lineCount = (ruleText.getLineCount()-begin)-1;
+				ruleText.setLineIndent(begin, lineCount, 5);
+				ruleText.setLineBackground(begin, lineCount, commentGray);
 			}
 		}
 		else ruleText.setText("");
