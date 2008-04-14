@@ -6,29 +6,30 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Text;
 
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.inference.Suspender.Action;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
-import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeRule;
 import de.fzi.ipe.trie.proceduraldebugger.gui.labelProvider.LabelUtil;
+import de.fzi.ipe.trie.proceduraldebugger.gui.labelProvider.TextualRule;
 
 public class CurrentRuleWidget implements ILabelProviderListener, ISelectionChangedListener{
 
 	private Group group;
-	private Text ruleText;
+	private StyledText ruleText;
 	private Color white = new Color(Display.getDefault(), 255, 255, 255);
+	private Color highlight = new Color(Display.getDefault(), 232,242,254);
 	
-	private ExecutionTreeElement lastGoal;
+	private ExecutionTreeElement lastElement;
 	private Rule lastRule;
 	
 	public CurrentRuleWidget(Composite parent,int height) {
@@ -40,7 +41,7 @@ public class CurrentRuleWidget implements ILabelProviderListener, ISelectionChan
 	
 	
 	private void createRuleText() {
-		ruleText = new Text(group,SWT.BORDER |SWT.MULTI |SWT.H_SCROLL | SWT.V_SCROLL);
+		ruleText = new StyledText(group,SWT.BORDER |SWT.MULTI |SWT.H_SCROLL | SWT.V_SCROLL);
 		ruleText.setEditable(false);
 		ruleText.setBackground(white);
 	}
@@ -57,25 +58,24 @@ public class CurrentRuleWidget implements ILabelProviderListener, ISelectionChan
 		group.setLayoutData(layoutData);
 	}
 
-	public void suspending(Action a, ExecutionTreeElement goal, Rule r) {
+	public void suspending(Action a, ExecutionTreeElement element, Rule r) {
 		lastRule = r;
-		lastGoal = goal;
+		lastElement = element;
+		TextualRule tr = null; 
 		if (r != null) {
-			ruleText.setText(LabelUtil.toString(r));
+			if (element instanceof ExecutionTreeGoal) {
+				tr = new TextualRule(r, (ExecutionTreeGoal)element);
+			}
+			else tr = new TextualRule(r,null); 
 		}
-		else if (goal != null) { 
-			if (goal.getParent() instanceof ExecutionTreeQuery) {
-				ruleText.setText(LabelUtil.toString((ExecutionTreeQuery)goal.getParent()));
-			}
-			else if (goal.getParent() instanceof ExecutionTreeRule) {
-				ExecutionTreeRule rule = (ExecutionTreeRule) goal.getParent();
-				ruleText.setText(LabelUtil.toString(rule));
-			}
-			else if (goal instanceof ExecutionTreeRule) {
-				ruleText.setText(LabelUtil.toString((ExecutionTreeRule)goal));
-			}
-			else {
-				ruleText.setText("??? "+goal.getParent().getClass().toString());
+		else if (element != null) { 
+			tr = new TextualRule(element);
+		}
+		
+		if (tr != null) {
+			ruleText.setText(tr.toString());
+			if (tr.getActiveGoalLine() != -1) {
+				ruleText.setLineBackground(tr.getActiveGoalLine(), 1, highlight);
 			}
 		}
 		else ruleText.setText("");
@@ -100,7 +100,7 @@ public class CurrentRuleWidget implements ILabelProviderListener, ISelectionChan
 	 * Makes a redraw of this componen after the state of the LabelProperty object changed.
 	 */
 	public void labelProviderChanged(LabelProviderChangedEvent event) {
-		suspending(null,lastGoal,lastRule);
+		suspending(null,lastElement,lastRule);
 	}
 
 	public void selectionChanged(SelectionChangedEvent event) {

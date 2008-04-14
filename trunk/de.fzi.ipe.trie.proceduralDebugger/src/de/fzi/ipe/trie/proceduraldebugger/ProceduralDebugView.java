@@ -36,11 +36,12 @@ public class ProceduralDebugView extends ViewPart {
 		createTopButtonPanel(mainComposite);
 		new ConfigurationWidget(mainComposite,60);
 		new ExplanationWidget(mainComposite);
-		new VariableBindingsWidget(mainComposite,200);
+		CurrentRuleWidget currentRule = new CurrentRuleWidget(mainComposite,200);
 		ExecutionTreeWidget et = new ExecutionTreeWidget(mainComposite,400);
 		et.getLayoutData().verticalSpan = 2;
 		et.getLayoutData().verticalAlignment = SWT.FILL;
-		CurrentRuleWidget currentRule = new CurrentRuleWidget(mainComposite,200);
+		new VariableBindingsWidget(mainComposite,200);
+		
 		et.addSelectionListener(currentRule);
 		parent.layout(true);
 	}

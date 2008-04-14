@@ -10,12 +10,9 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 
 import de.fzi.ipe.trie.Atom;
-import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.Term;
 import de.fzi.ipe.trie.URITerm;
 import de.fzi.ipe.trie.inference.ProofVariable;
-import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
-import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeRule;
 
 /**
  * Collection of utilities for the creation of labels. Also offers the 
@@ -31,42 +28,7 @@ public class LabelUtil {
 	private static Set<Tuple> listeners = new HashSet<Tuple>();
 	
 	private static NullLabelProvider NULL_LABEL_PROVIDER = new NullLabelProvider();
-	
-	public static String toString(ExecutionTreeQuery query) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Query:\n");
-		builder.append("<-\n");
-		appendAtomArray(query.getBody(),builder);
-		return builder.toString();
-	}
-	
-	public static String toString(ExecutionTreeRule eRule) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("["+eRule.getRule().getName()+"\n");
-		appendAtomArray(new Atom[] {eRule.getHead()},builder);
-		builder.append("<-\n");
-		appendAtomArray(eRule.getBody(),builder);
-		builder.append("]");
-		return builder.toString();
-	}
-	
-	public static String toString(Rule rule) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("["+rule.getName()+"\n");
-		appendAtomArray(rule.getHead(),builder);
-		builder.append("<-\n");
-		appendAtomArray(rule.getBody(),builder);
-		builder.append("]");
-		return builder.toString();
-	}
-	
-	private static void appendAtomArray(Atom[] atoms, StringBuilder builder) {
-		for (Atom a: atoms) {
-			builder.append("\t");
-			builder.append(toString(a));
-			builder.append("\n");
-		}
-	}
+
 	
 	public static String toString(Atom atom) {
 		StringBuilder builder = new StringBuilder();
@@ -133,6 +95,7 @@ public class LabelUtil {
 		}
 	}
 	
+	
 	private static class Tuple {
 		IBaseLabelProvider labelProvider;
 		ILabelProviderListener listener;
@@ -143,7 +106,7 @@ public class LabelUtil {
 			this.listener = listener;
 		}
 	}
-	
+		
 	private static class NullLabelProvider implements IBaseLabelProvider {
 
 		public void addListener(ILabelProviderListener listener) {
