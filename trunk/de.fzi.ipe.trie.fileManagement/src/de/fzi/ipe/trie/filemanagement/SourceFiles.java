@@ -18,15 +18,15 @@ import com.hp.hpl.jena.shared.JenaException;
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.RuleParser;
 import de.fzi.ipe.trie.filemanagement.extensionPoint.Datamodel;
+import de.fzi.ipe.trie.filemanagement.extensionPoint.SourceFileListener;
 import de.fzi.ipe.trie.filemanagement.model.DebuggerFile;
-import de.fzi.ipe.trie.filemanagement.model.SourceFileListener;
 import de.fzi.ipe.trie.inference.KnowledgeBase;
 
 
 /**
  * Holds information about the RDF and rule files of the debugger.
  */
-public class SourceFiles implements Datamodel{
+public class SourceFiles implements Datamodel {
 	
 	private static SourceFiles instance = new SourceFiles();
 	
