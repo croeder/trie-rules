@@ -4,16 +4,17 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Text;
 
-import de.fzi.ipe.trie.debugger.gui.events.RefreshEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
 import de.fzi.ipe.trie.debugger.gui.events.RedrawEvent;
+import de.fzi.ipe.trie.debugger.gui.events.RefreshEvent;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.model.DebuggerAtom;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
@@ -27,6 +28,7 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 	private Group clauses;
 	
 	private StyledTextView styledText;
+	private Text comment;
 	
 	public RuleDetailsGroup(Composite parent, DebuggerRuleStore ruleStore, DebuggerEventBus eventBus) {
 		this.eventBus = eventBus;
@@ -35,12 +37,25 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 		clauses = new Group(parent, SWT.NONE);
 		clauses.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL));
 		clauses.setText("Rule Details");
-		FillLayout layout = new FillLayout();
+		GridLayout layout = new GridLayout();
 		layout.marginWidth = 10;
 		layout.marginHeight = 10;
 		clauses.setLayout(layout);
 		
 		styledText = new StyledTextView(clauses,eventBus);
+		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL,true,true));
+		
+		createCommentField();
+	}
+
+
+	private void createCommentField() {
+		comment = new Text(clauses,SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
+		comment.setBackground(clauses.getBackground());
+		GridData gd = new GridData();
+		gd.horizontalAlignment = SWT.FILL;
+		gd.heightHint = comment.getLineHeight()*2;
+		comment.setLayoutData(gd);
 	}
 
 
@@ -54,8 +69,10 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 		makeBodyClauses(styledText,rule);
 		styledText.updateText();
 
+		comment.setText(rule.getComment());
+		
 		GridData gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
-		gridData.minimumHeight = styledText.getSize().y;
+		gridData.minimumHeight = styledText.getSize().y + comment.getLineHeight()*2;
 		gridData.minimumWidth = styledText.getSize().x;
 	}
 	
