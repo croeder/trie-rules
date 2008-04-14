@@ -5,15 +5,21 @@ public class Rule {
 	private Atom[] head;
 	private Atom[] body;
 	private String name;
+	private String comment;
 	
-	public Rule(String name, Atom[] head, Atom[] body) {
+	public Rule(String name, String comment, Atom[] head, Atom[] body) {
 		this.head = head;
 		this.body = body;
 		this.name = name;
+		this.comment = comment;
 	}
 	
 	public String getName() {
 		return name;
+	}
+	
+	public String getComment() {
+		return comment;
 	}
 	
 	public Atom[] getHead() {
