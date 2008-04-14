@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 import java.util.Set;
 import java.util.Stack;
 
@@ -16,7 +17,7 @@ import de.fzi.ipe.trie.inference.KnowledgeBase;
 import de.fzi.ipe.trie.inference.KnowledgeBaseListener;
 
 
-public class DebuggerRuleStore implements KnowledgeBaseListener{
+public class DebuggerRuleStore extends Observable implements KnowledgeBaseListener {
 
 	private Datamodel dm;
 	private Map<Rule,DebuggerRule> ruleCache = new HashMap<Rule,DebuggerRule>();
@@ -24,6 +25,7 @@ public class DebuggerRuleStore implements KnowledgeBaseListener{
 	
 	public DebuggerRuleStore(Datamodel dm) {
 		this.dm = dm;
+		this.dm.getKnowledgeBase().addListener(this);
 	}
 	
 	
@@ -85,13 +87,18 @@ public class DebuggerRuleStore implements KnowledgeBaseListener{
 
 
 	public void knowledgeBaseChanged() {
-		ruleCache.clear();
+		ruleCache.clear();	
+		setChanged();
+		notifyObservers();
 	}
 
+	/**
+	 * Forces a reload of everything. Actually causes the files from the disc to be reread
+	 * @throws IOException
+	 */
 	public void reload() throws IOException {
 		ruleCache.clear();
 		dm.reload();
+		notifyObservers();
 	}
-
-	
 }
