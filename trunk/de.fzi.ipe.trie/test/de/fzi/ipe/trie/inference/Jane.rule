@@ -1,18 +1,20 @@
 # Example Rule File  
 @prefix zach: <http://www.fzi.de/ipe/zach#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-
-[Rule_Result:
-	(x,x,x)
-<-
+  
+# This is the actual query
+[Rule_Result:  
+	(x,x,x)   
+<-  
     (?A,rdf:type,zach:father)
     (?A,rdf:type,?B)
 ]
 
-[Rule_Father:
+# This is a rule with a stupid name
+[Rule_Buttaer:
     (?A,rdf:type,zach:father)
 <-
-	(?A,rdf:type,zach:male)
+	(?A,rdf:type,zach:male) 
 	(?A,zach:parent,?B)
 ]
  
@@ -27,5 +29,4 @@
 	(?X,zach:child,?Y)
 <-
 	(?Y,zach:raises,?X)
-] 
- 
+]
