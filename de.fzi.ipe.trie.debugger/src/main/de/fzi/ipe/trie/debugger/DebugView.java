@@ -1,6 +1,8 @@
 package de.fzi.ipe.trie.debugger;
 
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -42,7 +44,7 @@ import de.fzi.ipe.trie.debugger.gui.prooftree.ProoftreeGroup;
 import de.fzi.ipe.trie.debugger.gui.ruleDetails.RuleDetailsGroup;
 import de.fzi.ipe.trie.debugger.model.DebuggerRuleStore;
 
-public class DebugView extends ViewPart implements DebuggerEventBusListener {
+public class DebugView extends ViewPart implements DebuggerEventBusListener, Observer {
 
 
 	protected static final Font FONT_CLAUSES = new Font(null, "Tahoma", 10, SWT.BOLD);
@@ -150,6 +152,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 	public void createPartControl(Composite parent) {
 		this.parent = parent;
 		debuggerRuleStore = new DebuggerRuleStore(DatamodelAccess.getDatamodel());
+		debuggerRuleStore.addObserver(this);
 		
 		createActions();
 		createMenu();
@@ -246,7 +249,6 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 				} catch (IOException e) {
 					handleException(e, "Could not reload files - "+ e.getMessage());
 				}
-				eventBus.sendEvent(new ReloadEvent());
 			}
 		};
 		refresh.setImageDescriptor(DebuggerPlugin.loadImage(DebuggerPlugin.IMAGE_REFRESH));
@@ -258,6 +260,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 	 * Passing the focus request to the viewer's control.
 	 */
 	public void setFocus() {
+//		System.err.println("Set Focus");
 		//	viewer.getControl().setFocus();
 	}
 
@@ -300,6 +303,10 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener {
 			parent.layout(true);
 			parent.redraw();
 		}
+	}
+
+	public void update(Observable arg0, Object arg1) {
+		eventBus.sendEvent(new ReloadEvent());
 	}
 
 
