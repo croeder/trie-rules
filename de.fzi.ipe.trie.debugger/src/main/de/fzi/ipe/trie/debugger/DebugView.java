@@ -38,7 +38,7 @@ import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
 import de.fzi.ipe.trie.debugger.gui.events.RedrawEvent;
-import de.fzi.ipe.trie.debugger.gui.events.ReloadEvent;
+import de.fzi.ipe.trie.debugger.gui.events.RefreshEvent;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.gui.prooftree.ProoftreeGroup;
 import de.fzi.ipe.trie.debugger.gui.ruleDetails.RuleDetailsGroup;
@@ -78,6 +78,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener, Obs
 	private ForwardAction forward;
 	private BackAction back;
 	private boolean showNamespaces_b = false, showModules_b = false, dynamic_b = true, showProoftree_b = true;
+	private boolean inNeedOfRefresh = false;
 
 	/**
 	 * The constructor.
@@ -260,8 +261,11 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener, Obs
 	 * Passing the focus request to the viewer's control.
 	 */
 	public void setFocus() {
-//		System.err.println("Set Focus");
-		//	viewer.getControl().setFocus();
+		mainComposite.setFocus();
+		if (inNeedOfRefresh) {
+			eventBus.sendEvent(new RefreshEvent());
+			inNeedOfRefresh = false;
+		}
 	}
 
 	/**
@@ -306,7 +310,11 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener, Obs
 	}
 
 	public void update(Observable arg0, Object arg1) {
-		eventBus.sendEvent(new ReloadEvent());
+		if (mainComposite.isVisible()) {
+			eventBus.sendEvent(new RefreshEvent());
+			inNeedOfRefresh  = false;
+		}
+		else inNeedOfRefresh = true;
 	}
 
 

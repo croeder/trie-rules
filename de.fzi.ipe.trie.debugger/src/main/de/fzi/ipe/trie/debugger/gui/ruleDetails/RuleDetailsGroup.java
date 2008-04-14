@@ -9,7 +9,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
-import de.fzi.ipe.trie.debugger.gui.events.ReloadEvent;
+import de.fzi.ipe.trie.debugger.gui.events.RefreshEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
@@ -103,7 +103,7 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 			SelectedRuleEvent sEvent = (SelectedRuleEvent) event;
 			updateDisplay(sEvent.getRule());
 		}
-		else if (event instanceof ReloadEvent) {
+		else if (event instanceof RefreshEvent) {
 			if (rule != null) {
 				DebuggerRule newRule = ruleStore.getRule(rule.getRule().getName());
 				updateDisplay(newRule);
