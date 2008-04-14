@@ -21,6 +21,7 @@ public class TextualRule {
 	
 	private List<String> lines = new LinkedList<String>();
 	private int goalLine = -1;
+	private int commentBegin = -1;
 	
 	public TextualRule(ExecutionTreeElement element) {
 		if (element.getParent() instanceof ExecutionTreeQuery) {
@@ -61,6 +62,10 @@ public class TextualRule {
 	public int getActiveGoalLine() {
 		return goalLine;
 	}
+
+	public int getCommentBegin() {
+		return commentBegin;
+	}
 	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -77,6 +82,9 @@ public class TextualRule {
 		lines.add("<-");
 		appendAtomArray(rule.getBody());
 		lines.add("]");		
+		lines.add("");
+		lines.add(rule.getRule().getComment());
+		if (rule.getRule().getComment().trim().length() != 0) commentBegin = lines.size()-1;
 	}
 	
 	private void makeRule(Rule rule) {
@@ -85,6 +93,9 @@ public class TextualRule {
 		lines.add("<-");
 		appendAtomArray(rule.getBody());
 		lines.add("]");
+		lines.add("");
+		lines.add(rule.getComment());
+		if (rule.getComment().trim().length() != 0) commentBegin = lines.size()-1;
 	}
 	
 	private void makeQuery(ExecutionTreeQuery query) {
