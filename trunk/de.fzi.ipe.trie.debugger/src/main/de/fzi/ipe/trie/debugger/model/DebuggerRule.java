@@ -27,6 +27,10 @@ public class DebuggerRule  {
 		return rule.getName();
 	}
 	
+	public String getComment() {
+		return rule.getComment();
+	}
+	
 	public Rule getRule() {
 		return rule;
 	}

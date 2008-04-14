@@ -42,6 +42,7 @@ public class StyledTextView implements MouseMoveListener, MouseListener, Debugge
 		formatStyledText(parent, styledText);
     }
     
+    
 
     private void formatStyledText(Composite parent, StyledText styledText) {
         styledText.setFont(new Font(null,"Tahoma", 12,SWT.BOLD));		
@@ -57,6 +58,10 @@ public class StyledTextView implements MouseMoveListener, MouseListener, Debugge
     	buttons.clearAll();
     	
     	textParts.clear();
+    }
+
+    public void setLayoutData(Object layoutData) {
+    	styledText.setLayoutData(layoutData);
     }
     
     public void updateText() {
