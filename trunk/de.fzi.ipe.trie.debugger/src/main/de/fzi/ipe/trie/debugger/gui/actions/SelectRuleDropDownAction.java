@@ -53,7 +53,7 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator, De
         fMenu = null;
         setToolTipText("Select rule");
         setText("Select Rule");
-        setImageDescriptor(DebuggerPlugin.loadImage(DebuggerPlugin.IMAGE_RULE));
+        setImageDescriptor(DebuggerPlugin.loadImage(DebuggerPlugin.IMAGE_RULE_BLACK));
         setMenuCreator(this);
     }
 
