@@ -31,6 +31,7 @@ import de.fzi.ipe.trie.debugger.gui.DebugLabelProvider;
 import de.fzi.ipe.trie.debugger.gui.HeadlineComposite;
 import de.fzi.ipe.trie.debugger.gui.actions.BackAction;
 import de.fzi.ipe.trie.debugger.gui.actions.ForwardAction;
+import de.fzi.ipe.trie.debugger.gui.actions.GoToQueryAction;
 import de.fzi.ipe.trie.debugger.gui.actions.SelectRuleDropDownAction;
 import de.fzi.ipe.trie.debugger.gui.bindings.BindingsGroup;
 import de.fzi.ipe.trie.debugger.gui.dependsOn.DependsOnGroup;
@@ -241,6 +242,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener, Obs
 		forward.setToolTipText("Forward");
 		mgr.add(forward);
 		mgr.add(new Separator());
+		mgr.add(new GoToQueryAction(debuggerRuleStore,eventBus));
 		mgr.add(new SelectRuleDropDownAction(this,debuggerRuleStore, eventBus));
 		mgr.add(new Separator());
 		mgr.add(refresh);

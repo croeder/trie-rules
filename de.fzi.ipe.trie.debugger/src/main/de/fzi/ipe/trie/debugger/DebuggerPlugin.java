@@ -27,6 +27,8 @@ public class DebuggerPlugin extends AbstractUIPlugin implements IStartup{
 	public static final String IMAGE_RULE = "rule.gif";
 	public static final String IMAGE_RULE_GREEN = "rule_green.gif";
 	public static final String IMAGE_RULE_BLACK = "rule_black.gif";
+	public static final String IMAGE_QUERY_BLACK = "query_black.png";
+	public static final String IMAGE_QUERY_BLACK_GRAYED ="query_black_grayed.png";
 	public static final String IMAGE_AXIOM_GREEN = "axiom_green.gif";
 	public static final String IMAGE_AXIOM_BLACK = "axiom_black.gif";
 	public static final String IMAGE_REFRESH = "refresh.gif";
