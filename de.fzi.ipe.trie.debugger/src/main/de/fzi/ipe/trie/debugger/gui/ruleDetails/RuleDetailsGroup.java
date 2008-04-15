@@ -78,17 +78,24 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 	
 	private void makeHeadClauses(StyledTextView parent, DebuggerRule currentRule) {
 		if (currentRule != null) {
-			List<DebuggerAtom> headPredicates = currentRule.getHeadClauses();
-			for (int i=0;i<headPredicates.size();i++) {
-				DebuggerAtom currentClause = headPredicates.get(i);
-				TextPart currentLabel = new TextPartWord(currentClause.toString());
-				parent.addClause(currentLabel,null);
-
-				if (i < (headPredicates.size ()- 1)) {
-					TextPart and = new TextPartWord(" AND ");
-					parent.addClause(and,null);
-				}
+			if (currentRule.getName().equals("Query")) {
+				TextPart query = new TextPartWord("Return a result");
+				parent.addClause(query,null);
 				parent.addNewLine();
+			}
+			else {
+				List<DebuggerAtom> headPredicates = currentRule.getHeadClauses();
+				for (int i=0;i<headPredicates.size();i++) {
+					DebuggerAtom currentClause = headPredicates.get(i);
+					TextPart currentLabel = new TextPartWord(currentClause.toString());
+					parent.addClause(currentLabel,null);
+	
+					if (i < (headPredicates.size ()- 1)) {
+						TextPart and = new TextPartWord(" AND ");
+						parent.addClause(and,null);
+					}
+					parent.addNewLine();
+				}
 			}
 		}
 	}
