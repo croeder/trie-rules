@@ -20,7 +20,7 @@ public class AtomFocusButton extends CustomButton implements DebuggerEventBusLis
 	
 	
 	public AtomFocusButton(Point upperLeftCorner,DebuggerAtom atom, DebuggerEventBus eventBus) {
-		super(upperLeftCorner, "Focus on this clause");
+		super(upperLeftCorner, "Focus on this atom");
 		this.atom = atom;
 		this.eventBus = eventBus;
 		eventBus.addListener(this);
