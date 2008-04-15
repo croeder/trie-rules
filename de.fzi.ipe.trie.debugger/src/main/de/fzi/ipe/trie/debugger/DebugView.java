@@ -42,6 +42,7 @@ import de.fzi.ipe.trie.debugger.gui.events.RefreshEvent;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
 import de.fzi.ipe.trie.debugger.gui.prooftree.ProoftreeGroup;
 import de.fzi.ipe.trie.debugger.gui.ruleDetails.RuleDetailsGroup;
+import de.fzi.ipe.trie.debugger.model.DebuggerRule;
 import de.fzi.ipe.trie.debugger.model.DebuggerRuleStore;
 
 public class DebugView extends ViewPart implements DebuggerEventBusListener, Observer {
@@ -167,6 +168,11 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener, Obs
 		scrolledComposite.setContent(mainComposite);
 
 		createPartControl();
+		
+		if (debuggerRuleStore.getRule("Query") != null) {
+			DebuggerRule query = debuggerRuleStore.getRule("Query");
+			eventBus.sendEvent(new SelectedRuleEvent(query));
+		}
 	}
 
 	private void createPartControl() {
