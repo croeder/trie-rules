@@ -44,6 +44,29 @@ public class TextPartAtom extends TextPartWord implements DebuggerEventBusListen
 		return currentStyleRange;
 	}
 
+	@Override
+	public String getToolTipText() {
+		if (atom.isActive()) {
+			if (atom.getBindings().numberResults()> 0) {
+				return "This rule atom is active and has results";
+			}
+			else if (atom.getPossibilities().length > 0) {
+				return  "This rule atom is active but has no results \n"+
+						"There are rules that seem to be able to supply results for this atom, these are \n"+
+						"are shown in the Depends On view below, click on the exclamation mark to see only the rules. \n"+
+						"relevant to this atom. \n"+
+						"You can click on this atom to deactivate it to see how the rule would work without it.";
+			}
+			else {
+				return  "This rule atom is active but has no results \n" + 
+						"There are no rules that could supply results for this atom, \n" + 
+						"You can click on this atom to deactivate it to see how the rule would work without it.";
+			}
+		}
+		else {
+			return "This rule atom is not currently active. \n Click on it to activate it";
+		}
+	}
 	
 	private Color getForeground() {
 		if (atom.isActive()) {
