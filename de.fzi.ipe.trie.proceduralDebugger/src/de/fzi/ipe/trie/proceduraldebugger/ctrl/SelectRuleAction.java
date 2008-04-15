@@ -44,7 +44,7 @@ public class SelectRuleAction extends ButtonEnabledAction{
 		int  code = listDialog.open();
 		if ((code == Dialog.OK) && (listDialog.getResult().length > 0)) {
 			ReasoningAccess.setStartingPoint((Rule) listDialog.getResult()[0]);
-			StartDebuggingAction.getInstance().setEnabled(true);
+			StartDebuggingAction.getInstance(shell).setEnabled(true);
 		}
 	}
 	

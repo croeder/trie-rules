@@ -11,7 +11,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
 import de.fzi.ipe.trie.proceduraldebugger.ctrl.JumpAction;
-import de.fzi.ipe.trie.proceduraldebugger.ctrl.SelectRuleAction;
 import de.fzi.ipe.trie.proceduraldebugger.ctrl.StartDebuggingAction;
 import de.fzi.ipe.trie.proceduraldebugger.ctrl.StepAction;
 import de.fzi.ipe.trie.proceduraldebugger.ctrl.StopAction;
@@ -68,10 +67,10 @@ public class ProceduralDebugView extends ViewPart {
 		buttonLD.height = 50;
 		buttonLD.width = 50;
 		
-		Button button = SelectRuleAction.getInstance(parent.getShell()).createButton(panel);
-		button.setLayoutData(buttonLD);
+//		Button button = SelectRuleAction.getInstance(parent.getShell()).createButton(panel);
+//		button.setLayoutData(buttonLD);
 		
-		button = StartDebuggingAction.getInstance().createButton(panel);
+		Button button = StartDebuggingAction.getInstance(parent.getShell()).createButton(panel);
 		button.setLayoutData(buttonLD);
 		
 		button = StepAction.getInstance().createButton(panel);
