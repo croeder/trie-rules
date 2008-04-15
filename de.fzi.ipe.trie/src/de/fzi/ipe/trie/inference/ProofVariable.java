@@ -34,6 +34,10 @@ public class ProofVariable extends Term implements Comparable<ProofVariable> {
 		else return false;
 	}
 	
+	public int getId() {
+		return id;
+	}
+	
 	public int hashCode() {
 		return id;
 	}
