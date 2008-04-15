@@ -25,6 +25,7 @@ import de.fzi.ipe.trie.inference.ProofVariable;
 public class LabelUtil {
 
 	private static boolean hideBeforeHash = true;
+	private static boolean displayVariableID = true;
 	private static Set<Tuple> listeners = new HashSet<Tuple>();
 	
 	private static NullLabelProvider NULL_LABEL_PROVIDER = new NullLabelProvider();
@@ -32,13 +33,11 @@ public class LabelUtil {
 	
 	public static String toString(Atom atom) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("(");
 		builder.append(toString(atom.getSubject())); 
-		builder.append(",");
+		builder.append(", ");
 		builder.append(toString(atom.getPredicate())); 
-		builder.append(",");
+		builder.append(", ");
 		builder.append(toString(atom.getObject())); 
-		builder.append(")");
 		return builder.toString();
 	}
 	
@@ -54,7 +53,10 @@ public class LabelUtil {
 		}
 		else if (term instanceof ProofVariable) {
 			ProofVariable var = (ProofVariable) term;
-			return var.getVariableName(); 
+			if (displayVariableID) {
+				return var.getVariableName() + "-"+var.getId();
+			}
+			else return var.getVariableName(); 
 		}
 		else {
 			return term.toString();
