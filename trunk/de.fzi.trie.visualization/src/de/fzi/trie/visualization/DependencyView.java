@@ -1,17 +1,16 @@
 package de.fzi.trie.visualization;
 
 
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.zest.core.widgets.Graph;
+import org.eclipse.zest.core.widgets.GraphConnection;
+import org.eclipse.zest.core.widgets.GraphNode;
+import org.eclipse.zest.layouts.LayoutStyles;
+import org.eclipse.zest.layouts.algorithms.SpringLayoutAlgorithm;
 
 
 /**
@@ -36,61 +35,33 @@ public class DependencyView extends ViewPart {
 	
 	public static String VIEW_ID = "de.fzi.trie.visualization.dependency.DependencyView";
 	
-	private TableViewer viewer;
+	private Composite root;
 
-	/*
-	 * The content provider class is responsible for
-	 * providing objects to the view. It can wrap
-	 * existing objects in adapters or simply return
-	 * objects as-is. These objects may be sensitive
-	 * to the current input of the view, or ignore
-	 * it and always show the same content 
-	 * (like Task List, for example).
-	 */
-	 
-	class ViewContentProvider implements IStructuredContentProvider {
-		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		}
-		public void dispose() {
-		}
-		public Object[] getElements(Object parent) {
-			return new String[] { "One", "Two", "Three" };
-		}
-	}
-	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
-		public String getColumnText(Object obj, int index) {
-			return getText(obj);
-		}
-		public Image getColumnImage(Object obj, int index) {
-			return getImage(obj);
-		}
-		public Image getImage(Object obj) {
-			return PlatformUI.getWorkbench().
-					getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
-		}
-	}
-
-	/**
-	 * The constructor.
-	 */
 	public DependencyView() {
 	}
 
-	/**
-	 * This is a callback that will allow us
-	 * to create the viewer and initialize it.
-	 */
 	public void createPartControl(Composite parent) {
-		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		viewer.setContentProvider(new ViewContentProvider());
-		viewer.setLabelProvider(new ViewLabelProvider());
-		viewer.setInput(getViewSite());
+		root = new Composite(parent, SWT.DEFAULT);
+		root.setLayout(new FillLayout()); 
+		
+		Graph g = new Graph(root, SWT.NONE);
+
+		GraphNode n = new GraphNode(g, SWT.NONE, "Paper");
+		GraphNode n2 = new GraphNode(g, SWT.NONE, "Rock");
+		GraphNode n3 = new GraphNode(g, SWT.NONE, "Scissors");
+		new GraphConnection(g, SWT.NONE, n, n2);
+		new GraphConnection(g, SWT.NONE, n2, n3);
+		new GraphConnection(g, SWT.NONE, n3, n);
+		g.setLayoutAlgorithm(new SpringLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING), true);
+		
+		Label testLabel = new Label(root,SWT.None);
+		testLabel.setText("So weit so gut");
 	}
 
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
 	public void setFocus() {
-		viewer.getControl().setFocus();
+		;
 	}
 }
