@@ -12,7 +12,7 @@
             name="Dependency View"
             icon="icons/sample.gif"
             category="de.fzi.trie.visualization"
-            class="de.fzi.trie.visualization.dependency.DependencyView"
+            class="de.fzi.trie.visualization.DependencyView"
             id="de.fzi.trie.visualization.dependency.DependencyView">
       </view>
    </extension>
