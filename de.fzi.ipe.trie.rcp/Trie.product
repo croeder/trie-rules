@@ -3,7 +3,6 @@
 
 <product name="Inference Explorer" id="de.fzi.ipe.trie.rcp.InferenceExplorerProduct" application="de.fzi.ipe.trie.rcp.InferenceExplorer" useFeatures="false">
 
-
    <configIni use="default"/>
 
    <launcherArgs>
@@ -11,14 +10,12 @@
 
    <windowImages/>
 
-
    <launcher>
       <solaris/>
       <win useIco="false">
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
    </vm>
@@ -30,6 +27,7 @@
       <plugin id="de.fzi.ipe.trie.fileManagement"/>
       <plugin id="de.fzi.ipe.trie.proceduralDebugger"/>
       <plugin id="de.fzi.ipe.trie.rcp"/>
+      <plugin id="de.fzi.trie.visualization"/>
       <plugin id="org.eclipse.ant.core"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
