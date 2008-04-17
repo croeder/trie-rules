@@ -5,6 +5,9 @@ Bundle-SymbolicName: de.fzi.trie.visualization; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: de.fzi.trie.visualization.Activator
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.gef,
+ org.eclipse.zest.core,
+ org.eclipse.zest.layouts
 Eclipse-LazyStart: true
 Export-Package: de.fzi.trie.visualization
