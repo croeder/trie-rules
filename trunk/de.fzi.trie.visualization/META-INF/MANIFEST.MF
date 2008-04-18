@@ -8,6 +8,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.gef,
  org.eclipse.zest.core,
- org.eclipse.zest.layouts
+ org.eclipse.zest.layouts,
+ de.fzi.ipe.trie,
+ de.fzi.ipe.trie.fileManagement
 Eclipse-LazyStart: true
 Export-Package: de.fzi.trie.visualization

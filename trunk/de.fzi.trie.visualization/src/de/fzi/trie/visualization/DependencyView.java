@@ -4,13 +4,13 @@ package de.fzi.trie.visualization;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.zest.core.widgets.Graph;
-import org.eclipse.zest.core.widgets.GraphConnection;
-import org.eclipse.zest.core.widgets.GraphNode;
+import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.algorithms.SpringLayoutAlgorithm;
+
+import de.fzi.ipe.trie.inference.KnowledgeBaseListener;
+import de.fzi.trie.visualization.model.RuleGraph;
 
 
 /**
@@ -31,37 +31,43 @@ import org.eclipse.zest.layouts.algorithms.SpringLayoutAlgorithm;
  * <p>
  */
 
-public class DependencyView extends ViewPart {
+public class DependencyView extends ViewPart implements KnowledgeBaseListener {
 	
 	public static String VIEW_ID = "de.fzi.trie.visualization.dependency.DependencyView";
 	
 	private Composite root;
+	private GraphViewer g;
 
+	private boolean changed = false;
+	
 	public DependencyView() {
 	}
 
 	public void createPartControl(Composite parent) {
+		DatamodelAccess.getDatamodel().getKnowledgeBase().addListener(this);
+		
 		root = new Composite(parent, SWT.DEFAULT);
 		root.setLayout(new FillLayout()); 
 		
-		Graph g = new Graph(root, SWT.NONE);
-
-		GraphNode n = new GraphNode(g, SWT.NONE, "Paper");
-		GraphNode n2 = new GraphNode(g, SWT.NONE, "Rock");
-		GraphNode n3 = new GraphNode(g, SWT.NONE, "Scissors");
-		new GraphConnection(g, SWT.NONE, n, n2);
-		new GraphConnection(g, SWT.NONE, n2, n3);
-		new GraphConnection(g, SWT.NONE, n3, n);
-		g.setLayoutAlgorithm(new SpringLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING), true);
+		g = new GraphViewer(root,SWT.NONE);
+		g.setLabelProvider(new RuleGraphLabelProvider());
+		g.setContentProvider(new RuleGraphContentProvider());
+		g.setInput(new RuleGraph(DatamodelAccess.getDatamodel().getKnowledgeBase().getRuleBase()));
 		
-		Label testLabel = new Label(root,SWT.None);
-		testLabel.setText("So weit so gut");
+		g.setLayoutAlgorithm(new SpringLayoutAlgorithm(LayoutStyles.NONE), true);
 	}
 
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
 	public void setFocus() {
-		;
+		if (changed) {
+			g.setInput(new RuleGraph(DatamodelAccess.getDatamodel().getKnowledgeBase().getRuleBase()));
+			changed = false;
+		}
+	}
+
+	public void knowledgeBaseChanged() {
+		changed = true;
 	}
 }
