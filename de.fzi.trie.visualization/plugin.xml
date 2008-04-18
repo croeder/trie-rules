@@ -28,5 +28,11 @@
          </view>
       </perspectiveExtension>
    </extension>
+   <extension
+         point="de.fzi.ipe.trie.fileManagement.fileManagementListener">
+      <Listener
+            ClassName="de.fzi.trie.visualization.DatamodelAccess">
+      </Listener>
+   </extension>
 
 </plugin>
