@@ -13,6 +13,7 @@ import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.Term;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeFactory;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeRule;
+import de.fzi.ipe.trie.inference.executionTree.simple.SimpleExecutionTreeFactory;
 import de.fzi.ipe.trie.util.SetMap;
 
 
@@ -34,6 +35,10 @@ public class RuleBase {
 			groundTermIndexes[i] = new SetMap();
 			allGroundTerms [i] = new HashSet();
 		}
+	}
+	
+	public List<Rule> getMatchingRules(Atom goal) {
+		return getMatchingRules(goal,SimpleExecutionTreeFactory.getInstance());
 	}
 	
 	/**
