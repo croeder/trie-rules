@@ -37,8 +37,8 @@ public class ConfigurableSuspender extends Suspender{
 	}
 	
 	/**
-	 * Method that stops the thread if the current state matches the conditions specified in the suspender. Restarts the thred on 
-	 * actions by the user. This implementation stops always, other behavior can be achieved by overriding it. 
+	 * Method that stops the thread if the current state matches the conditions specified in the suspender. Restarts the thread on 
+	 * actions by the user. 
 	 * @param a
 	 * @param goal
 	 * @param r
