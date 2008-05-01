@@ -16,7 +16,7 @@ public class Suspender {
 
 	
 	/**
-	 * Method that stops the thread if the current state matches the conditions specified in the suspender. Restarts the thred on 
+	 * Method that stops the thread if the current state matches the conditions specified in the suspender. Restarts the thread on 
 	 * actions by the user. */ 
 	public void performedAction(Action a, ExecutionTreeGoal goal, Rule r) {
 		if (toStop) {
