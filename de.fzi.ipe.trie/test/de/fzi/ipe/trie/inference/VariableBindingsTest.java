@@ -10,10 +10,11 @@ import org.junit.Test;
 import de.fzi.ipe.trie.GroundTerm;
 import de.fzi.ipe.trie.URITerm;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
+import de.fzi.ipe.trie.inference.executionTree.simple.ExecutionTreeElementImpl;
 
 public class VariableBindingsTest {
 
-	class TestExecutionTreeElement extends ExecutionTreeElement {
+	class TestExecutionTreeElement extends ExecutionTreeElementImpl {
 
 		
 	}

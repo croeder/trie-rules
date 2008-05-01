@@ -7,6 +7,7 @@ import java.util.List;
 import de.fzi.ipe.trie.Atom;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
+import de.fzi.ipe.trie.inference.executionTree.simple.SimpleExecutionTreeFactory;
 import de.fzi.ipe.trie.inference.prooftree.Prooftree;
 
 public class SimpleBackwardChainer {
@@ -39,7 +40,7 @@ public class SimpleBackwardChainer {
 	
 	
 	public Result hasProof(Atom[] goals) {
-		query = new ExecutionTreeQuery(goals);
+		query = SimpleExecutionTreeFactory.getInstance().createExecutionTreeQuery(goals);
 		query.create(knowledgeBase,toProof);
 		
 		proceed();

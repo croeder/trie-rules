@@ -17,7 +17,9 @@ import com.hp.hpl.jena.rdf.model.ModelMaker;
 import de.fzi.ipe.trie.Atom;
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.RuleParser;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeFactory;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeFacts;
+import de.fzi.ipe.trie.inference.executionTree.simple.SimpleExecutionTreeFactory;
 
 public class KnowledgeBaseTest {
 
@@ -43,11 +45,12 @@ public class KnowledgeBaseTest {
 		}
 		
 		KnowledgeBase knowledgeBase = new KnowledgeBase(model,rules);
+		ExecutionTreeFactory f = SimpleExecutionTreeFactory.getInstance();
 		Rule testRule = knowledgeBase.getRuleBase().getRule("testFail");
 		for (int i=0;i<testRule.getBody().length;i++) {
 			Atom goal = testRule.getBody()[i];
 			Unification.processAtom(goal);
-			ExecutionTreeFacts facts = new ExecutionTreeFacts(goal,knowledgeBase);
+			ExecutionTreeFacts facts = f.createExecutionTreeFacts(goal, knowledgeBase);
 			if (facts.next(new VariableBindings())) fail("testfail "+i);
 		}
 
@@ -55,7 +58,7 @@ public class KnowledgeBaseTest {
 		for (int i=0;i<testRule.getBody().length;i++) {
 			Atom goal = testRule.getBody()[i];
 			Unification.processAtom(goal);
-			ExecutionTreeFacts facts = new ExecutionTreeFacts(goal,knowledgeBase);
+			ExecutionTreeFacts facts = f.createExecutionTreeFacts(goal,knowledgeBase);
 			if (!facts.next(new VariableBindings())) fail("testsuc "+i);
 		}
 

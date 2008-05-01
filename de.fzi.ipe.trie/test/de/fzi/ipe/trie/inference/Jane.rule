@@ -3,15 +3,15 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
   
 # This is the actual query
-[Rule_Result:  
+[Query:  
 	(x,x,x)   
 <-  
     (?A,rdf:type,zach:father)
     (?A,rdf:type,?B)
 ]
 
-# This is a rule with a stupid name
-[Rule_Buttaer:
+# This rule defines the father relation.
+[Rule_Father:
     (?A,rdf:type,zach:father)
 <-
 	(?A,rdf:type,zach:male) 
