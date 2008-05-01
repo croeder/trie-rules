@@ -13,6 +13,7 @@ import de.fzi.ipe.trie.Atom;
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.RuleParser;
 import de.fzi.ipe.trie.inference.RuleBase;
+import de.fzi.ipe.trie.inference.executionTree.simple.SimpleExecutionTreeFactory;
 
 public class RuleBaseTest {
 
@@ -32,7 +33,7 @@ public class RuleBaseTest {
 		Rule testRule = ruleBase.getRule("testRule");
 		for (int i=0;i<testRule.getBody().length;i++) {
 			Atom goal = testRule.getBody()[i];
-			List<Rule> matchingRules = ruleBase.getMatchingRules(goal);
+			List<Rule> matchingRules = ruleBase.getMatchingRules(goal, SimpleExecutionTreeFactory.getInstance());
 			if (inList("fail"+i,matchingRules))  fail("fail"+i); 
 			if (notInList("suc"+i,matchingRules)) fail("suc"+i);
 		}

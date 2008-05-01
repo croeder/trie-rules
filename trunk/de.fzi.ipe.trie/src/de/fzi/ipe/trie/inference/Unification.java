@@ -8,6 +8,7 @@ import de.fzi.ipe.trie.GroundTerm;
 import de.fzi.ipe.trie.Term;
 import de.fzi.ipe.trie.Variable;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeFactory;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeRule;
 
 
@@ -94,11 +95,11 @@ public class Unification {
 	}
 	
 	
-	public static boolean canUnify(Atom goal, Atom other) {
+	public static boolean canUnify(Atom goal, Atom other, ExecutionTreeFactory f) {
 		goal = goal.clone();
 		processAtom(goal);
 		other = other.clone();
-		return unify(goal,other, new ExecutionTreeElement(), new VariableBindings());		
+		return unify(goal,other, f.createExecutionTreeElement(), new VariableBindings());		
 	}
 	
 }

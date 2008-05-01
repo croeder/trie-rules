@@ -11,6 +11,7 @@ import de.fzi.ipe.trie.Atom;
 import de.fzi.ipe.trie.GroundTerm;
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.Term;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeFactory;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeRule;
 import de.fzi.ipe.trie.util.SetMap;
 
@@ -41,9 +42,9 @@ public class RuleBase {
 	 * the goal. 
 	 * @param newRules
 	 */
-	public List<Rule> getMatchingRules(Atom goal) {
+	public List<Rule> getMatchingRules(Atom goal, ExecutionTreeFactory f) {
 		List<Rule> toReturn = new ArrayList<Rule>();
-		List<ExecutionTreeRule> base = getExecutionTreeRules(goal);
+		List<ExecutionTreeRule> base = getExecutionTreeRules(goal,f);
 		for (ExecutionTreeRule r: base) {
 			toReturn.add(r.getRule());
 		}
@@ -61,12 +62,12 @@ public class RuleBase {
 	 * the goal. 
 	 * @param newRules
 	 */
-	public List<ExecutionTreeRule> getExecutionTreeRules(Atom goal) {
+	public List<ExecutionTreeRule> getExecutionTreeRules(Atom goal, ExecutionTreeFactory f) {
 		List<ExecutionTreeRule> toReturn = new ArrayList<ExecutionTreeRule>();
 		Set<Rule> candidateRules = getCandidateRules(goal);
 		for (Rule r:candidateRules) {
 			for (Atom a:r.getHead()) {
-				if (Unification.canUnify(goal, a)) toReturn.add(new ExecutionTreeRule(r,a));
+				if (Unification.canUnify(goal, a, f)) toReturn.add(f.createExecutionTreeRule(r, a));
 			}
 		}
 		return toReturn;
