@@ -59,7 +59,6 @@ public class ExecutionTreeGoal extends ExecutionTreeElement {
 			
 		}
 		return success;
-		//always remove any possible old Stack entries first. 
 	}
 	
 	public ExecutionTreeElement getCurrentlyProcessed() {
