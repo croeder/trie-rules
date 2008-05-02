@@ -60,7 +60,7 @@ public class AbductiveBackwardChainer implements BackwardChainer{
 			while (!toProof.isEmpty()) {
 				ExecutionTreeGoal currentElement = toProof.pop(); 
 				
-				if (!currentElement.proof(toProof, vb, knowledgeBase,suspender)) { //backtrack
+				if (!currentElement.proof(toProof, vb, knowledgeBase,suspender,query)) { //backtrack
 					suspender.performedAction(Suspender.Action.FAIL_GOAL, currentElement, null);
 					if (proofTrace.size() == 0) {
 						suspender.performedAction(Suspender.Action.END, null, null);						

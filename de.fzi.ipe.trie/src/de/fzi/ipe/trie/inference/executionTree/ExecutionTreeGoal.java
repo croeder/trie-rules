@@ -10,7 +10,7 @@ public interface ExecutionTreeGoal extends ExecutionTreeElement {
 
 	public Atom getGoal();
 	
-	public boolean proof(GoalStack stack, VariableBindings vb, KnowledgeBase kb, Suspender suspender );
+	public boolean proof(GoalStack stack, VariableBindings vb, KnowledgeBase kb, Suspender suspender, ExecutionTreeQuery query);
 	
 	public ExecutionTreeElement getCurrentlyProcessed();
 	

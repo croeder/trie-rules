@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeAssumption;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeRule;
 
 public class AbductiveExecutionTreeElementImpl implements ExecutionTreeElement{
 
@@ -35,4 +38,24 @@ public class AbductiveExecutionTreeElementImpl implements ExecutionTreeElement{
 		return Collections.unmodifiableList(children);
 	}
 	
+	/**
+	 * 
+	 * @return a number indicating how well this element is grounded in the knowledge base. 
+	 */
+	public double kbGrounding() {
+		double toReturn = 0;
+		if (this instanceof ExecutionTreeAssumption) {
+			toReturn = -2;
+		}
+		else if (this instanceof ExecutionTreeRule){
+			toReturn = 2;
+		}
+		else if (this instanceof ExecutionTreeGoal){
+			toReturn = 1;
+		}
+		for (ExecutionTreeElement elem: children) {
+			toReturn += elem.kbGrounding(); 
+		}
+		return toReturn;
+	}
 }

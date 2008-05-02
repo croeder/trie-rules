@@ -10,6 +10,7 @@ import de.fzi.ipe.trie.inference.Unification;
 import de.fzi.ipe.trie.inference.VariableBindings;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeRule;
 
 public class ExecutionTreeGoalImpl extends ExecutionTreeElementImpl implements ExecutionTreeGoal {
@@ -26,7 +27,7 @@ public class ExecutionTreeGoalImpl extends ExecutionTreeElementImpl implements E
 		return goal;
 	}
 	
-	public boolean proof(GoalStack stack, VariableBindings vb, KnowledgeBase kb, Suspender suspender ) {
+	public boolean proof(GoalStack stack, VariableBindings vb, KnowledgeBase kb, Suspender suspender, ExecutionTreeQuery query ) {
 		if (!isPrepared) {
 			suspender.performedAction(Suspender.Action.CALLING_GOAL, this, null);
 			create(kb,suspender);

@@ -35,4 +35,12 @@ public class ExecutionTreeElementImpl implements ExecutionTreeElement{
 		return Collections.unmodifiableList(children);
 	}
 	
+	/**
+	 * 
+	 * @return a number indicating how well this element is grounded in the knowledge base. 
+	 */
+	public double kbGrounding() {
+		return Double.MAX_VALUE;
+	}
+	
 }
