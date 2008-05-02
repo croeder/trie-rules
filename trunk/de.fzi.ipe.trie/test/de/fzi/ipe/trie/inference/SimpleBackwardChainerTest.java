@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.fzi.ipe.trie.Rule;
+import de.fzi.ipe.trie.inference.executionTree.simple.SimpleBackwardChainer;
 
 public class SimpleBackwardChainerTest {
 

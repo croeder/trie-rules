@@ -8,6 +8,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import de.fzi.ipe.trie.Rule;
+import de.fzi.ipe.trie.inference.executionTree.simple.SimpleBackwardChainer;
 
 public class SuspendableReasonerTest {
 	static String result1 =

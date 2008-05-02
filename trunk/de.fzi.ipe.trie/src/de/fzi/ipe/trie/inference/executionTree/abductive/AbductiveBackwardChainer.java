@@ -1,16 +1,21 @@
-package de.fzi.ipe.trie.inference;
+package de.fzi.ipe.trie.inference.executionTree.abductive;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import de.fzi.ipe.trie.Atom;
+import de.fzi.ipe.trie.inference.BackwardChainer;
+import de.fzi.ipe.trie.inference.GoalStack;
+import de.fzi.ipe.trie.inference.KnowledgeBase;
+import de.fzi.ipe.trie.inference.Result;
+import de.fzi.ipe.trie.inference.Suspender;
+import de.fzi.ipe.trie.inference.VariableBindings;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
-import de.fzi.ipe.trie.inference.executionTree.abductive.AbductiveExecutionTreeFactory;
 import de.fzi.ipe.trie.inference.prooftree.Prooftree;
 
-public class SimpleBackwardChainer {
+public class AbductiveBackwardChainer implements BackwardChainer{
 
 	private KnowledgeBase knowledgeBase;
 	private Suspender suspender;
@@ -28,11 +33,11 @@ public class SimpleBackwardChainer {
 	public VariableBindings getVariableBindings() { return vb; }	
 	public ExecutionTreeQuery getExecutionTree() { return query; }
 
-	public SimpleBackwardChainer(KnowledgeBase knowledgeBase) {
+	public AbductiveBackwardChainer(KnowledgeBase knowledgeBase) {
 		this(knowledgeBase,new Suspender());
 	}
 	
-	public SimpleBackwardChainer(KnowledgeBase knowledgeBase, Suspender suspender) {
+	public AbductiveBackwardChainer(KnowledgeBase knowledgeBase, Suspender suspender) {
 		this.knowledgeBase = knowledgeBase;
 		this.suspender = suspender;
 	}
