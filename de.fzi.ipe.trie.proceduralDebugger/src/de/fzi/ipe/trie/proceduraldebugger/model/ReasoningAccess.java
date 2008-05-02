@@ -1,14 +1,15 @@
 package de.fzi.ipe.trie.proceduraldebugger.model;
 
 import de.fzi.ipe.trie.Rule;
-import de.fzi.ipe.trie.inference.SimpleBackwardChainer;
+import de.fzi.ipe.trie.inference.BackwardChainer;
 import de.fzi.ipe.trie.inference.Suspender;
+import de.fzi.ipe.trie.inference.executionTree.abductive.AbductiveBackwardChainer;
 
 public class ReasoningAccess {
 
 	//	needs to be final, because components are ataching listeners to it (and they won't know when it's replaced)
 	private static final ListenableSuspender suspender = new ListenableSuspender(); 
-	private static SimpleBackwardChainer reasoner;
+	private static BackwardChainer reasoner;
 	private static Rule startingPoint;
 	private static ReasoningThread reasoningThread;
 	
@@ -17,7 +18,7 @@ public class ReasoningAccess {
 		ReasoningAccess.startingPoint = startingPoint;
 	}
 	
-	public static SimpleBackwardChainer getReasoner() {
+	public static BackwardChainer getReasoner() {
 		return reasoner;
 	}
 	
@@ -27,7 +28,7 @@ public class ReasoningAccess {
 
 	public static void startDebugging() {
 		stopDebugging();
-		reasoner = new SimpleBackwardChainer(DatamodelAccess.getKnowledgeBase(),suspender);
+		reasoner = new AbductiveBackwardChainer(DatamodelAccess.getKnowledgeBase(),suspender);
 		reasoningThread = new ReasoningThread();
 		reasoningThread.start();
 	}

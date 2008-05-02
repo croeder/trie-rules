@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
 import de.fzi.ipe.trie.Rule;
-import de.fzi.ipe.trie.inference.SimpleBackwardChainer;
+import de.fzi.ipe.trie.inference.BackwardChainer;
 import de.fzi.ipe.trie.inference.Suspender.Action;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 import de.fzi.ipe.trie.proceduraldebugger.model.ReasoningAccess;
@@ -15,7 +15,7 @@ import de.fzi.ipe.trie.proceduraldebugger.model.SuspendListener;
 
 public abstract class ReasonerStateWidget implements SuspendListener{
 
-	SimpleBackwardChainer reasoner; 
+	BackwardChainer reasoner; 
 	Group group;
 	
 	public ReasonerStateWidget(Composite parent,String title, int height) {

@@ -5,11 +5,11 @@ import java.util.HashSet;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import de.fzi.ipe.trie.inference.SimpleBackwardChainer;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeFacts;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
+import de.fzi.ipe.trie.inference.executionTree.simple.SimpleBackwardChainer;
 
 public class ExecutionTreeContentProvider implements ITreeContentProvider{
 
