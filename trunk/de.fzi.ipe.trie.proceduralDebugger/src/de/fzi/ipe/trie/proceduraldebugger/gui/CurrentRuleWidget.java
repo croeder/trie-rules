@@ -104,7 +104,7 @@ public class CurrentRuleWidget implements ILabelProviderListener, ISelectionChan
 
 
 	/**
-	 * Makes a redraw of this componen after the state of the LabelProperty object changed.
+	 * Makes a redraw of this component after the state of the LabelProperty object changed.
 	 */
 	public void labelProviderChanged(LabelProviderChangedEvent event) {
 		suspending(null,lastElement,lastRule);

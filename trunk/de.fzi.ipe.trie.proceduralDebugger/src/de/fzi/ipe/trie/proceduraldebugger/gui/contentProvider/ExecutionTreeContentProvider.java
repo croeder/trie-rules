@@ -5,11 +5,11 @@ import java.util.HashSet;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+import de.fzi.ipe.trie.inference.BackwardChainer;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeFacts;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
-import de.fzi.ipe.trie.inference.executionTree.simple.SimpleBackwardChainer;
 
 public class ExecutionTreeContentProvider implements ITreeContentProvider{
 
@@ -51,7 +51,7 @@ public class ExecutionTreeContentProvider implements ITreeContentProvider{
 	}
 
 	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof SimpleBackwardChainer) {
+		if (inputElement instanceof BackwardChainer) {
 			return new Object[]{query};
 		}
 		else return new Object[0];
@@ -62,7 +62,7 @@ public class ExecutionTreeContentProvider implements ITreeContentProvider{
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		if (newInput != null) query = ((SimpleBackwardChainer) newInput).getExecutionTree();
+		if (newInput != null) query = ((BackwardChainer) newInput).getExecutionTree();
 		else query = null;
 	}
 
