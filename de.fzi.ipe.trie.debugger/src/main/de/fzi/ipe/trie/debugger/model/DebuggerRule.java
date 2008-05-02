@@ -7,8 +7,9 @@ import java.util.Set;
 
 import de.fzi.ipe.trie.Atom;
 import de.fzi.ipe.trie.Rule;
+import de.fzi.ipe.trie.inference.BackwardChainer;
 import de.fzi.ipe.trie.inference.Result;
-import de.fzi.ipe.trie.inference.SimpleBackwardChainer;
+import de.fzi.ipe.trie.inference.executionTree.abductive.AbductiveBackwardChainer;
 import de.fzi.ipe.trie.inference.prooftree.Prooftree;
 import de.fzi.ipe.trie.inference.prooftree.ProoftreeNode;
 import de.fzi.ipe.trie.inference.prooftree.ProoftreeRuleNode;
@@ -55,7 +56,7 @@ public class DebuggerRule  {
 	 * @return
 	 */
 	public Result getBindings() {
-		SimpleBackwardChainer reasoner = new SimpleBackwardChainer(debuggerRuleStore.getKnowledgeBase());
+		BackwardChainer reasoner = new AbductiveBackwardChainer(debuggerRuleStore.getKnowledgeBase());
 		
 		List<Atom> activeBodyAtoms = new ArrayList<Atom>();
 		for (DebuggerAtom da: bodyClauses) {

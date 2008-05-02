@@ -6,8 +6,9 @@ import java.util.Set;
 import de.fzi.ipe.trie.Atom;
 import de.fzi.ipe.trie.Variable;
 import de.fzi.ipe.trie.debugger.DebugView;
+import de.fzi.ipe.trie.inference.BackwardChainer;
 import de.fzi.ipe.trie.inference.Result;
-import de.fzi.ipe.trie.inference.SimpleBackwardChainer;
+import de.fzi.ipe.trie.inference.executionTree.abductive.AbductiveBackwardChainer;
 
 public class DebuggerAtom {
 
@@ -66,7 +67,7 @@ public class DebuggerAtom {
 			return results;
 		}
 		else {
-			SimpleBackwardChainer reasoner = new SimpleBackwardChainer(rule.getDebuggerRuleStore().getKnowledgeBase());
+			BackwardChainer reasoner = new AbductiveBackwardChainer(rule.getDebuggerRuleStore().getKnowledgeBase());
 			results = reasoner.hasProof(new Atom[] {atom});
 			return results;
 		}
