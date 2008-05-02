@@ -8,6 +8,7 @@ import de.fzi.ipe.trie.inference.ProofVariable;
 public interface ExecutionTreeQuery extends ExecutionTreeInstantiation {	
 
 	public Map<Variable,ProofVariable> getVariableMap();
+
 	
 	
 }

@@ -1,5 +1,4 @@
 @prefix : <http://www.fzi.de/ipe/zach#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 
-	:JohnsUncle 	rdf:type  :male;
-	              :raises   :John.
+	:JohnsUncle 	rdf:type  :male. 
