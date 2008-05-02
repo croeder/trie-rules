@@ -1,5 +1,6 @@
 package de.fzi.ipe.trie.inference.prooftree;
 
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeAssumption;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeFacts;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
@@ -12,6 +13,9 @@ public class ProoftreeAtomNode extends ProoftreeNode{
 		ExecutionTreeElement currentlyProcessed = goal.getCurrentlyProcessed();
 		if (currentlyProcessed instanceof ExecutionTreeRule) {
 			addChild(new ProoftreeRuleNode((ExecutionTreeRule) currentlyProcessed));
+		}
+		else if (currentlyProcessed instanceof ExecutionTreeAssumption) {
+			addChild(new ProoftreeAssumptionNode((ExecutionTreeAssumption) currentlyProcessed));
 		}
 		else {
 			addChild(new ProoftreeFactNode((ExecutionTreeFacts)currentlyProcessed));

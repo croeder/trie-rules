@@ -8,8 +8,10 @@ import de.fzi.ipe.trie.inference.KnowledgeBase;
 import de.fzi.ipe.trie.inference.Suspender;
 import de.fzi.ipe.trie.inference.Unification;
 import de.fzi.ipe.trie.inference.VariableBindings;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeAssumption;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeRule;
 
 public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElementImpl implements ExecutionTreeGoal {
@@ -26,7 +28,7 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 		return goal;
 	}
 	
-	public boolean proof(GoalStack stack, VariableBindings vb, KnowledgeBase kb, Suspender suspender ) {
+	public boolean proof(GoalStack stack, VariableBindings vb, KnowledgeBase kb, Suspender suspender, ExecutionTreeQuery query) {
 		if (!isPrepared) {
 			suspender.performedAction(Suspender.Action.CALLING_GOAL, this, null);
 			create(kb,suspender);
@@ -47,7 +49,7 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 				success = ((AbductiveExecutionTreeFactsImpl) currentElement).next(vb);
 				if (!success) childIndex++;
 			}
-			else {
+			else if (currentElement instanceof AbductiveExecutionTreeRuleImpl){
 				AbductiveExecutionTreeRuleImpl currentRule = (AbductiveExecutionTreeRuleImpl) getChildren().get(childIndex);
 				boolean unify = Unification.unify(goal, currentRule, vb);
 				assert(unify);
@@ -55,6 +57,12 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 				childIndex++;
 				success = true;
 			}
+			else if (currentElement instanceof AbductiveExecutionTreeAssumptionImpl) {
+				if (query.kbGrounding() >2) success = true;
+				else success = false;
+				childIndex ++;
+			}
+			
 			if (success) {
 				suspender.performedAction(Suspender.Action.EXIT_GOAL, this, null);
 				break;
@@ -64,6 +72,7 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 		return success;
 	}
 	
+
 	public ExecutionTreeElement getCurrentlyProcessed() {
 		if (childIndex == 0) return getChildren().get(0);
 		else {
@@ -90,8 +99,10 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 	}
 	
 	protected void create(KnowledgeBase kb, Suspender suspender) {		
+		//facts
 		addChild(new AbductiveExecutionTreeFactsImpl(goal,kb));
 		
+		//rules
 		List<ExecutionTreeRule> matchingRules = kb.getRuleBase().getExecutionTreeRules(goal, AbductiveExecutionTreeFactory.getInstance());
 		for (ExecutionTreeRule r:matchingRules) {
 			AbductiveExecutionTreeRuleImpl ri = (AbductiveExecutionTreeRuleImpl) r;
@@ -99,6 +110,11 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 			addChild(r);
 			suspender.performedAction(Suspender.Action.ADD_RULE_TO_EXECUTION_TREE, this, r.getRule());
 		}
+		
+		//assumption
+		ExecutionTreeAssumption assumption = new AbductiveExecutionTreeAssumptionImpl(goal,this);
+		addChild(assumption);
+		
 		childIndex = 0;
 		isPrepared = true;
 	}

@@ -6,7 +6,7 @@ import de.fzi.ipe.trie.inference.KnowledgeBase;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeInstantiation;
 
 
-public abstract class ExecutionTreeInstantiationImpl extends ExecutionTreeElementImpl implements ExecutionTreeInstantiation{
+public class ExecutionTreeInstantiationImpl extends ExecutionTreeElementImpl implements ExecutionTreeInstantiation{
 	
 	protected Atom[] body;
 	

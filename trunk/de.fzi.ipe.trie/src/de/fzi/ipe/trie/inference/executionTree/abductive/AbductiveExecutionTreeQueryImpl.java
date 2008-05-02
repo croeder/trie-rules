@@ -39,6 +39,12 @@ public class AbductiveExecutionTreeQueryImpl extends AbductiveExecutionTreeInsta
 		return a;
 	}
 	
+	@Override
+	public double kbGrounding() {
+System.out.println(super.kbGrounding()); //TODO sysout
+		return super.kbGrounding();
+	}
+	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("[query:\n");

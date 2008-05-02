@@ -7,7 +7,6 @@
 	(x,x,x)   
 <-  
     (?A,rdf:type,zach:father)
-    (?A,rdf:type,?B)
 ]
 
 # This rule defines the father relation.
