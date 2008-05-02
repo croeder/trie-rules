@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.LabelProvider;
 
 import de.fzi.ipe.trie.Atom;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeAssumption;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeRule;
@@ -24,6 +25,10 @@ public class ExecutionTreeElementLabelProvider extends LabelProvider {
 		}
 		else if (element instanceof ExecutionTreeQuery) {
 			return "Query";
+		}
+		else if (element instanceof ExecutionTreeAssumption) {
+			Atom assumedGoal = ((ExecutionTreeAssumption) element).getGoal();
+			return "Assume: "+ LabelUtil.toString(assumedGoal);
 		}
 		else if (element instanceof Atom) {
 			return LabelUtil.toString((Atom)element); 
