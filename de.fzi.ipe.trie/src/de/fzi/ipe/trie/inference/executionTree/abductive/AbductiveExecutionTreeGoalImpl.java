@@ -58,7 +58,12 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 				success = true;
 			}
 			else if (currentElement instanceof AbductiveExecutionTreeAssumptionImpl) {
-				if (query.kbGrounding() >2) success = true;
+				AbductiveExecutionTreeAssumptionImpl assumption = (AbductiveExecutionTreeAssumptionImpl) currentElement;
+				if (query.kbGrounding() >0) {
+					boolean unify = Unification.unify(goal, assumption.getGoal(),assumption,vb);
+					assert(unify);
+					success = true;
+				}
 				else success = false;
 				childIndex ++;
 			}
@@ -119,5 +124,10 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 		isPrepared = true;
 	}
 	
+	
+	@Override
+	public void postprocess(VariableBindings vb) {
+		getCurrentlyProcessed().postprocess(vb);
+	}
 	
 }

@@ -63,12 +63,12 @@ public class Atom {
 		if (p.equals(a)) p=b;
 		if (o.equals(a)) o=b;
 	}
-
-	//probably remove this later.
-	public void replace(ProofVariable a, ProofVariable b) {
+	
+	public void replace(ProofVariable a, Term b) {
 		if (s.equals(a)) s=b;
 		if (p.equals(a)) p=b;
 		if (o.equals(a)) o=b;
 	}
+
 	
 }

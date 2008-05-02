@@ -21,6 +21,8 @@ public class Result {
 	
 	
 	public Result(ExecutionTreeQuery query, List<VariableBindings> result, List<Prooftree> prooftrees) {
+		sort(result, prooftrees);
+		
 		Set<Variable> variables = query.getVariableMap().keySet();
 		int i=0;
 		for (Variable v:variables) {
@@ -35,10 +37,35 @@ public class Result {
 				GroundTerm value = result.get(x).getVariableBinding(pv);
 				results[x][variableToIndex.get(v)] = value;
 			}
-		}
+		}		
 		this.prooftrees = prooftrees;
 	}
 	
+	
+	/*
+	 * sorts both list based on the kb grounding of the prooftrees. 
+	 */
+	private void sort(List<VariableBindings> result, List<Prooftree> prooftrees) {
+		//feeling lazy now and the lists will be small ... selection sort!
+		for (int x=0;x<prooftrees.size();x++) {
+			Prooftree currentP = prooftrees.get(x);
+			VariableBindings currentV = result.get(x);
+			for (int y=x+1;y<prooftrees.size();y++){
+				Prooftree otherP = prooftrees.get(y);
+				if (otherP.getGrounding() > currentP.getGrounding()) {
+					prooftrees.set(x, otherP);
+					result.set(x,result.get(y));
+					prooftrees.set(y, currentP);
+					result.set(y,currentV);
+					currentP = prooftrees.get(x);
+					currentV = result.get(y);
+				}
+			}
+		}
+	}
+
+
+
 	public String toString() {
 		List<String> variables = getSortedVariableNames();
 		

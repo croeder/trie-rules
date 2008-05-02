@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.fzi.ipe.trie.inference.VariableBindings;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeAssumption;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
@@ -57,5 +58,11 @@ public class AbductiveExecutionTreeElementImpl implements ExecutionTreeElement{
 			toReturn += elem.kbGrounding(); 
 		}
 		return toReturn;
+	}
+
+	public void postprocess(VariableBindings vb) {
+		for (ExecutionTreeElement element: getChildren()) {
+			element.postprocess(vb);
+		}
 	}
 }

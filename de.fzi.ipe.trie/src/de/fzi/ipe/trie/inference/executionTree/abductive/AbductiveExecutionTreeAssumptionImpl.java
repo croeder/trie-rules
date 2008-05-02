@@ -1,6 +1,9 @@
 package de.fzi.ipe.trie.inference.executionTree.abductive;
 
 import de.fzi.ipe.trie.Atom;
+import de.fzi.ipe.trie.GroundTerm;
+import de.fzi.ipe.trie.inference.ProofVariable;
+import de.fzi.ipe.trie.inference.VariableBindings;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeAssumption;
 
 public class AbductiveExecutionTreeAssumptionImpl extends AbductiveExecutionTreeElementImpl implements ExecutionTreeAssumption{
@@ -20,6 +23,16 @@ public class AbductiveExecutionTreeAssumptionImpl extends AbductiveExecutionTree
 
 	public String toString() {
 		return "Assume "+goal.toString();
+	}
+
+	public void postprocess(VariableBindings vb) {
+		for (int i=0;i<3;i++) {
+			if (goal.getTerm(i) instanceof ProofVariable) {
+				ProofVariable var = (ProofVariable) goal.getTerm(i);
+				GroundTerm term = vb.getVariableBinding(var);
+				if (term != null) goal.replace(var, term);
+			}
+		}
 		
 		
 	}

@@ -42,7 +42,9 @@ public class VariableBindings {
 	
 	public void removeBindings(ExecutionTreeElement elem) {
 		ProofVariable[] vars = bindingLineage.removeVars(elem);
-		for (ProofVariable v:vars) variableBindings.remove(v);
+		for (ProofVariable v:vars) {
+			variableBindings.remove(v);
+		}
 	}
 	
 	public String toString() {
