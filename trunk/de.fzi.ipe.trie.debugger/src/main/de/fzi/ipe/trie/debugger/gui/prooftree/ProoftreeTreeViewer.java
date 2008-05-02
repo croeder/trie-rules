@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Composite;
 import de.fzi.ipe.trie.debugger.DebugView;
 import de.fzi.ipe.trie.debugger.DebuggerPlugin;
 import de.fzi.ipe.trie.inference.prooftree.Prooftree;
+import de.fzi.ipe.trie.inference.prooftree.ProoftreeAssumptionNode;
 import de.fzi.ipe.trie.inference.prooftree.ProoftreeFactNode;
 import de.fzi.ipe.trie.inference.prooftree.ProoftreeNode;
 import de.fzi.ipe.trie.inference.prooftree.ProoftreeQueryNode;
@@ -88,6 +89,10 @@ public class ProoftreeTreeViewer extends TreeViewer{
 			if(element instanceof ProoftreeFactNode) {
 				ProoftreeFactNode node = (ProoftreeFactNode) element;
 				return DebugView.labelProvider.getLabel(node.getFacts());
+			}
+			else if (element instanceof ProoftreeAssumptionNode) {
+				ProoftreeAssumptionNode node = (ProoftreeAssumptionNode) element;
+				return "Assumption "+ DebugView.labelProvider.getLabel(node.getGoal());
 			}
 			else if(element instanceof ProoftreeNode) {
 			    ProoftreeNode node = (ProoftreeNode) element;
