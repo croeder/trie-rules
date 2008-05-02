@@ -11,7 +11,7 @@ import de.fzi.ipe.trie.inference.ProofVariable;
 
 
 
-public class VariableBindingsTreeLabelProvider implements ITableLabelProvider{
+public class VariableBindingsTableLabelProvider implements ITableLabelProvider{
 
 	public Image getColumnImage(Object element, int columnIndex) {
 		return null;
