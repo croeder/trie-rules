@@ -18,5 +18,4 @@ public interface BackwardChainer {
 	
 	public Result hasProof(Atom[] goals);
 	
-	
 }
