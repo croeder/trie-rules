@@ -28,7 +28,7 @@ public class ExecutionTreeElementLabelProvider extends LabelProvider {
 		else if (element instanceof Atom) {
 			return LabelUtil.toString((Atom)element); 
 		}
-		else return "GoalLabelProvider: Unexpected Element "+element.getClass();
+		else return "ExecutionTreeElementLabelProvider: Unexpected Element "+element.getClass();
 	}
 
 	

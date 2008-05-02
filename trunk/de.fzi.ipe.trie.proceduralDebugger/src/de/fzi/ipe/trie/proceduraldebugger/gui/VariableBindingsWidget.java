@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 
 import de.fzi.ipe.trie.proceduraldebugger.gui.contentProvider.VariableBindingsContentProvider;
-import de.fzi.ipe.trie.proceduraldebugger.gui.labelProvider.VariableBindingsTreeLabelProvider;
+import de.fzi.ipe.trie.proceduraldebugger.gui.labelProvider.VariableBindingsTableLabelProvider;
 import de.fzi.ipe.trie.proceduraldebugger.model.ReasoningAccess;
 
 public class VariableBindingsWidget extends ReasonerStateWidget{
@@ -26,7 +26,7 @@ public class VariableBindingsWidget extends ReasonerStateWidget{
 		value.setWidth(250);
 		
 		table.setContentProvider(new VariableBindingsContentProvider());
-		table.setLabelProvider(new VariableBindingsTreeLabelProvider());
+		table.setLabelProvider(new VariableBindingsTableLabelProvider());
 		
 	}
 
