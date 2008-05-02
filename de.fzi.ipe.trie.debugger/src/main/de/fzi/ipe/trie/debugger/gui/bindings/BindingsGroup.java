@@ -6,7 +6,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -74,7 +73,6 @@ public class BindingsGroup implements DebuggerEventBusListener{
 		labelProvider = new BindingsTableLabelProvider();
 		bindingsViewer.setContentProvider(new BindingsTableContentProvider());
 		bindingsViewer.setLabelProvider(labelProvider);
-		bindingsViewer.setSorter(new ViewerSorter());
 		bindingsViewer.getTable().setLinesVisible(true);
 		bindingsViewer.getTable().setHeaderVisible(true);
 

@@ -35,6 +35,7 @@ public class DebuggerPlugin extends AbstractUIPlugin implements IStartup{
 	public static final String IMAGE_DYNAMIC = "dyn.gif";
 	public static final String IMAGE_FACT_BLACK = "fact_black.gif";
 	public static final String IMAGE_FACT_GREEN = "fact_green.gif";
+	public static final String IMAGE_FACT_RED = "fact_red.gif";
 	public static final String IMAGE_REMOVE_GRAY = "remove_gray.gif";
 	public static final String IMAGE_TO_QUERY = "find.gif";
 	public static final String IMAGE_PROOFTREE = "prooftree.gif";

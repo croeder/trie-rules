@@ -80,6 +80,9 @@ public class ProoftreeTreeViewer extends TreeViewer{
 			    if (node instanceof ProoftreeFactNode) {
 			        return DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_FACT_GREEN);
 			    }
+			    else if (node instanceof ProoftreeAssumptionNode) {
+			    	return DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_FACT_RED);
+			    }
 			    else return DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_RULE_GREEN);
 			}
 			else return null;
@@ -103,6 +106,7 @@ public class ProoftreeTreeViewer extends TreeViewer{
 			}
 			else return "?";
 		}
+		
 
 		public void addListener(ILabelProviderListener listener) {
 			;
