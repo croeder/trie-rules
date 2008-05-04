@@ -127,12 +127,14 @@ public class ProoftreeTreeViewer extends TreeViewer{
 			;
 		}
 	}
+	
+
 
 	
 	public ProoftreeTreeViewer (Composite c) {
 	    super(c);
 	    setContentProvider(new MyTreeContentProvider());
-	    setLabelProvider(new MyTreeLabelProvider());		
+	    setLabelProvider(new MyTreeLabelProvider());	
 	}
 
 	public void displayProoftree(Prooftree prooftree) {

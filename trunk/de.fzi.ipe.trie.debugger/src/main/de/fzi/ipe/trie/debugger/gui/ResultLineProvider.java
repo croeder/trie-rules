@@ -18,7 +18,6 @@ public class ResultLineProvider {
 		this.result = result;
 	}
 
-
 	public GroundTerm getBinding(String varName) {
 		return result.getBinding(varName, i);
 	}
@@ -41,7 +40,17 @@ public class ResultLineProvider {
 		return result.getVariables();
 	}
 	
-	
+	public boolean sameBindings (ResultLineProvider other) {
+		for (Variable v: getVariables()) {
+			GroundTerm term1 = getBinding(v);
+			GroundTerm term2 = other.getBinding(v);
+			if (term1 != term2) {
+				if (term1 != null && term2 != null && term1.equals(term2)) continue;
+				else return false;
+			}
+		}
+		return true;
+	}
 	
 	
 }
