@@ -1,11 +1,16 @@
 package de.fzi.ipe.trie.debugger.gui.bindings;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -81,6 +86,7 @@ public class BindingsGroup implements DebuggerEventBusListener{
 
 	private void setResult(Result result) {
 		String[] sortedVariables = result.getSortedVariableNames().toArray(new String[0]);
+		bindingsViewer.setFilters(new ViewerFilter[]{new ThresholdFilter()});
 		labelProvider.setSortedVariables(sortedVariables);
 		for (TableColumn tc:bindingsViewer.getTable().getColumns()) {
 			tc.dispose();
@@ -146,6 +152,38 @@ public class BindingsGroup implements DebuggerEventBusListener{
 			IStructuredSelection sel = (IStructuredSelection) event.getSelection();
 			ResultLineProvider node = (ResultLineProvider) sel.getFirstElement();
 			eventBus.sendEvent(new SelectedResultLineEvent(node));
+		}
+	}
+	
+	private static class ThresholdFilter extends ViewerFilter {
+
+		Set<ResultLineProvider> providers = new HashSet<ResultLineProvider>();
+		static final double THRESHOLD = 0.6d;
+		static final double THRESHOLD_DIFF = 0.1d;
+		
+		boolean sameResultAlreadyBetter(ResultLineProvider currentLine) {
+			for (ResultLineProvider older:providers) {
+				if (currentLine.sameBindings(older)) {
+					if (!older.basedOnAssumption()) return true;
+					else if (older.getProoftree().getGrounding() - currentLine.getProoftree().getGrounding() > THRESHOLD_DIFF) {
+						return true;
+					}
+				}
+			}
+			providers.add(currentLine);
+			return false;
+		}
+		
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
+			ResultLineProvider currentLine = (ResultLineProvider) element;
+			if (!currentLine.basedOnAssumption()) {
+				return true;
+			}
+			else if (currentLine.getProoftree().getGrounding() > THRESHOLD){
+				return !sameResultAlreadyBetter(currentLine);
+			}
+			else return false;
 		}
 	}
 
