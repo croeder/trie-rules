@@ -20,7 +20,8 @@ Bundle-ClassPath: Trie.jar,
  lib/stax-api-1.0.jar,
  lib/wstx-asl-3.0.0.jar,
  lib/xercesImpl.jar,
- lib/xml-apis.jar
+ lib/xml-apis.jar,
+ lib/commons-lang-2.4.jar
 Export-Package: .,
  EDU.oswego.cs.dl.util.concurrent,
  antlr,
