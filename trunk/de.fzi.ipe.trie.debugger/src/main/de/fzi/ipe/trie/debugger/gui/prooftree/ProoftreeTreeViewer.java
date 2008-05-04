@@ -138,13 +138,14 @@ public class ProoftreeTreeViewer extends TreeViewer{
 	public void displayProoftree(Prooftree prooftree) {
         TreeViewRoot root = new TreeViewRoot(prooftree);
         setInput(root);
-        expandAll();
+        expandToLevel(3);
         showAssumptions(prooftree);
         refresh();	    
 	}
 	
 	private void showAssumptions(Prooftree prooftree) {
 		if (prooftree != null && prooftree.getGrounding()<1d) {
+			expandAll();
 			List<ProoftreeNode> toShow = new ArrayList<ProoftreeNode>(50);
 			for (ProoftreeNode node: prooftree) {
 				if (node instanceof ProoftreeAssumptionNode) toShow.add(node);
