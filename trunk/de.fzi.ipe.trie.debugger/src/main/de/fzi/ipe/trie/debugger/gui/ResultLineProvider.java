@@ -33,6 +33,9 @@ public class ResultLineProvider {
 		return result.getProoftree(i);
 	}
 
+	public boolean basedOnAssumption() {
+		return result.getProoftree(i).getGrounding()<1d;
+	}
 
 	public Set<Variable> getVariables() {
 		return result.getVariables();
