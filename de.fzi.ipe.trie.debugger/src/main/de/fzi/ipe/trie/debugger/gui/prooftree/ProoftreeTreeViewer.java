@@ -1,6 +1,8 @@
 package de.fzi.ipe.trie.debugger.gui.prooftree;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,10 +27,29 @@ import de.fzi.ipe.trie.inference.prooftree.ProoftreeRuleNode;
 
 public class ProoftreeTreeViewer extends TreeViewer{
 	
-	class MyTreeContentProvider implements ITreeContentProvider {
+	static class ProoftreeNodeComparator implements Comparator<ProoftreeNode> {
+
+		public int compare(ProoftreeNode o1, ProoftreeNode o2) {
+			String name1 = makeComparableString(o1);
+			String name2 = makeComparableString(o2);
+			return name1.compareTo(name2);
+		}
+
+		private String makeComparableString(ProoftreeNode o1) {
+			String name1;
+			if (o1 instanceof ProoftreeRuleNode) name1 = "a"+o1.toString();
+			else if (o1 instanceof ProoftreeAssumptionNode) name1 = "b"+o1.toString();
+			else name1 = "c"+o1.toString();
+			return name1;
+		}
+		
+	}
+	
+	
+	static class MyTreeContentProvider implements ITreeContentProvider {
 
 		private final String[] placeholder = {"Please select a result to show the prooftree for it"};
-		
+		private static final Comparator<ProoftreeNode> COMPARATOR = new ProoftreeNodeComparator();
 		
 		public Object[] getChildren(Object parentElement) {
 			if (parentElement instanceof TreeViewRoot) {
@@ -41,10 +62,14 @@ public class ProoftreeTreeViewer extends TreeViewer{
 					for (ProoftreeNode node:((ProoftreeNode)parentElement).getChildren()) {
 						toReturn.addAll(node.getChildren());
 					}
-					return toReturn.toArray();
+					ProoftreeNode[] toReturnArray = toReturn.toArray(new ProoftreeNode[0]);
+					Arrays.sort(toReturnArray,COMPARATOR);
+					return toReturnArray;
 				}
 				else {
-					return ((ProoftreeNode)parentElement).getChildren().toArray();
+					ProoftreeNode[] toReturnArray = ((ProoftreeNode)parentElement).getChildren().toArray(new ProoftreeNode[0]);
+					Arrays.sort(toReturnArray,COMPARATOR);
+					return toReturnArray;
 				}
 			}
 			else return new Object[0];
