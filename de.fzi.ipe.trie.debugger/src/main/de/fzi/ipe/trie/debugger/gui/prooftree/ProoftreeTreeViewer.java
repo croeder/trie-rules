@@ -1,6 +1,8 @@
 package de.fzi.ipe.trie.debugger.gui.prooftree;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -10,7 +12,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-
+import org.eclipse.swt.widgets.Item;
 
 import de.fzi.ipe.trie.debugger.DebugView;
 import de.fzi.ipe.trie.debugger.DebuggerPlugin;
@@ -124,7 +126,6 @@ public class ProoftreeTreeViewer extends TreeViewer{
 		public void removeListener(ILabelProviderListener listener) {
 			;
 		}
-		
 	}
 
 	
@@ -137,8 +138,30 @@ public class ProoftreeTreeViewer extends TreeViewer{
 	public void displayProoftree(Prooftree prooftree) {
         TreeViewRoot root = new TreeViewRoot(prooftree);
         setInput(root);
+        expandAll();
+        showAssumptions(prooftree);
         refresh();	    
+	}
+	
+	private void showAssumptions(Prooftree prooftree) {
+		if (prooftree != null && prooftree.getGrounding()<1d) {
+			List<ProoftreeNode> toShow = new ArrayList<ProoftreeNode>(50);
+			for (ProoftreeNode node: prooftree) {
+				if (node instanceof ProoftreeAssumptionNode) toShow.add(node);
+			}
+			for (int i=toShow.size()-1;i>=0;i--) {
+				Item item = (Item) doFindItem(toShow.get(i));
+				if (item != null) showItem(item); 
+			}
+		}
 	}
 
 	
 }
+
+
+
+
+
+
+

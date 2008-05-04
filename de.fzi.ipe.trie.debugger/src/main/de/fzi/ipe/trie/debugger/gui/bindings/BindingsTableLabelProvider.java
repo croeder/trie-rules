@@ -9,6 +9,7 @@ import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Image;
 
 import de.fzi.ipe.trie.debugger.DebugView;
+import de.fzi.ipe.trie.debugger.DebuggerPlugin;
 import de.fzi.ipe.trie.debugger.gui.ResultLineProvider;
 
 
@@ -32,7 +33,11 @@ public class BindingsTableLabelProvider implements ITableLabelProvider{
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
      */
     public Image getColumnImage(Object element, int columnIndex) {
-        return null;
+        ResultLineProvider currentNode = (ResultLineProvider) element; 
+        if (columnIndex == 0 && currentNode.basedOnAssumption()) {
+        	return DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_FOCUS);
+        }
+        else return null;
     }
 
     
@@ -45,7 +50,8 @@ public class BindingsTableLabelProvider implements ITableLabelProvider{
             if (sortedVariables.length>columnIndex) {
                 String variableName = sortedVariables[columnIndex];
                 if (currentNode != null) {
-                    return DebugView.labelProvider.getLabel(currentNode.getBinding(variableName));
+                	String columnText = DebugView.labelProvider.getLabel(currentNode.getBinding(variableName));
+                	return (columnText != null) ? columnText : " ??? ";
                 }
             }
             else {
