@@ -1,10 +1,14 @@
 package de.fzi.ipe.trie.inference.prooftree;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
 
-public class Prooftree {
+public class Prooftree implements Iterable<ProoftreeNode>{
 	
 	ProoftreeQueryNode rootNode = new ProoftreeQueryNode("query");
 
@@ -49,6 +53,19 @@ public class Prooftree {
 			calculateGrounding(child);
 		}
 		kbGrounding = ((double) kbElements) / ((double) allElements);
+	}
+
+	public Iterator<ProoftreeNode> iterator() {
+		List<ProoftreeNode> nodes = new LinkedList<ProoftreeNode>();
+		collect(rootNode,nodes);
+		return nodes.iterator();
+	}
+	
+	private void collect(ProoftreeNode start, List<ProoftreeNode> collect) {
+		collect.add(start);
+		for (ProoftreeNode node:start.getChildren()) {
+			collect(node,collect);
+		}
 	}
 
 	
