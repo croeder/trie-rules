@@ -47,7 +47,7 @@ public class ExecutionTreeFactsImpl extends ExecutionTreeElementImpl implements 
 		vb.removeBindings(this);
 		Atom a;
 		while ((a = getNextAtom()) != null) {
-			if (Unification.unify(goal, a, this, vb)) return true;
+			if (Unification.unify(goal, a, this, vb,0)) return true;
 			else vb.removeBindings(this);
 		}
 		return false;

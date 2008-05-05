@@ -3,6 +3,8 @@ package de.fzi.ipe.trie.inference;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import de.fzi.ipe.trie.Atom;
 import de.fzi.ipe.trie.GroundTerm;
 import de.fzi.ipe.trie.Term;
@@ -48,37 +50,38 @@ public class Unification {
 	
 	
 	//! the atom other is changed! (the variables are replaced). 
-	public static boolean unify(Atom goal, Atom other, ExecutionTreeElement elem, VariableBindings vb) {
+	public static boolean unify(Atom goal, Atom other, ExecutionTreeElement elem, VariableBindings vb, int maxEdits) {
 		processAtom(other);
 		for (int i=0;i<3;i++) {
 			if (goal.getTerm(i) instanceof ProofVariable && other.getTerm(i) instanceof ProofVariable) {
 				other.replace((ProofVariable)other.getTerm(i), (ProofVariable) goal.getTerm(i));
 			}
 		}
-		return unifyCore(goal,other,elem,vb);
+		return unifyCore(goal,other,elem,vb,maxEdits);
 	}
 
-	public static boolean unify(Atom goal, ExecutionTreeRule rule, VariableBindings vb) {
+	public static boolean unify(Atom goal, ExecutionTreeRule rule, VariableBindings vb, int maxEdits) {
 		processRule(rule);
 		for (int i=0;i<3;i++) {
 			if (goal.getTerm(i) instanceof ProofVariable && rule.getHead().getTerm(i) instanceof ProofVariable) {
 				rule.replace((ProofVariable)rule.getHead().getTerm(i), (ProofVariable) goal.getTerm(i));
 			}
 		}
-		return unifyCore(goal,rule.getHead(),rule,vb);		
+		return unifyCore(goal,rule.getHead(),rule,vb,maxEdits);		
 	}
 	
 	
-	private static boolean unifyCore(Atom goal, Atom other, ExecutionTreeElement elem, VariableBindings vb) {
-		boolean failed = false;
+	private static boolean unifyCore(Atom goal, Atom other, ExecutionTreeElement elem, VariableBindings vb, int maxEdits) {
+		int edits = 0;
 		for (int i=0;i<3;i++) {
 			Term goalTerm = vb.getCurrentTerm(goal.getTerm(i));
 			Term otherTerm = vb.getCurrentTerm(other.getTerm(i));
 			if (goalTerm instanceof ProofVariable && otherTerm instanceof ProofVariable) {
-				if (goalTerm != otherTerm) failed = true; 
+				if (goalTerm != otherTerm) edits = 10000; 
 			}
 			else if (goalTerm instanceof GroundTerm && otherTerm instanceof GroundTerm) {
-				if (!goalTerm.equals(otherTerm)) failed = true;
+				if (goalTerm.equals(otherTerm)) edits +=0; 
+				else edits += almostEqual((GroundTerm)goalTerm, (GroundTerm) otherTerm);
 			}
 			else if (goalTerm instanceof ProofVariable) {
 				vb.addVariableBinding((ProofVariable)goalTerm, (GroundTerm) otherTerm, elem);
@@ -87,19 +90,28 @@ public class Unification {
 				vb.addVariableBinding((ProofVariable) otherTerm, (GroundTerm) goalTerm, elem);
 			}
 		}
-		if (failed) {
+		if (edits > maxEdits) {
 			vb.removeBindings(elem);
 			return false;
 		}
 		else return true;
 	}
 	
+
+	/**
+	 * Returns true iff 1) a and b are not equal and 2) the edit distance
+	 * between the uris of a and b is very small. 
+	 */
+	private static int almostEqual(GroundTerm a, GroundTerm b) {
+		return StringUtils.getLevenshteinDistance(a.toString(), b.toString());
+	}
 	
-	public static boolean canUnify(Atom goal, Atom other, ExecutionTreeFactory f) {
+	
+	public static boolean canUnify(Atom goal, Atom other, ExecutionTreeFactory f, int maxEdits) {
 		goal = goal.clone();
 		processAtom(goal);
 		other = other.clone();
-		return unify(goal,other, f.createExecutionTreeElement(), new VariableBindings());		
+		return unify(goal,other, f.createExecutionTreeElement(), new VariableBindings(),maxEdits);		
 	}
 	
 }

@@ -2,6 +2,10 @@ package de.fzi.ipe.trie;
 
 public class Rule {
 
+	//the default edit distance to be used when also retrieving rules that 
+	//'almost' match
+	public static final int DEFAULT_EDIT_DISTANCE = 3;
+	
 	private Atom[] head;
 	private Atom[] body;
 	private String name;
