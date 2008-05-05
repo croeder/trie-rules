@@ -48,7 +48,7 @@ public class DebuggerRuleStore extends Observable implements KnowledgeBaseListen
 	}
 	
 	public Set<DebuggerRule> getPossibilities(DebuggerAtom bodyClause) {
-		List<Rule> matchingRules = dm.getKnowledgeBase().getRuleBase().getMatchingRules(bodyClause.getAtom());
+		List<Rule> matchingRules = dm.getKnowledgeBase().getRuleBase().getMatchingRules(bodyClause.getAtom(),Rule.DEFAULT_EDIT_DISTANCE);
 		Set<DebuggerRule> toReturn = new HashSet<DebuggerRule>();
 		for (Rule r:matchingRules) {
 			toReturn.add(getRule(r));
