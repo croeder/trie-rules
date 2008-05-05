@@ -46,7 +46,7 @@ public class RuleGraph {
 		
 		public void connect(RuleBase ruleBase, HashMap<Rule, RuleNode> ruleNodes) {
 			Set<Rule> dependsOnCandidates = new HashSet<Rule>();
-			for (Atom a:rule.getBody()) dependsOnCandidates.addAll(ruleBase.getMatchingRules(a));
+			for (Atom a:rule.getBody()) dependsOnCandidates.addAll(ruleBase.getMatchingRules(a,Rule.DEFAULT_EDIT_DISTANCE));
 			for (Rule r:dependsOnCandidates) {
 				dependsOn.add(ruleNodes.get(r));
 				ruleNodes.get(r).dependingOn.add(this);
