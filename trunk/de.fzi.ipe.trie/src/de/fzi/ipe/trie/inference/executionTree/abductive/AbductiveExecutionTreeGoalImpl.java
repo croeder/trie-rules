@@ -3,6 +3,7 @@ package de.fzi.ipe.trie.inference.executionTree.abductive;
 import java.util.List;
 
 import de.fzi.ipe.trie.Atom;
+import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.inference.GoalStack;
 import de.fzi.ipe.trie.inference.KnowledgeBase;
 import de.fzi.ipe.trie.inference.Suspender;
@@ -51,7 +52,7 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 			}
 			else if (currentElement instanceof AbductiveExecutionTreeRuleImpl){
 				AbductiveExecutionTreeRuleImpl currentRule = (AbductiveExecutionTreeRuleImpl) getChildren().get(childIndex);
-				boolean unify = Unification.unify(goal, currentRule, vb);
+				boolean unify = Unification.unify(goal, currentRule, vb, Rule.DEFAULT_EDIT_DISTANCE);
 				assert(unify);
 				currentRule.create(kb, stack);
 				childIndex++;
@@ -60,7 +61,7 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 			else if (currentElement instanceof AbductiveExecutionTreeAssumptionImpl) {
 				AbductiveExecutionTreeAssumptionImpl assumption = (AbductiveExecutionTreeAssumptionImpl) currentElement;
 				if (query.kbGrounding() >0) {
-					boolean unify = Unification.unify(goal, assumption.getGoal(),assumption,vb);
+					boolean unify = Unification.unify(goal, assumption.getGoal(),assumption,vb,0);
 					assert(unify);
 					success = true;
 				}
@@ -108,7 +109,7 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 		addChild(new AbductiveExecutionTreeFactsImpl(goal,kb));
 		
 		//rules
-		List<ExecutionTreeRule> matchingRules = kb.getRuleBase().getExecutionTreeRules(goal, AbductiveExecutionTreeFactory.getInstance());
+		List<ExecutionTreeRule> matchingRules = kb.getRuleBase().getExecutionTreeRules(goal, AbductiveExecutionTreeFactory.getInstance(),Rule.DEFAULT_EDIT_DISTANCE);
 		for (ExecutionTreeRule r:matchingRules) {
 			AbductiveExecutionTreeRuleImpl ri = (AbductiveExecutionTreeRuleImpl) r;
 			ri.setParent(this);

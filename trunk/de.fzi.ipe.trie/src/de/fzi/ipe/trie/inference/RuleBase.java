@@ -37,8 +37,8 @@ public class RuleBase {
 		}
 	}
 	
-	public List<Rule> getMatchingRules(Atom goal) {
-		return getMatchingRules(goal,SimpleExecutionTreeFactory.getInstance());
+	public List<Rule> getMatchingRules(Atom goal, int maxEdits) {
+		return getMatchingRules(goal,SimpleExecutionTreeFactory.getInstance(),maxEdits);
 	}
 	
 	/**
@@ -47,9 +47,9 @@ public class RuleBase {
 	 * the goal. 
 	 * @param newRules
 	 */
-	public List<Rule> getMatchingRules(Atom goal, ExecutionTreeFactory f) {
+	public List<Rule> getMatchingRules(Atom goal, ExecutionTreeFactory f, int maxEdits) {
 		List<Rule> toReturn = new ArrayList<Rule>();
-		List<ExecutionTreeRule> base = getExecutionTreeRules(goal,f);
+		List<ExecutionTreeRule> base = getExecutionTreeRules(goal,f,maxEdits);
 		for (ExecutionTreeRule r: base) {
 			toReturn.add(r.getRule());
 		}
@@ -67,17 +67,19 @@ public class RuleBase {
 	 * the goal. 
 	 * @param newRules
 	 */
-	public List<ExecutionTreeRule> getExecutionTreeRules(Atom goal, ExecutionTreeFactory f) {
+	public List<ExecutionTreeRule> getExecutionTreeRules(Atom goal, ExecutionTreeFactory f, int maxEdits) {
 		List<ExecutionTreeRule> toReturn = new ArrayList<ExecutionTreeRule>();
-		Set<Rule> candidateRules = getCandidateRules(goal);
+		Collection<Rule> candidateRules;
+		if (maxEdits == 0) candidateRules = getCandidateRules(goal);
+		else candidateRules = getAllRules();
 		for (Rule r:candidateRules) {
 			for (Atom a:r.getHead()) {
-				if (Unification.canUnify(goal, a, f)) toReturn.add(f.createExecutionTreeRule(r, a));
+				if (Unification.canUnify(goal, a, f,maxEdits)) toReturn.add(f.createExecutionTreeRule(r, a));
 			}
 		}
 		return toReturn;
 	}
-	
+		
 	private Set<Rule> getCandidateRules(Atom goal) {
 		Set<Rule> toReturn = new HashSet<Rule>();
 		toReturn.addAll(rules);

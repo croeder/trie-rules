@@ -2,4 +2,6 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 
 	:JohnsUncle 	rdf:type  :male. 
+	:JohnsUncle 	:raises  :Mike. 
+
       :Fritz rdf:type :male.

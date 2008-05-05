@@ -18,6 +18,15 @@
 ]
  
 
+
+# This rule defines the father relation.
+[Rule_Father2:
+    (?A,rdf:type,zach:pather)
+<-
+	(?A,rdf:type,zach:male) 
+	(?A,zach:parent,?B)
+]
+
 [Rule_Parent:
 	(?X,zach:parent,?Y)
 <-

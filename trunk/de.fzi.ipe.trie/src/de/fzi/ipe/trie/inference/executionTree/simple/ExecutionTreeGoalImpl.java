@@ -50,7 +50,7 @@ public class ExecutionTreeGoalImpl extends ExecutionTreeElementImpl implements E
 			}
 			else {
 				ExecutionTreeRuleImpl currentRule = (ExecutionTreeRuleImpl) getChildren().get(childIndex);
-				boolean unify = Unification.unify(goal, currentRule, vb);
+				boolean unify = Unification.unify(goal, currentRule, vb,0);
 				assert(unify);
 				currentRule.create(kb, stack);
 				childIndex++;
@@ -93,7 +93,7 @@ public class ExecutionTreeGoalImpl extends ExecutionTreeElementImpl implements E
 	protected void create(KnowledgeBase kb, Suspender suspender) {		
 		addChild(new ExecutionTreeFactsImpl(goal,kb));
 		
-		List<ExecutionTreeRule> matchingRules = kb.getRuleBase().getExecutionTreeRules(goal, SimpleExecutionTreeFactory.getInstance());
+		List<ExecutionTreeRule> matchingRules = kb.getRuleBase().getExecutionTreeRules(goal, SimpleExecutionTreeFactory.getInstance(),0);
 		for (ExecutionTreeRule r:matchingRules) {
 			ExecutionTreeRuleImpl ri = (ExecutionTreeRuleImpl) r;
 			ri.setParent(this);
