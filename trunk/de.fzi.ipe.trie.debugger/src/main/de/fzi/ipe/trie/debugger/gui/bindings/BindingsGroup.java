@@ -178,6 +178,7 @@ public class BindingsGroup implements DebuggerEventBusListener{
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			ResultLineProvider currentLine = (ResultLineProvider) element;
 			if (!currentLine.basedOnAssumption()) {
+				providers.add(currentLine);
 				return true;
 			}
 			else if (currentLine.getProoftree().getGrounding() > THRESHOLD){
