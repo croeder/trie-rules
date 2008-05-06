@@ -7,6 +7,7 @@ import de.fzi.ipe.trie.Atom;
 import de.fzi.ipe.trie.Variable;
 import de.fzi.ipe.trie.inference.ProofVariable;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
+import de.fzi.ipe.trie.inference.executionTree.GroundingNumbers;
 
 public class AbductiveExecutionTreeQueryImpl extends AbductiveExecutionTreeInstantiationImpl implements ExecutionTreeQuery{	
 
@@ -40,7 +41,7 @@ public class AbductiveExecutionTreeQueryImpl extends AbductiveExecutionTreeInsta
 	}
 	
 	@Override
-	public double kbGrounding() {
+	public GroundingNumbers kbGrounding() {
 		return super.kbGrounding();
 	}
 	

@@ -15,7 +15,7 @@ public interface ExecutionTreeElement {
 	 * 
 	 * @return a number indicating how well this element is grounded in the knowledge base. 
 	 */
-	public double kbGrounding();
+	public GroundingNumbers kbGrounding();
 
 
 	/**

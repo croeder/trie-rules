@@ -9,6 +9,8 @@ import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeAssumption;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeRule;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeRuleAssumption;
+import de.fzi.ipe.trie.inference.executionTree.GroundingNumbers;
 
 public class AbductiveExecutionTreeElementImpl implements ExecutionTreeElement{
 
@@ -41,21 +43,31 @@ public class AbductiveExecutionTreeElementImpl implements ExecutionTreeElement{
 	
 	/**
 	 * 
-	 * @return a number indicating how well this element is grounded in the knowledge base. 
+	 * @return a tuple with two number, the first being the number of all elements 
+	 * in the tree, the second the number of non-assumptions
 	 */
-	public double kbGrounding() {
-		double toReturn = 0;
-		if (this instanceof ExecutionTreeAssumption) {
-			toReturn = -2;
+	public GroundingNumbers kbGrounding() {
+		GroundingNumbers toReturn; 
+		if (this instanceof ExecutionTreeGoal) {
+			toReturn = new GroundingNumbers(2,2);
+			ExecutionTreeGoal goal = (ExecutionTreeGoal) this;
+			ExecutionTreeElement current = goal.getCurrentlyProcessed();
+			if (current != null) toReturn = GroundingNumbers.add(goal.getCurrentlyProcessed().kbGrounding(),toReturn);
 		}
-		else if (this instanceof ExecutionTreeRule){
-			toReturn = 2;
-		}
-		else if (this instanceof ExecutionTreeGoal){
-			toReturn = 1;
-		}
-		for (ExecutionTreeElement elem: children) {
-			toReturn += elem.kbGrounding(); 
+		else {
+			if (this instanceof ExecutionTreeAssumption) {
+				toReturn = new GroundingNumbers(2,0);
+			}
+			else if (this instanceof ExecutionTreeRuleAssumption) {
+				toReturn = new GroundingNumbers(1,0);
+			}
+			else if (this instanceof ExecutionTreeRule){
+				toReturn = new GroundingNumbers(2,2);
+			}
+			else toReturn = new GroundingNumbers(0,0);
+			for (ExecutionTreeElement elem: children) {
+				toReturn = GroundingNumbers.add(toReturn, elem.kbGrounding()); 
+			}
 		}
 		return toReturn;
 	}
@@ -65,4 +77,5 @@ public class AbductiveExecutionTreeElementImpl implements ExecutionTreeElement{
 			element.postprocess(vb);
 		}
 	}
+
 }

@@ -42,12 +42,18 @@ public class Prooftree implements Iterable<ProoftreeNode>{
 	
 	
 	private void calculateGrounding(ProoftreeNode node) {
-		if ((node instanceof ProoftreeRuleNode) || (node instanceof ProoftreeFactNode)){
-			allElements ++;
+		if (node instanceof ProoftreeRuleNode) {
+			ProoftreeRuleNode ruleNode = (ProoftreeRuleNode) node;
+			if (!ruleNode.isAlmostMatch()) kbElements++;
 			kbElements ++;
+			allElements +=2;
+		}
+		else if (node instanceof ProoftreeFactNode){
+			allElements +=2;
+			kbElements +=2 ;
 		}
 		else if (node instanceof ProoftreeAssumptionNode) {
-			allElements ++;
+			allElements +=2;
 		}
 		for (ProoftreeNode child: node.getChildren()) {
 			calculateGrounding(child);
@@ -68,5 +74,4 @@ public class Prooftree implements Iterable<ProoftreeNode>{
 		}
 	}
 
-	
 }

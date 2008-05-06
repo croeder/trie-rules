@@ -60,13 +60,13 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 			}
 			else if (currentElement instanceof AbductiveExecutionTreeAssumptionImpl) {
 				AbductiveExecutionTreeAssumptionImpl assumption = (AbductiveExecutionTreeAssumptionImpl) currentElement;
-				if (query.kbGrounding() >0) {
+				childIndex ++;
+				if (query.kbGrounding().getFraction() >0.90) { 
 					boolean unify = (Unification.unify(goal, assumption.getGoal(),assumption,vb,0) != -1);
 					assert(unify);
 					success = true;
 				}
 				else success = false;
-				childIndex ++;
 			}
 			
 			if (success) {
@@ -82,7 +82,8 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 	public ExecutionTreeElement getCurrentlyProcessed() {
 		if (childIndex == 0) return getChildren().get(0);
 		else {
-			return getChildren().get(childIndex-1);
+			if (childIndex <= getChildren().size()) return getChildren().get(childIndex-1);
+			else return null;
 		}
 	}
 
