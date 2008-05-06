@@ -1,6 +1,7 @@
 package de.fzi.ipe.trie.inference.prooftree;
 
 import de.fzi.ipe.trie.Rule;
+import de.fzi.ipe.trie.RuleProxy;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeRule;
@@ -12,6 +13,10 @@ public class ProoftreeRuleNode extends ProoftreeNode{
 	
 	public Rule getRule() {
 		return rule;
+	}
+	
+	public boolean isAlmostMatch() {
+		return rule instanceof RuleProxy;
 	}
 	
 	public ProoftreeRuleNode(ExecutionTreeRule rule) {

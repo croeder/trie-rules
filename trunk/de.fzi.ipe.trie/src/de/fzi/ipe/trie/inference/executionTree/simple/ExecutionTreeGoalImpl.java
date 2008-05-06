@@ -50,7 +50,7 @@ public class ExecutionTreeGoalImpl extends ExecutionTreeElementImpl implements E
 			}
 			else {
 				ExecutionTreeRuleImpl currentRule = (ExecutionTreeRuleImpl) getChildren().get(childIndex);
-				boolean unify = Unification.unify(goal, currentRule, vb,0);
+				boolean unify = (Unification.unify(goal, currentRule, vb,0) != -1);
 				assert(unify);
 				currentRule.create(kb, stack);
 				childIndex++;

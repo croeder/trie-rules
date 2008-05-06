@@ -7,17 +7,9 @@ package de.fzi.ipe.trie;
  * @author zach
  *
  */
-public class RuleProxy extends Rule{
+public interface RuleProxy extends Rule{
 	
-	private Atom goal; //The goal that almost matched this rule
-	
-	public RuleProxy(String name, String comment, Atom[] head, Atom[] body, Atom goal) {
-		super(name, comment, head, body);
-		this.goal = goal;
-	}
-	
-	public Atom getGoal() {
-		return goal;
-	}
+	public Atom getGoal();
+	public Rule getRule();
 	
 }
