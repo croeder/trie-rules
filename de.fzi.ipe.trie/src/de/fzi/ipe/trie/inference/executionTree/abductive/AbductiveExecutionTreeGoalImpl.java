@@ -52,7 +52,7 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 			}
 			else if (currentElement instanceof AbductiveExecutionTreeRuleImpl){
 				AbductiveExecutionTreeRuleImpl currentRule = (AbductiveExecutionTreeRuleImpl) getChildren().get(childIndex);
-				boolean unify = Unification.unify(goal, currentRule, vb, Rule.DEFAULT_EDIT_DISTANCE);
+				boolean unify = (Unification.unify(goal, currentRule, vb, Rule.DEFAULT_EDIT_DISTANCE) != -1);
 				assert(unify);
 				currentRule.create(kb, stack);
 				childIndex++;
@@ -61,7 +61,7 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 			else if (currentElement instanceof AbductiveExecutionTreeAssumptionImpl) {
 				AbductiveExecutionTreeAssumptionImpl assumption = (AbductiveExecutionTreeAssumptionImpl) currentElement;
 				if (query.kbGrounding() >0) {
-					boolean unify = Unification.unify(goal, assumption.getGoal(),assumption,vb,0);
+					boolean unify = (Unification.unify(goal, assumption.getGoal(),assumption,vb,0) != -1);
 					assert(unify);
 					success = true;
 				}

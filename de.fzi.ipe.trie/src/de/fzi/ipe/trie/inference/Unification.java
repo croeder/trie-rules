@@ -50,7 +50,7 @@ public class Unification {
 	
 	
 	//! the atom other is changed! (the variables are replaced). 
-	public static boolean unify(Atom goal, Atom other, ExecutionTreeElement elem, VariableBindings vb, int maxEdits) {
+	public static int unify(Atom goal, Atom other, ExecutionTreeElement elem, VariableBindings vb, int maxEdits) {
 		processAtom(other);
 		for (int i=0;i<3;i++) {
 			if (goal.getTerm(i) instanceof ProofVariable && other.getTerm(i) instanceof ProofVariable) {
@@ -60,7 +60,7 @@ public class Unification {
 		return unifyCore(goal,other,elem,vb,maxEdits);
 	}
 
-	public static boolean unify(Atom goal, ExecutionTreeRule rule, VariableBindings vb, int maxEdits) {
+	public static int unify(Atom goal, ExecutionTreeRule rule, VariableBindings vb, int maxEdits) {
 		processRule(rule);
 		for (int i=0;i<3;i++) {
 			if (goal.getTerm(i) instanceof ProofVariable && rule.getHead().getTerm(i) instanceof ProofVariable) {
@@ -71,7 +71,7 @@ public class Unification {
 	}
 	
 	
-	private static boolean unifyCore(Atom goal, Atom other, ExecutionTreeElement elem, VariableBindings vb, int maxEdits) {
+	private static int unifyCore(Atom goal, Atom other, ExecutionTreeElement elem, VariableBindings vb, int maxEdits) {
 		int edits = 0;
 		for (int i=0;i<3;i++) {
 			Term goalTerm = vb.getCurrentTerm(goal.getTerm(i));
@@ -92,9 +92,9 @@ public class Unification {
 		}
 		if (edits > maxEdits) {
 			vb.removeBindings(elem);
-			return false;
+			return -1;
 		}
-		else return true;
+		else return edits;
 	}
 	
 
@@ -107,7 +107,11 @@ public class Unification {
 	}
 	
 	
-	public static boolean canUnify(Atom goal, Atom other, ExecutionTreeFactory f, int maxEdits) {
+	/**
+	 * 
+	 * @return the number of edits that is necessary to match the goal to the atom other
+	 */
+	public static int canUnify(Atom goal, Atom other, ExecutionTreeFactory f, int maxEdits) {
 		goal = goal.clone();
 		processAtom(goal);
 		other = other.clone();

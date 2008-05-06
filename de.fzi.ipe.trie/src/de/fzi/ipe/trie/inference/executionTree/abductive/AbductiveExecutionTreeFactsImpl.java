@@ -47,7 +47,7 @@ public class AbductiveExecutionTreeFactsImpl extends AbductiveExecutionTreeEleme
 		vb.removeBindings(this);
 		Atom a;
 		while ((a = getNextAtom()) != null) {
-			if (Unification.unify(goal, a, this, vb,0)) return true;
+			if (Unification.unify(goal, a, this, vb,0) != -1) return true;
 			else vb.removeBindings(this);
 		}
 		return false;

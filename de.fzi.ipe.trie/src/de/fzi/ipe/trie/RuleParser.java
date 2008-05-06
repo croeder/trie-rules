@@ -19,6 +19,8 @@ import com.hp.hpl.jena.graph.Node_URI;
 import com.hp.hpl.jena.reasoner.TriplePattern;
 import com.hp.hpl.jena.reasoner.rulesys.ClauseEntry;
 
+import de.fzi.ipe.trie.inference.RuleImpl;
+
 
 /**
  * Rule parser that utilizes the Jena rule parser. Could be made a lot faster by simply implementing 
@@ -41,7 +43,7 @@ public class RuleParser {
 		for (com.hp.hpl.jena.reasoner.rulesys.Rule r:jenaRules) {
 			Atom[] body = getAtoms(r.getBody(),variableMap);
 			Atom[] head = getAtoms(r.getHead(),variableMap);
-			Rule currentRule = new Rule(r.getName(),ruleComments.get(r.getName()),head,body);
+			Rule currentRule = new RuleImpl(r.getName(),ruleComments.get(r.getName()),head,body);
 			toReturn.add(currentRule);
 		}
 		return toReturn;

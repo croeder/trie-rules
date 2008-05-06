@@ -110,8 +110,15 @@ public class Result {
 	}
 	
 	public GroundTerm getBinding(Variable var, int resultLine) {
-		if (var==null||resultLine>=results.length || variableToIndex.get(var)>=results[resultLine].length) return null;
-		else return results[resultLine][variableToIndex.get(var)];
+		try {
+			if (var==null 
+					||resultLine>=results.length 
+					||variableToIndex.get(var) == null
+					||variableToIndex.get(var)>=results[resultLine].length) return null;
+			else return results[resultLine][variableToIndex.get(var)];			
+		} catch (NullPointerException npe) {
+			throw npe;
+		}
 	}
 	
 	public GroundTerm getBinding(String varName, int resultLine) {
