@@ -18,6 +18,12 @@
 ]
  
 
+[Rule_ChildFromRaises:
+	(?X,zach:child,?Y)
+<-
+	(?Y,zach:raises,?X)
+]
+ 
 
 # This rule defines the father relation.
 [Rule_Father2:
@@ -33,8 +39,3 @@
 	(?Y,zach:child,?X)
 ]
 
-[Rule_ChildFromRaises:
-	(?X,zach:child,?Y)
-<-
-	(?Y,zach:raises,?X)
-]
