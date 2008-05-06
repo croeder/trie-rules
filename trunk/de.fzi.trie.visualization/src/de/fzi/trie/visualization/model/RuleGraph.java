@@ -3,10 +3,12 @@ package de.fzi.trie.visualization.model;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import de.fzi.ipe.trie.Atom;
 import de.fzi.ipe.trie.Rule;
+import de.fzi.ipe.trie.RuleProxy;
 import de.fzi.ipe.trie.inference.RuleBase;
 
 public class RuleGraph {
@@ -46,10 +48,20 @@ public class RuleGraph {
 		
 		public void connect(RuleBase ruleBase, HashMap<Rule, RuleNode> ruleNodes) {
 			Set<Rule> dependsOnCandidates = new HashSet<Rule>();
-			for (Atom a:rule.getBody()) dependsOnCandidates.addAll(ruleBase.getMatchingRules(a,Rule.DEFAULT_EDIT_DISTANCE));
+			for (Atom a:rule.getBody()) {
+				List<Rule> matchingRules = ruleBase.getMatchingRules(a,Rule.DEFAULT_EDIT_DISTANCE);
+				for (Rule r:matchingRules) {
+					if (r instanceof RuleProxy) dependsOnCandidates.add(((RuleProxy)r).getRule());
+					else dependsOnCandidates.add(r);
+				}
+			}
 			for (Rule r:dependsOnCandidates) {
 				dependsOn.add(ruleNodes.get(r));
-				ruleNodes.get(r).dependingOn.add(this);
+				if (r instanceof RuleProxy) {
+					RuleProxy rp = (RuleProxy) r;
+					ruleNodes.get(rp.getRule()).dependingOn.add(this);
+				}
+				else ruleNodes.get(r).dependingOn.add(this);
 			}
 		}
 
