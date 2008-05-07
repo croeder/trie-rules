@@ -78,7 +78,7 @@ public class DependsOnGroup implements DebuggerEventBusListener{
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
 				DebuggerRule rule = (DebuggerRule) sel.getFirstElement();
-				eventBus.sendEvent(new SelectedRuleEvent(rule));
+				eventBus.sendEvent(new SelectedRuleEvent(rule, SelectedRuleEvent.Source.DEPENDS_ON));
 			}
 		});
 		

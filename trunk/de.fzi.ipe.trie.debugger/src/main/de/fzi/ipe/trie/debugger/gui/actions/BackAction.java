@@ -40,7 +40,7 @@ public class BackAction extends Action implements DebuggerEventBusListener {
     }
 
     public void run() {
-    	SelectedRuleEvent event = new SelectedRuleEvent(ruleHistory.popLast());
+    	SelectedRuleEvent event = new SelectedRuleEvent(ruleHistory.popLast(),SelectedRuleEvent.Source.BACKWARD);
     	event.setIsBackwardNavigation(true);
     	eventBus.sendEvent(event);
     	refresh();

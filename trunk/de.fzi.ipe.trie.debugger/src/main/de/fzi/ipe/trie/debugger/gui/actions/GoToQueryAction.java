@@ -34,7 +34,7 @@ public class GoToQueryAction extends Action implements DebuggerEventBusListener 
 	
     public void run() {
 		DebuggerRule query = ruleStore.getRule("Query");
-		if (query != null) eventBus.sendEvent(new SelectedRuleEvent(query));    
+		if (query != null) eventBus.sendEvent(new SelectedRuleEvent(query,SelectedRuleEvent.Source.QUERY_BUTTON));    
 	}
 
 

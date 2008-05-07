@@ -21,4 +21,10 @@
             ClassName="de.fzi.ipe.trie.debugger.DatamodelAccess">
       </Listener>
    </extension>
+   <extension
+         point="de.fzi.trie.evaluationLogger.Logable">
+      <Logable
+            ClassName="de.fzi.ipe.trie.debugger.DebugLogger">
+      </Logable>
+   </extension>
 </plugin>

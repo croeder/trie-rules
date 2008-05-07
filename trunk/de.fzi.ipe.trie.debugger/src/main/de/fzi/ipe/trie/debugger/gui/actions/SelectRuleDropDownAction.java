@@ -109,7 +109,7 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator, De
         listDialog.setMessage("Please choose the rule that you want to debug.");
         int code = listDialog.open();
         if ((code == Dialog.OK) && (listDialog.getResult().length > 0)){
-        	eventBus.sendEvent(new SelectedRuleEvent((DebuggerRule)listDialog.getResult()[0]));
+        	eventBus.sendEvent(new SelectedRuleEvent((DebuggerRule)listDialog.getResult()[0],SelectedRuleEvent.Source.RULE_BUTTON));
         }
     }
     
@@ -121,7 +121,7 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator, De
             this.rule = rule;
         }
         public void run() {
-        	eventBus.sendEvent(new SelectedRuleEvent(rule));
+        	eventBus.sendEvent(new SelectedRuleEvent(rule,SelectedRuleEvent.Source.RULE_BUTTON));
         }
     }
     

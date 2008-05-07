@@ -38,6 +38,7 @@ import de.fzi.ipe.trie.debugger.gui.dependsOn.DependsOnGroup;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
+import de.fzi.ipe.trie.debugger.gui.events.EvaluationEventLogger;
 import de.fzi.ipe.trie.debugger.gui.events.RedrawEvent;
 import de.fzi.ipe.trie.debugger.gui.events.RefreshEvent;
 import de.fzi.ipe.trie.debugger.gui.events.SelectedRuleEvent;
@@ -88,6 +89,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener, Obs
 	public DebugView() {
 		singleton = this;
 		eventBus.addListener(this);
+		new EvaluationEventLogger(eventBus);
 	}
 
 	public static DebugView getInstance() { 
@@ -144,7 +146,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener, Obs
 
 	public static void handleException(Exception e, String msg) {
 		MessageDialog.openError(singleton.getShell(), "Rule Debugger Error", msg);
-		SelectedRuleEvent event = new SelectedRuleEvent(null);
+		SelectedRuleEvent event = new SelectedRuleEvent(null,SelectedRuleEvent.Source.INTERNAL);
 		singleton.eventBus.sendEvent(event);
 	}
 
@@ -172,7 +174,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener, Obs
 		
 		if (debuggerRuleStore.getRule("Query") != null) {
 			DebuggerRule query = debuggerRuleStore.getRule("Query");
-			eventBus.sendEvent(new SelectedRuleEvent(query));
+			eventBus.sendEvent(new SelectedRuleEvent(query,SelectedRuleEvent.Source.INTERNAL));
 		}
 	}
 
