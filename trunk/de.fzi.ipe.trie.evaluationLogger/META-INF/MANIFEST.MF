@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: EvaluationLogger Plug-in
+Bundle-SymbolicName: de.fzi.ipe.trie.evaluationLogger; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: de.fzi.ipe.trie.evaluationlogger.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Eclipse-LazyStart: true
+Export-Package: de.fzi.ipe.trie.evaluationlogger
