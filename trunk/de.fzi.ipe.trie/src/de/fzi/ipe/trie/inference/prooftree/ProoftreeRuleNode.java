@@ -19,6 +19,16 @@ public class ProoftreeRuleNode extends ProoftreeNode{
 		return rule instanceof RuleProxy;
 	}
 	
+	public String getTooltip(){
+		if (isAlmostMatch()) {
+			RuleProxy ruleProxy = (RuleProxy) rule;
+			return  "Rule was included based on the assumption that \n"+
+					ruleProxy.getExplanation() + 
+					"actually mean the same thing. ";
+		}
+		else return null;
+	}
+	
 	public ProoftreeRuleNode(ExecutionTreeRule rule) {
 		super(rule.getRule().getName());
 		this.rule = rule.getRule();

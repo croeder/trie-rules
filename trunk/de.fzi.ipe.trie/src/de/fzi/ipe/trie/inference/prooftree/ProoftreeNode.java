@@ -21,6 +21,10 @@ public class ProoftreeNode {
 		return name;
 	}
 	
+	public String getTooltip() {
+		return null;
+	}
+	
 	public void addChild(ProoftreeNode child) {
 		children.add(child);
 	}

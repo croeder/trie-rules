@@ -16,4 +16,10 @@ public class ProoftreeAssumptionNode extends ProoftreeNode{
 		return assumedGoal;
 	}
 	
+	@Override
+	public String getTooltip() {
+		return "This fact is not in the knowledge base, \n"+
+			   "adding it would make the shown proof \n"+
+			   "possible. ";
+	}
 }

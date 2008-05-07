@@ -76,7 +76,7 @@ public class RuleBase {
 			for (Atom a:r.getHead()) {
 				int edits = Unification.canUnify(goal, a, f,maxEdits);
 				if (edits == 0) toReturn.add(f.createExecutionTreeRule(r, a));
-				else if (edits >-1) toReturn.add(f.createExecutionTreeRule(new RuleProxyImpl(r,a), a));
+				else if (edits >-1) toReturn.add(f.createExecutionTreeRule(new RuleProxyImpl(r,goal,a), a));
 			}
 		}
 		return toReturn;
