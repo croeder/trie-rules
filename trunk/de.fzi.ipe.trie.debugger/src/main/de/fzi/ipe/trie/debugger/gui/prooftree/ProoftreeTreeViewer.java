@@ -174,11 +174,14 @@ public class ProoftreeTreeViewer extends TreeViewer{
 		private Shell tip;
 		private Label label;
 		
+		public ToolTipCreator() {
+        	addShellListener();
+		}
+		
 		public void mouseHover(MouseEvent e) {
 			TreeItem item = getTree().getItem(new Point(e.x,e.y));
 	        if (item != null) {
 	        	disposeTip();
-	        	addShellListener();
 	        	String tooltipText = getTooltipText(item);
 	        	if (tooltipText != null) {
 	        		createTooltip(tooltipText);

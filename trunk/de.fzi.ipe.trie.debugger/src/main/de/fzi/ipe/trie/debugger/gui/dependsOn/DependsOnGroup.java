@@ -3,6 +3,7 @@ package de.fzi.ipe.trie.debugger.gui.dependsOn;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -11,7 +12,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
+import de.fzi.ipe.trie.RuleProxy;
 import de.fzi.ipe.trie.debugger.gui.RuleListContentProvider;
+import de.fzi.ipe.trie.debugger.gui.TableTooltipManager;
 import de.fzi.ipe.trie.debugger.gui.events.AtomActivatedEvent;
 import de.fzi.ipe.trie.debugger.gui.events.AtomDeactivatedEvent;
 import de.fzi.ipe.trie.debugger.gui.events.AtomFocussedEvent;
@@ -32,6 +35,23 @@ public class DependsOnGroup implements DebuggerEventBusListener{
 	
 	private TableViewer dependsOnViewer;
 	private DependsOnLabelProvider labelProvider = new DependsOnLabelProvider();
+	
+	private class TooltipLabelProvider extends LabelProvider {
+		
+		@Override
+		public String getText(Object element) {
+			DebuggerRule debuggerRule = (DebuggerRule) element;
+			if (debuggerRule.getRule() instanceof RuleProxy) {
+				RuleProxy rule = (RuleProxy) debuggerRule.getRule();
+				return  "Rule was included based on the assumption that \n"+
+						rule.getExplanation() + 
+						"actually mean the same thing. ";				
+			}
+			else return null;
+		}
+		
+	}
+	
 	
 	public DependsOnGroup(Composite parent, DebuggerRuleStore ruleStore, final DebuggerEventBus eventBus) {
 		this.eventBus = eventBus;
@@ -61,6 +81,8 @@ public class DependsOnGroup implements DebuggerEventBusListener{
 				eventBus.sendEvent(new SelectedRuleEvent(rule));
 			}
 		});
+		
+		new TableTooltipManager(dependsOnViewer.getTable(),new TooltipLabelProvider());
 	}
 
 	public void eventNotification(DebuggerEvent event) {
@@ -94,7 +116,7 @@ public class DependsOnGroup implements DebuggerEventBusListener{
 			}
 		}
 	}
-
+	
 	private void setRuleInGUIElements() {
 		if (rule != null) {
 			dependsOnViewer.setInput(rule.getAllPossibilities());
