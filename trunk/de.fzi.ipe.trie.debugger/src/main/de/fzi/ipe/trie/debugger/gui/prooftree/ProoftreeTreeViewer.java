@@ -12,9 +12,21 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.MouseTrackListener;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Item;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TreeItem;
 
 import de.fzi.ipe.trie.debugger.DebugView;
 import de.fzi.ipe.trie.debugger.DebuggerPlugin;
@@ -127,7 +139,7 @@ public class ProoftreeTreeViewer extends TreeViewer{
 			}
 			else if (element instanceof ProoftreeAssumptionNode) {
 				ProoftreeAssumptionNode node = (ProoftreeAssumptionNode) element;
-				return "Assumption "+ DebugView.labelProvider.getLabel(node.getGoal());
+				return "Assumption: "+ DebugView.labelProvider.getLabel(node.getGoal());
 			}
 			else if(element instanceof ProoftreeNode) {
 			    ProoftreeNode node = (ProoftreeNode) element;
@@ -158,13 +170,86 @@ public class ProoftreeTreeViewer extends TreeViewer{
 		}
 	}
 	
+	private class ToolTipCreator extends ShellAdapter implements MouseMoveListener, MouseTrackListener{
+		private Shell tip;
+		private Label label;
+		
+		public void mouseHover(MouseEvent e) {
+			TreeItem item = getTree().getItem(new Point(e.x,e.y));
+	        if (item != null) {
+	        	disposeTip();
+	        	addShellListener();
+	        	String tooltipText = getTooltipText(item);
+	        	if (tooltipText != null) {
+	        		createTooltip(tooltipText);
+	        		Point size = tip.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+	        		Point pt = getTree().toDisplay(e.x, e.y);
+	        		tip.setBounds(pt.x+15, pt.y+20, size.x, size.y);
+	        		tip.setVisible(true);
+	        	}
+	        }
+		}
 
+		private void createTooltip(String tooltipText) {
+			tip = new Shell(getControl().getShell(), SWT.ON_TOP | SWT.TOOL);
+			tip.setLayout(new FillLayout());
+			label = new Label(tip, SWT.NONE);
+			label.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+			label.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+			label.setText(tooltipText);
+		}
+
+		private void addShellListener() {
+			Shell activeShell = Display.getCurrent().getActiveShell();
+			if (activeShell != null) activeShell.addShellListener(this);
+		}
+		
+		private String getTooltipText(TreeItem item) {
+			if (item.getData() instanceof ProoftreeNode) {
+				ProoftreeNode node = (ProoftreeNode) item.getData();
+				return node.getTooltip();
+			}
+			else return null;
+		}
+
+		private void disposeTip() {
+			if (tip != null && !tip.isDisposed()) tip.dispose();
+		}
+		
+		public void mouseMove(MouseEvent e) {
+			disposeTip();
+		}
+
+		public void shellClosed(ShellEvent e) {
+			disposeTip();
+		}
+
+		public void shellDeactivated(ShellEvent e) {
+			disposeTip();
+		}
+
+		public void shellIconified(ShellEvent e) {
+			disposeTip();
+		}
+
+		public void mouseEnter(MouseEvent e) {
+			;
+		}
+
+		public void mouseExit(MouseEvent e) {
+			disposeTip();
+		}
+
+	}
 
 	
 	public ProoftreeTreeViewer (Composite c) {
 	    super(c);
 	    setContentProvider(new MyTreeContentProvider());
-	    setLabelProvider(new MyTreeLabelProvider());	
+	    setLabelProvider(new MyTreeLabelProvider());
+	    ToolTipCreator ttc = new ToolTipCreator();
+	    getTree().addMouseTrackListener(ttc);
+	    getTree().addMouseMoveListener(ttc);
 	}
 
 	public void displayProoftree(Prooftree prooftree) {
@@ -174,6 +259,7 @@ public class ProoftreeTreeViewer extends TreeViewer{
         showAssumptions(prooftree);
         refresh();	    
 	}
+	
 	
 	private void showAssumptions(Prooftree prooftree) {
 		if (prooftree != null && prooftree.getGrounding()<1d) {
