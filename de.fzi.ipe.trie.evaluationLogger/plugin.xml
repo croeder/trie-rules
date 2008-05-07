@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="de.fzi.trie.evaluationLogger.Logable" name="Logable" schema="schema/de.fzi.trie.evaluationLogger.Logable.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Sample Category"
+            id="de.fzi.ipe.trie.evaluationLogger">
+      </category>
+      <view
+            name="Sample View"
+            icon="icons/sample.gif"
+            category="de.fzi.ipe.trie.evaluationLogger"
+            class="de.fzi.ipe.trie.evaluationlogger.views.LoggerDebugView"
+            id="de.fzi.ipe.trie.evaluationlogger.views.LoggerDebugView">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="de.fzi.ipe.trie.evaluationlogger.EarlyStartupManager">
+      </startup>
+   </extension>
+
+</plugin>
