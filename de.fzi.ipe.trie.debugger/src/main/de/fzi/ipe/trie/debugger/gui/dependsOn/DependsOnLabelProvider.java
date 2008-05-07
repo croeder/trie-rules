@@ -10,6 +10,7 @@ import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Image;
 
 
+import de.fzi.ipe.trie.RuleProxy;
 import de.fzi.ipe.trie.debugger.DebuggerPlugin;
 import de.fzi.ipe.trie.debugger.model.DebuggerRule;
 
@@ -36,7 +37,10 @@ public class DependsOnLabelProvider implements ILabelProvider {
     
     public Image getImage(Object element) {
     	DebuggerRule rule = (DebuggerRule) element;
-        if (bindingSupplyingRules.contains(rule)) {
+    	if (rule.getRule() instanceof RuleProxy) {
+    		return DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_RULE_RED);
+    	}
+    	else if (bindingSupplyingRules.contains(rule)) {
             return DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_RULE_GREEN);
         }
         else return DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_RULE_BLACK);
