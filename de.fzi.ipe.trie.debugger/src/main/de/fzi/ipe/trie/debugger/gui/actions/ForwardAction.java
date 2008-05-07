@@ -39,7 +39,7 @@ public class ForwardAction extends Action implements DebuggerEventBusListener{
     }
 
     public void run() {
-    	SelectedRuleEvent event = new SelectedRuleEvent(history.popLast());
+    	SelectedRuleEvent event = new SelectedRuleEvent(history.popLast(),SelectedRuleEvent.Source.FORWARD);
     	event.setIsForwardNavigation(true);
     	eventBus.sendEvent(event);
     	refresh();

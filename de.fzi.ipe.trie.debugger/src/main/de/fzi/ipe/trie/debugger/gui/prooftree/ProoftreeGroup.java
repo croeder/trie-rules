@@ -45,7 +45,7 @@ public class ProoftreeGroup implements DebuggerEventBusListener {
 					ProoftreeNode node = (ProoftreeNode) sel.getFirstElement();
 					if (node instanceof ProoftreeRuleNode) {
 						Rule rule = ((ProoftreeRuleNode) node).getRule();
-						SelectedRuleEvent e = new SelectedRuleEvent(ProoftreeGroup.this.ruleStore.getRule(rule.getName()));
+						SelectedRuleEvent e = new SelectedRuleEvent(ProoftreeGroup.this.ruleStore.getRule(rule.getName()),SelectedRuleEvent.Source.PROOFTREE);
 						ProoftreeGroup.this.eventBus.sendEvent(e);
 					}
 				}

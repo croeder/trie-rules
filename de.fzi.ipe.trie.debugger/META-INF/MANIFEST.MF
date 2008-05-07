@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.ui.ide,
  de.fzi.ipe.trie,
- de.fzi.ipe.trie.fileManagement
+ de.fzi.ipe.trie.fileManagement,
+ de.fzi.ipe.trie.evaluationLogger
 Eclipse-LazyStart: true
 Bundle-Vendor: FZI
 Bundle-ManifestVersion: 2
