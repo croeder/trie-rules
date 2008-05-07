@@ -1,6 +1,7 @@
 package de.fzi.ipe.trie.inference;
 
 import de.fzi.ipe.trie.Atom;
+import de.fzi.ipe.trie.GroundTerm;
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.RuleProxy;
 
@@ -12,12 +13,14 @@ import de.fzi.ipe.trie.RuleProxy;
 public class RuleProxyImpl implements RuleProxy{
 	
 	private Rule rule;
-	private Atom goal;
+	
+	private Atom goal,head;
 	
 	
-	public RuleProxyImpl(Rule rule, Atom goal) {
+	public RuleProxyImpl(Rule rule, Atom goal, Atom head) {
 		this.rule = rule;
 		this.goal = goal;
+		this.head = head;
 	}
 	
 	public Atom getGoal() {
@@ -44,4 +47,20 @@ public class RuleProxyImpl implements RuleProxy{
 		return rule;
 	}
 
+	public String getExplanation() {
+		StringBuilder toReturn = new StringBuilder();
+		for (int i=0;i<3;i++) {
+			if (goal.getTerm(i) instanceof GroundTerm && head.getTerm(i) instanceof GroundTerm) {
+				GroundTerm g1 = (GroundTerm) goal.getTerm(i);
+				GroundTerm g2 = (GroundTerm) head.getTerm(i);
+				if (!g1.equals(g2)) {
+					toReturn.append("Rule head \""+g2.toString()+"\"\n");
+					toReturn.append("and the goal \""+g1.toString()+"\"\n");
+				}
+			}
+		}
+		return toReturn.toString();
+	}
+	
+	
 }

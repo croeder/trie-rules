@@ -12,4 +12,6 @@ public interface RuleProxy extends Rule{
 	public Atom getGoal();
 	public Rule getRule();
 	
+	public String getExplanation();
+	
 }

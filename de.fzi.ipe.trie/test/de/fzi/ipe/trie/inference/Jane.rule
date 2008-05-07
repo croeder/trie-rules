@@ -9,13 +9,6 @@
     (?A,rdf:type,zach:father)
 ]
 
-# This rule defines the father relation.
-[Rule_Father:
-    (?A,rdf:type,zach:father)
-<-
-	(?A,rdf:type,zach:male) 
-	(?A,zach:parent,?B)
-]
  
 
 [Rule_ChildFromRaises:
