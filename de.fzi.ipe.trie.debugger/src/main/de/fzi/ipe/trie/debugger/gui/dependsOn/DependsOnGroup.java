@@ -43,7 +43,7 @@ public class DependsOnGroup implements DebuggerEventBusListener{
 			DebuggerRule debuggerRule = (DebuggerRule) element;
 			if (debuggerRule.getRule() instanceof RuleProxy) {
 				RuleProxy rule = (RuleProxy) debuggerRule.getRule();
-				return  "Rule was included based on the assumption that \n"+
+				return  "This rule was included based on the assumption that \n"+
 						rule.getExplanation() + 
 						"actually mean the same thing. ";				
 			}
