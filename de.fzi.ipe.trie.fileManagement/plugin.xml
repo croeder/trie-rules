@@ -14,5 +14,11 @@
          point="org.eclipse.ui.startup">
       <startup class="de.fzi.ipe.trie.filemanagement.EarlyStartupManager"/>
    </extension>
+   <extension
+         point="de.fzi.trie.evaluationLogger.Logable">
+      <Logable
+            ClassName="de.fzi.ipe.trie.filemanagement.DebugLogger">
+      </Logable>
+   </extension>
 
 </plugin>
