@@ -9,7 +9,7 @@ import de.fzi.ipe.trie.GroundTerm;
 import de.fzi.ipe.trie.Term;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
 
-public class VariableBindings {
+public class VariableBindings implements Cloneable{
 
 	
 	private Map<ProofVariable,GroundTerm> variableBindings = new HashMap<ProofVariable,GroundTerm>();

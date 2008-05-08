@@ -11,7 +11,7 @@ import de.fzi.ipe.trie.inference.ProofVariable;
  * @author zach
  *
  */
-public class Atom {
+public class Atom implements Cloneable{
 	
 	private Term s,p,o;
 	

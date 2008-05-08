@@ -88,21 +88,25 @@ public class RuleParser {
 	public static Map<String,String> parseRuleComments(File file) throws IOException {
 		Map<String,String> ruleComments = new HashMap<String,String>();
 		BufferedReader reader = new BufferedReader(new FileReader(file));
-		String currentLine = reader.readLine();
-		StringBuilder currentComment = new StringBuilder();
-		while (currentLine != null) {
-			if (isCommentLine(currentLine)) {
-				currentComment.append(getComment(currentLine));
-				currentComment.append(" ");
+		try {
+			String currentLine = reader.readLine();
+			StringBuilder currentComment = new StringBuilder();
+			while (currentLine != null) {
+				if (isCommentLine(currentLine)) {
+					currentComment.append(getComment(currentLine));
+					currentComment.append(" ");
+				}
+				else if (isRuleDeclaration(currentLine)) {
+					ruleComments.put(getRuleName(currentLine), currentComment.toString());
+					currentComment = new StringBuilder();
+				}
+				else if (currentLine.trim().length() == 0) {
+					if (currentComment.length()>0) currentComment = new StringBuilder();
+				}
+				currentLine = reader.readLine();
 			}
-			else if (isRuleDeclaration(currentLine)) {
-				ruleComments.put(getRuleName(currentLine), currentComment.toString());
-				currentComment = new StringBuilder();
-			}
-			else if (currentLine.trim().length() == 0) {
-				if (currentComment.length()>0) currentComment = new StringBuilder();
-			}
-			currentLine = reader.readLine();
+		} finally {
+			reader.close();
 		}
 		return ruleComments;
 	}

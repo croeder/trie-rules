@@ -11,8 +11,8 @@ public class RuleImpl implements Rule{
 	private String comment;
 	
 	public RuleImpl(String name, String comment, Atom[] head, Atom[] body) {
-		this.head = head;
-		this.body = body;
+		this.head = cloneAtoms(head);
+		this.body = cloneAtoms(body);
 		this.name = name;
 		this.comment = comment;
 	}
