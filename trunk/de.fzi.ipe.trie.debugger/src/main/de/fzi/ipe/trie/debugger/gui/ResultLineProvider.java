@@ -27,7 +27,6 @@ public class ResultLineProvider {
 		return result.getBinding(var, i);
 	}
 
-
 	public Prooftree getProoftree() {
 		return result.getProoftree(i);
 	}
@@ -38,6 +37,16 @@ public class ResultLineProvider {
 
 	public Set<Variable> getVariables() {
 		return result.getVariables();
+	}
+	
+	public String toString() {
+		StringBuilder toReturn = new StringBuilder();
+		toReturn.append("Result "+i+": ");
+		for (Variable v:getVariables()) {
+			toReturn.append(v+"="+getBinding(v));
+			toReturn.append(", ");
+		}
+		return toReturn.toString();
 	}
 	
 	public boolean sameBindings (ResultLineProvider other) {
