@@ -14,7 +14,7 @@ import de.fzi.ipe.trie.inference.executionTree.simple.ExecutionTreeElementImpl;
 
 public class VariableBindingsTest {
 
-	class TestExecutionTreeElement extends ExecutionTreeElementImpl {
+	static class TestExecutionTreeElement extends ExecutionTreeElementImpl {
 
 		
 	}
