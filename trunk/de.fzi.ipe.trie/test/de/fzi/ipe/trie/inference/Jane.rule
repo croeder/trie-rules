@@ -8,7 +8,7 @@
 <-  
     (?A,rdf:type,zach:father)
 ]
-
+  
  
 
 [Rule_ChildFromRaises:
@@ -20,7 +20,7 @@
 
 # This rule defines the father relation.
 [Rule_Father2:
-    (?A,rdf:type,zach:pather)
+    (?A,rdf:type,zach:father)
 <-
 	(?A,rdf:type,zach:male) 
 	(?A,zach:parent,?B)

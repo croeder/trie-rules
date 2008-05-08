@@ -36,7 +36,7 @@ public class URITerm extends GroundTerm {
 	}
 	
 	public String toString() {
-		return uri.toString();
+		return uri;
 	}
 	
 	

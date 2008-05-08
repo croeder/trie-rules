@@ -28,7 +28,7 @@ public class LiteralTerm extends GroundTerm{
 	}
 	
 	public String toString() {
-		return "\""+literalValue.toString()+"\"";
+		return "\""+literalValue+"\"";
 	}
 
 	public String getLiteral() {
