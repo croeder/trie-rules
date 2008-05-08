@@ -30,7 +30,7 @@ public class DebugLogger implements Logable, SuspendListener{
 
 	public void suspending(Action a, ExecutionTreeGoal goal, Rule r) {
 		if (r!= null) logger.log(""+a,r.getName(),""+goal);
-		else logger.log(""+a,""+r,""+goal);
+		else logger.log(""+a,null,""+goal);
 	}
 
 	public void waking() {
