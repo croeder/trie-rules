@@ -12,7 +12,6 @@ import de.fzi.ipe.trie.evaluationlogger.LoggerListener;
 
 
 
-
 /**
  * Simple view have a look at the current log.
  * @author zach
