@@ -11,8 +11,12 @@ public class DatamodelAccess implements FileManagementListener{
 		return dm;
 	}
 	
+	private static void setDatamodelSingleton(Datamodel datamodel) {
+		dm = datamodel;
+	}
+	
 	public void setDatamodel(Datamodel dm) {
-		DatamodelAccess.dm=dm;
+		DatamodelAccess.setDatamodelSingleton(dm);
 	}
 
 
