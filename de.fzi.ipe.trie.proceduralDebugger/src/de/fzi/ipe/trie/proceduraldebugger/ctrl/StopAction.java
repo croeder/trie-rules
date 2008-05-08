@@ -4,6 +4,7 @@ import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.inference.Suspender;
 import de.fzi.ipe.trie.inference.Suspender.Action;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
+import de.fzi.ipe.trie.proceduraldebugger.DebugLogger;
 import de.fzi.ipe.trie.proceduraldebugger.model.ReasoningAccess;
 import de.fzi.ipe.trie.proceduraldebugger.model.SuspendListener;
 
@@ -25,6 +26,7 @@ public class StopAction extends ButtonEnabledAction implements SuspendListener {
 	
 	@Override
 	public void run() {
+		DebugLogger.log("Stop");
 		ReasoningAccess.stopDebugging();
 		StepAction.getInstance().setEnabled(false);
 		JumpAction.getInstance().setEnabled(false);

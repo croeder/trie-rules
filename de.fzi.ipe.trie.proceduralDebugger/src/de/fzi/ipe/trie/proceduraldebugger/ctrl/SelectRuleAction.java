@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
 
 import de.fzi.ipe.trie.Rule;
+import de.fzi.ipe.trie.proceduraldebugger.DebugLogger;
 import de.fzi.ipe.trie.proceduraldebugger.gui.contentProvider.RuleCollectionContentProvider;
 import de.fzi.ipe.trie.proceduraldebugger.gui.labelProvider.RuleNameLabelProvider;
 import de.fzi.ipe.trie.proceduraldebugger.model.DatamodelAccess;
@@ -43,6 +44,9 @@ public class SelectRuleAction extends ButtonEnabledAction{
 		listDialog.setMessage("Please choose the rule or query that you want to use as starting point");
 		int  code = listDialog.open();
 		if ((code == Dialog.OK) && (listDialog.getResult().length > 0)) {
+			Rule rule = (Rule) listDialog.getResult()[0];
+			DebugLogger.log("SelectRule",rule.getName());
+
 			ReasoningAccess.setStartingPoint((Rule) listDialog.getResult()[0]);
 			StartDebuggingAction.getInstance(shell).setEnabled(true);
 		}

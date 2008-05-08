@@ -1,5 +1,6 @@
 package de.fzi.ipe.trie.proceduraldebugger.ctrl;
 
+import de.fzi.ipe.trie.proceduraldebugger.DebugLogger;
 import de.fzi.ipe.trie.proceduraldebugger.model.ReasoningAccess;
 
 public class JumpAction extends ButtonEnabledAction {
@@ -21,6 +22,7 @@ public class JumpAction extends ButtonEnabledAction {
 	
 	@Override
 	public void run() {
+		DebugLogger.log("Jump");
 		ReasoningAccess.getSuspender().jump();
 	}
 
