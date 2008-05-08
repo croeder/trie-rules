@@ -17,7 +17,7 @@ public class DebugLogger implements Logable{
 	
 	public static void log(String... data) {
 		String[] toLog = new String[data.length+1];
-		toLog[0] = "ProceduralDebugger";
+		toLog[0] = "ExplorativeDebugger";
 		for (int i=1;i<toLog.length;i++) toLog[i] = data[i-1];
 		logger.log(toLog);
 	}
