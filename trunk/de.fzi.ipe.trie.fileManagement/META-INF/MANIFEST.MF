@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0
 Bundle-Activator: de.fzi.ipe.trie.filemanagement.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- de.fzi.ipe.trie
+ de.fzi.ipe.trie,
+ de.fzi.ipe.trie.evaluationLogger
 Eclipse-LazyStart: true
 Bundle-ClassPath: lib/jena.jar,
  .,
