@@ -14,13 +14,19 @@ public class LoggerImpl implements Logger {
 		return logger;
 	}
 	
-	public void log(String... data) {
-		for (LoggerListener l: listeners) l.event(this, data);
-		
+	private String clean (String text) {
+		String toReturn = text.replaceAll(",", ";");
+		toReturn = toReturn.replaceAll("\n", " ");
+		return toReturn;
+	}
 	
-		System.out.print((System.currentTimeMillis()-startingTime)/1000);
-		System.out.print(",");
-		for (String s:data) System.out.print(s+",");
+	public void log(String... data) {
+		String[] toLog = new String[data.length+1];
+		toLog[0] = ""+(System.currentTimeMillis()-startingTime)/1000;
+		for (int i=1;i<toLog.length;i++) toLog[i] = clean(data[i-1]);
+		for (LoggerListener l: listeners) l.event(this, toLog);
+
+		for (String s:toLog) System.out.print(s+",");
 		System.out.println();
 	}
 
