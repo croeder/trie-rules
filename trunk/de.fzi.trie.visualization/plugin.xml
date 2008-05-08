@@ -34,5 +34,11 @@
             ClassName="de.fzi.trie.visualization.DatamodelAccess">
       </Listener>
    </extension>
+   <extension
+         point="de.fzi.trie.evaluationLogger.Logable">
+      <Logable
+            ClassName="de.fzi.trie.visualization.DebugLogger">
+      </Logable>
+   </extension>
 
 </plugin>
