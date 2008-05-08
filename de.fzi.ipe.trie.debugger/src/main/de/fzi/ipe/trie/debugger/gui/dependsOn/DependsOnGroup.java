@@ -36,7 +36,7 @@ public class DependsOnGroup implements DebuggerEventBusListener{
 	private TableViewer dependsOnViewer;
 	private DependsOnLabelProvider labelProvider = new DependsOnLabelProvider();
 	
-	private class TooltipLabelProvider extends LabelProvider {
+	private static class TooltipLabelProvider extends LabelProvider {
 		
 		@Override
 		public String getText(Object element) {

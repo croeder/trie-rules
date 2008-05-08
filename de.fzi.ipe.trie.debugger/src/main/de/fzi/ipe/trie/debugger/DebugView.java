@@ -74,7 +74,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener, Obs
 	private Composite mainComposite, parent;
 	private ScrolledComposite scrolledComposite;
 
-	public static DebugLabelProvider labelProvider = new DebugLabelProvider();
+	public static final DebugLabelProvider LABEL_PROVIDER = new DebugLabelProvider();
 	
 	private Action refresh;
 	private Action showNamespaces, showModules;
@@ -93,7 +93,6 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener, Obs
 	}
 
 	public static DebugView getInstance() { 
-		if (singleton == null) singleton = new DebugView(); 
 		return singleton; 
 	}
 	
@@ -215,12 +214,12 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener, Obs
 
 		showNamespaces = new Action("Hide Uri before #", Action.AS_CHECK_BOX) {
 			public void run() {
-				if (showNamespaces.isChecked()) labelProvider.hideBeforeHash = true;
-				else labelProvider.hideBeforeHash = false;
+				if (showNamespaces.isChecked()) LABEL_PROVIDER.hideBeforeHash = true;
+				else LABEL_PROVIDER.hideBeforeHash = false;
 				refresh();
 			}
 		};
-		if (labelProvider.hideBeforeHash) showNamespaces.setChecked(true);
+		if (LABEL_PROVIDER.hideBeforeHash) showNamespaces.setChecked(true);
 		mgr.add(showNamespaces);
 		showModules = new Action("Show Modules", Action.AS_CHECK_BOX) {
 			public void run() {

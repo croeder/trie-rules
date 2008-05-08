@@ -1,5 +1,6 @@
 package de.fzi.ipe.trie.debugger.gui.prooftree;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -39,7 +40,9 @@ import de.fzi.ipe.trie.inference.prooftree.ProoftreeRuleNode;
 
 public class ProoftreeTreeViewer extends TreeViewer{
 	
-	static class ProoftreeNodeComparator implements Comparator<ProoftreeNode> {
+	static class ProoftreeNodeComparator implements Comparator<ProoftreeNode>, Serializable {
+
+		private static final long serialVersionUID = 1L;
 
 		public int compare(ProoftreeNode o1, ProoftreeNode o2) {
 			String name1 = makeComparableString(o1);
@@ -108,7 +111,7 @@ public class ProoftreeTreeViewer extends TreeViewer{
 		
 		
 	}
-	class MyTreeLabelProvider implements ILabelProvider {
+	static class MyTreeLabelProvider implements ILabelProvider {
 
 	    public MyTreeLabelProvider() {
 	    }
@@ -135,11 +138,11 @@ public class ProoftreeTreeViewer extends TreeViewer{
 		public String getText(Object element) {
 			if(element instanceof ProoftreeFactNode) {
 				ProoftreeFactNode node = (ProoftreeFactNode) element;
-				return DebugView.labelProvider.getLabel(node.getFacts());
+				return DebugView.LABEL_PROVIDER.getLabel(node.getFacts());
 			}
 			else if (element instanceof ProoftreeAssumptionNode) {
 				ProoftreeAssumptionNode node = (ProoftreeAssumptionNode) element;
-				return "Assumption: "+ DebugView.labelProvider.getLabel(node.getGoal());
+				return "Assumption: "+ DebugView.LABEL_PROVIDER.getLabel(node.getGoal());
 			}
 			else if(element instanceof ProoftreeNode) {
 			    ProoftreeNode node = (ProoftreeNode) element;
