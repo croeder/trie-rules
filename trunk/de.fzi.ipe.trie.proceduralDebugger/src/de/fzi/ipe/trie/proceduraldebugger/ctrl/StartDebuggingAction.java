@@ -3,6 +3,7 @@ package de.fzi.ipe.trie.proceduraldebugger.ctrl;
 import org.eclipse.swt.widgets.Shell;
 
 import de.fzi.ipe.trie.Rule;
+import de.fzi.ipe.trie.proceduraldebugger.DebugLogger;
 import de.fzi.ipe.trie.proceduraldebugger.model.DatamodelAccess;
 import de.fzi.ipe.trie.proceduraldebugger.model.ReasoningAccess;
 
@@ -33,6 +34,8 @@ public class StartDebuggingAction extends ButtonEnabledAction {
 	
 	@Override
 	public void run() {
+		DebugLogger.log("StartDebugging");
+		
 		//try to find a rule named 'Query' 
 		Rule rule = DatamodelAccess.getKnowledgeBase().getRuleBase().getRule("Query");
 		if (rule != null) ReasoningAccess.setStartingPoint(rule);

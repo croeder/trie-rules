@@ -1,5 +1,6 @@
 package de.fzi.ipe.trie.proceduraldebugger.ctrl;
 
+import de.fzi.ipe.trie.proceduraldebugger.DebugLogger;
 import de.fzi.ipe.trie.proceduraldebugger.model.ReasoningAccess;
 
 public class StepAction extends ButtonEnabledAction {
@@ -18,6 +19,7 @@ public class StepAction extends ButtonEnabledAction {
 	
 	@Override
 	public void run() {
+		DebugLogger.log("Step");
 		ReasoningAccess.getSuspender().step();		
 	}
 

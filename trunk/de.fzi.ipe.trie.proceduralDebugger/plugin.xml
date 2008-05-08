@@ -14,5 +14,11 @@
             ClassName="de.fzi.ipe.trie.proceduraldebugger.model.DatamodelAccess">
       </Listener>
    </extension>
+   <extension
+         point="de.fzi.trie.evaluationLogger.Logable">
+      <Logable
+            ClassName="de.fzi.ipe.trie.proceduraldebugger.DebugLogger">
+      </Logable>
+   </extension>
 
 </plugin>
