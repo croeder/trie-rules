@@ -80,8 +80,15 @@ public class ButtonGroup implements SourceFileListener{
 			return file.getAbsolutePath().compareTo(b2.file.getAbsolutePath());
 		}
 
-		public boolean equals (FileButton b2) {
-			return file.getAbsolutePath().equals(b2.file.getAbsolutePath());
+		public boolean equals (Object b2) {
+			if (b2 == null) return false;
+			else if (!(b2 instanceof FileButton)) return false;
+			else return file.getAbsolutePath().equals(((FileButton) b2).file.getAbsolutePath());
+		}
+		
+		@Override
+		public int hashCode() {
+			return file.getAbsolutePath().hashCode();
 		}
 		
 		public void dispose() {
