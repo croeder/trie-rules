@@ -61,6 +61,7 @@ public class DependencyView extends ViewPart implements KnowledgeBaseListener {
 	 * Passing the focus request to the viewer's control.
 	 */
 	public void setFocus() {
+		DebugLogger.log("OpeningVisualization");
 		if (changed) {
 			g.setInput(new RuleGraph(DatamodelAccess.getDatamodel().getKnowledgeBase().getRuleBase()));
 			changed = false;
