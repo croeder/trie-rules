@@ -54,7 +54,7 @@ public class CachingDebuggerRule extends DebuggerRule {
 	@Override
 	public Set<DebuggerRule> getRulesThatSupplyBindings() {
 		checkCacheCurrent();
-		if (rulesThatSupplyBinding == null) return super.getRulesThatSupplyBindings();
+		if (rulesThatSupplyBinding == null) rulesThatSupplyBinding = super.getRulesThatSupplyBindings();
 		return rulesThatSupplyBinding;
 	}
 	

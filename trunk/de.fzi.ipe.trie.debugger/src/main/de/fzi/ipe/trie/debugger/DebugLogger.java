@@ -8,10 +8,17 @@ public class DebugLogger implements Logable{
 	private static Logger logger;
 	
 	public void setLogger(Logger logger) {
-		DebugLogger.logger = logger;
+		DebugLogger.setLoggerInstance(logger);
 	}
 
+	private static void setLoggerInstance(Logger logger) {
+		DebugLogger.logger = logger;
+	}
+	
 	public static void log(String... data) {
+		String[] toLog = new String[data.length+1];
+		toLog[0] = "ProceduralDebugger";
+		for (int i=1;i<toLog.length;i++) toLog[i] = data[i-1];
 		logger.log(data);
 	}
 

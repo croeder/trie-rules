@@ -27,13 +27,5 @@ public class RedrawEvent implements DebuggerEvent{
 		return type;
 	}
 	
-	public int hashCode() {
-		return type.hashCode();
-	}
-	
-	public boolean equals(RedrawEvent other) {
-		return type.equals(other.type);
-	}
-	
 	
 }

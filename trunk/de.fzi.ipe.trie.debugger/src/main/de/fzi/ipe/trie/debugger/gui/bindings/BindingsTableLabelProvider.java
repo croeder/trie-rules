@@ -50,7 +50,7 @@ public class BindingsTableLabelProvider implements ITableLabelProvider{
             if (sortedVariables.length>columnIndex) {
                 String variableName = sortedVariables[columnIndex];
                 if (currentNode != null) {
-                	String columnText = DebugView.labelProvider.getLabel(currentNode.getBinding(variableName));
+                	String columnText = DebugView.LABEL_PROVIDER.getLabel(currentNode.getBinding(variableName));
                 	return (columnText != null) ? columnText : " ??? ";
                 }
             }

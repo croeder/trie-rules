@@ -53,7 +53,12 @@ public class DebuggerAtom {
 			return this.atom.equals(otherP.atom);
 		}
 	}
-
+	
+	@Override
+	public int hashCode() {
+		return atom.hashCode();
+	}
+	
 	public DebuggerRule[] getPossibilities() {
 		if (possibilities == null) {
 			Set<DebuggerRule> possibilities2 = rule.getDebuggerRuleStore().getPossibilities(this);
@@ -74,7 +79,7 @@ public class DebuggerAtom {
 	}
 
 	public String toString() {
-		return DebugView.labelProvider.getLabel(atom);
+		return DebugView.LABEL_PROVIDER.getLabel(atom);
 	}
 
 	public DebuggerAtom(Atom atom, DebuggerRule rule) {
