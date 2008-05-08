@@ -15,11 +15,15 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 	
+	private static void setInstance(Activator instance) {
+		plugin = instance;
+	}
+	
 	/**
 	 * The constructor
 	 */
 	public Activator() {
-		plugin = this;
+		setInstance(this);
 	}
 
 	/*
@@ -36,7 +40,7 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		SourceFiles.getInstance().saveFileLocations(); 
-		plugin = null;
+		setInstance(null);
 		super.stop(context);
 	}
 
