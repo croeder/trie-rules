@@ -12,6 +12,7 @@ import org.eclipse.ui.IStartup;
 public class EarlyStartupManager implements IStartup {
 
 	public void earlyStartup() {
+		LoggerImpl.getLogger();
 		try {
 			IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 			IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint("de.fzi.trie.evaluationLogger.Logable");
