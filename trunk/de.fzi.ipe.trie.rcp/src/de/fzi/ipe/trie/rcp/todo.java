@@ -12,6 +12,6 @@ package de.fzi.ipe.trie.rcp;
 	// logging suspend listener
 	// does it work after changing files?
 
-//TODO Visualization logging
+//Visualization logging
 
 //File Management Logging
