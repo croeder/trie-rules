@@ -10,8 +10,7 @@
             id="de.fzi.ipe.trie.evaluationLogger">
       </category>
       <view
-            name="Sample View"
-            icon="icons/sample.gif"
+            name="Logging"
             category="de.fzi.ipe.trie.evaluationLogger"
             class="de.fzi.ipe.trie.evaluationlogger.views.LoggerDebugView"
             id="de.fzi.ipe.trie.evaluationlogger.views.LoggerDebugView">
