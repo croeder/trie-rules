@@ -171,15 +171,18 @@ public class TextViewGroup implements ModifyListener, KeyListener {
 		try {
 			if (currentFile != null) {
 				currentFile.setContent(text.getText());
+				errorMessage.setText(currentFile.compileTest());
 				SourceFiles.getInstance().reload();
 				isModified = false;
 				save.setEnabled(false);
 				
-				errorMessage.setText(currentFile.compileTest());
 			} 
 		} catch (IOException ioe)  {
 			showError("Error Saving File", "Could not save file!", ioe);
+		} catch (JenaException je) {
+			showError("Error Saving File", je.getMessage(), je);			
 		}
+		
 	}
 	
 	private void saveFileChooserPath(String path) {
