@@ -11,12 +11,18 @@ import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 public class ListenableSuspender extends ConfigurableSuspender {
 	
 	private Set<SuspendListener> listeners = new HashSet<SuspendListener>();
-	
+		
 	@Override
 	public synchronized void suspend(final Action a, final ExecutionTreeGoal goal, final Rule r) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				for (SuspendListener s: listeners) s.suspending(a, goal, r);
+				for (SuspendListener s: listeners) {
+					try {
+						s.suspending(a, goal, r);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 			}});
 				
 		super.suspend(a, goal, r);
@@ -26,7 +32,11 @@ public class ListenableSuspender extends ConfigurableSuspender {
 	public synchronized void wake() {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				for (SuspendListener s: listeners) s.waking();
+				try {
+					for (SuspendListener s: listeners) s.waking();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}});
 		super.wake();
 	}
@@ -43,7 +53,11 @@ public class ListenableSuspender extends ConfigurableSuspender {
 		super.stop(); 
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				for (SuspendListener s: listeners) s.suspending(Action.STOPPED,null, null);
+				try {
+					for (SuspendListener s: listeners) s.suspending(Action.STOPPED,null, null);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}});
 	}
 }
