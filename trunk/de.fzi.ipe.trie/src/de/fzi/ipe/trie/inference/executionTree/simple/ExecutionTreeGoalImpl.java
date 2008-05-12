@@ -51,10 +51,14 @@ public class ExecutionTreeGoalImpl extends ExecutionTreeElementImpl implements E
 			else {
 				ExecutionTreeRuleImpl currentRule = (ExecutionTreeRuleImpl) getChildren().get(childIndex);
 				boolean unify = (Unification.unify(goal, currentRule, vb,0) != -1);
-				assert(unify);
-				currentRule.create(kb, stack);
-				childIndex++;
-				success = true;
+				if (unify) {
+					currentRule.create(kb, stack);
+					success = true;
+				}
+				else {
+					success = false;
+				}
+				childIndex ++;
 			}
 			if (success) {
 				suspender.performedAction(Suspender.Action.EXIT_GOAL, this, null);
