@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.Observable;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.swt.widgets.Text;
 
 
 
