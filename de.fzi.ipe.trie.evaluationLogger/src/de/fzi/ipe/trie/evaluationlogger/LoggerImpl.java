@@ -12,25 +12,39 @@ public class LoggerImpl implements Logger {
 	private DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 	
 	private Set<LoggerListener> listeners = new HashSet<LoggerListener>();
+	private String[] previousLoggedMessage = new String[0];
 	
 	public static Logger getLogger() {
 		return logger;
 	}
 	
 	private String clean (String text) {
-		String toReturn = text.replaceAll(",", ";");
-		toReturn = toReturn.replaceAll("\n", " ");
-		return toReturn;
+		if (text != null) {
+			String toReturn = text.replaceAll(",", ";");
+			toReturn = toReturn.replaceAll("\n", " ");
+			return toReturn;
+		}
+		else return null;
 	}
 	
 	public void log(String... data) {
 		String[] toLog = new String[data.length+1];
 		toLog[0] = dateFormat.format(new Date());
 		for (int i=1;i<toLog.length;i++) toLog[i] = clean(data[i-1]);
-		for (LoggerListener l: listeners) l.event(this, toLog);
-
-		for (String s:toLog) System.out.print(s+",");
-		System.out.println();
+		if (!equals(previousLoggedMessage,toLog)) { //preventing the same message to be send multiple times. 
+			previousLoggedMessage = toLog.clone();
+			for (LoggerListener l: listeners) l.event(this, toLog);
+		}
+	}
+	
+	private static boolean equals (String[] one, String[] two) {
+		if (one.length != two.length) return false;
+		else {
+			for (int i=0;i<one.length;i++) {
+				if (!one[i].equals(two[i])) return false;
+			}
+			return true;
+		}
 	}
 
 	public void addListener(LoggerListener lis) {
