@@ -10,6 +10,7 @@ import de.fzi.ipe.trie.inference.Unification;
 import de.fzi.ipe.trie.inference.VariableBindings;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeInstantiation;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeRule;
 
@@ -79,7 +80,7 @@ public class ExecutionTreeGoalImpl extends ExecutionTreeElementImpl implements E
 	public void backtrack(VariableBindings vb,GoalStack stack) {
 		ExecutionTreeElement currentElement = getChildren().get(childIndex-1);
 		vb.removeBindings(currentElement);
-		if (currentElement instanceof ExecutionTreeInstantiationImpl) {
+		if (currentElement instanceof ExecutionTreeInstantiation) {
 			stack.remove(currentElement.getChildren());
 		}
 		clearChildren();

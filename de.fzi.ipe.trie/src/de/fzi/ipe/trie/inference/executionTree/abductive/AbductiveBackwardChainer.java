@@ -76,9 +76,8 @@ public class AbductiveBackwardChainer implements BackwardChainer{
 				else proofTrace.add(currentElement);
 			}
 			suspender.performedAction(Suspender.Action.SUCCESS, null, null);
-			query.postprocess(vb);
 			results.add(vb.clone());
-			prooftrees.add(new Prooftree(query));
+			prooftrees.add(new Prooftree(query,vb));
 			if (proofTrace.size() == 0) {
 				suspender.performedAction(Suspender.Action.END, null, null);
 				return;

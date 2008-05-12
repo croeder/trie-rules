@@ -77,7 +77,7 @@ public class SimpleBackwardChainer implements BackwardChainer{
 			}
 			suspender.performedAction(Suspender.Action.SUCCESS, null, null);
 			results.add(vb.clone());
-			prooftrees.add(new Prooftree(query));
+			prooftrees.add(new Prooftree(query,vb));
 			if (proofTrace.size() == 0) {
 				suspender.performedAction(Suspender.Action.END, null, null);
 				return;

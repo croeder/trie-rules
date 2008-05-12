@@ -45,12 +45,4 @@ public class ExecutionTreeElementImpl implements ExecutionTreeElement{
 		return new GroundingNumbers(1,1);
 	}
 	
-	/**
-	 * Postprocessing - used to update the variables in the assumptions in the execution tree. 
-	 */
-	public void postprocess(VariableBindings vb) {
-		; //not needed in the case of the simple inference engine. 
-	}
-
-	
 }

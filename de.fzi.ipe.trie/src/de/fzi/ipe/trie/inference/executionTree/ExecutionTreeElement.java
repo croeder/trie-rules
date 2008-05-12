@@ -18,9 +18,4 @@ public interface ExecutionTreeElement {
 	public GroundingNumbers kbGrounding();
 
 
-	/**
-	 * Postprocessing - used to update the variables in the assumptions in the execution tree. 
-	 */
-	public void postprocess(VariableBindings vb);
-
 }

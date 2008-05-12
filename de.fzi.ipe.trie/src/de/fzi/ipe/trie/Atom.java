@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fzi.ipe.trie.inference.ProofVariable;
+import de.fzi.ipe.trie.inference.VariableBindings;
 
 
 /**
@@ -70,5 +71,11 @@ public class Atom implements Cloneable{
 		if (o.equals(a)) o=b;
 	}
 
+	/** Replaces all variables with the terms they are currently bound to. */
+	public void replaceWithCurrentTerms(VariableBindings vb) {
+		 s = vb.getCurrentTerm(s);
+		 p = vb.getCurrentTerm(p);
+		 o = vb.getCurrentTerm(o);
+	}
 	
 }
