@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.fzi.ipe.trie.inference.VariableBindings;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
@@ -18,9 +19,9 @@ public class Prooftree implements Iterable<ProoftreeNode>{
 	private double kbGrounding = -1;
 	
 	
-	public Prooftree(ExecutionTreeQuery query) {
+	public Prooftree(ExecutionTreeQuery query, VariableBindings vb) {
 		for (ExecutionTreeElement el: query.getChildren()) {
-			ProoftreeAtomNode atomNode = new ProoftreeAtomNode((ExecutionTreeGoal) el);
+			ProoftreeAtomNode atomNode = new ProoftreeAtomNode((ExecutionTreeGoal) el,vb);
 			rootNode.addChild(atomNode);
 		}
 		calculateGrounding(rootNode);

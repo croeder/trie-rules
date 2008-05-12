@@ -12,6 +12,7 @@ import de.fzi.ipe.trie.inference.VariableBindings;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeAssumption;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeElement;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeGoal;
+import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeInstantiation;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeQuery;
 import de.fzi.ipe.trie.inference.executionTree.ExecutionTreeRule;
 
@@ -32,7 +33,7 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 	public boolean proof(GoalStack stack, VariableBindings vb, KnowledgeBase kb, Suspender suspender, ExecutionTreeQuery query) {
 		if (!isPrepared) {
 			suspender.performedAction(Suspender.Action.CALLING_GOAL, this, null);
-			create(kb,suspender);
+			create(kb,suspender,vb);
 		}
 		else suspender.performedAction(Suspender.Action.RETRY_GOAL, this, null); 
 		boolean success = false;
@@ -41,7 +42,7 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 			if (childIndex > 0) {
 				ExecutionTreeElement previousElement = getChildren().get(childIndex-1);
 				vb.removeBindings(previousElement);
-				if (previousElement instanceof AbductiveExecutionTreeRuleImpl) {
+				if (previousElement instanceof ExecutionTreeRule) {
 					stack.remove(previousElement.getChildren());
 				}
 			}
@@ -51,7 +52,7 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 				if (!success) childIndex++;
 			}
 			else if (currentElement instanceof AbductiveExecutionTreeRuleImpl){
-				AbductiveExecutionTreeRuleImpl currentRule = (AbductiveExecutionTreeRuleImpl) getChildren().get(childIndex);
+				AbductiveExecutionTreeRuleImpl currentRule = (AbductiveExecutionTreeRuleImpl) currentElement;
 				boolean unify = (Unification.unify(goal, currentRule, vb, Rule.DEFAULT_EDIT_DISTANCE) != -1);
 				if (unify) {
 					currentRule.create(kb, stack);
@@ -67,7 +68,9 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 				childIndex ++;
 				if (query.kbGrounding().getFraction() >0.90) { 
 					boolean unify = (Unification.unify(goal, assumption.getGoal(),assumption,vb,0) != -1);
-					if (unify) success = true;
+					if (unify) {
+						success = true;
+					}
 					else success = false;
 				}
 				else success = false;
@@ -84,7 +87,10 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 	
 
 	public ExecutionTreeElement getCurrentlyProcessed() {
-		if (childIndex == 0) return getChildren().get(0);
+		if (childIndex == 0) {
+			if (getChildren().size() > 0) return getChildren().get(0);
+			else return null;
+		}
 		else {
 			if (childIndex <= getChildren().size()) return getChildren().get(childIndex-1);
 			else return null;
@@ -94,7 +100,7 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 	public void backtrack(VariableBindings vb,GoalStack stack) {
 		ExecutionTreeElement currentElement = getChildren().get(childIndex-1);
 		vb.removeBindings(currentElement);
-		if (currentElement instanceof AbductiveExecutionTreeInstantiationImpl) {
+		if (currentElement instanceof ExecutionTreeInstantiation) {
 			stack.remove(currentElement.getChildren());
 		}
 		clearChildren();
@@ -109,7 +115,7 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 		return isPrepared;
 	}
 	
-	protected void create(KnowledgeBase kb, Suspender suspender) {		
+	protected void create(KnowledgeBase kb, Suspender suspender, VariableBindings vb) {		
 		//facts
 		addChild(new AbductiveExecutionTreeFactsImpl(goal,kb));
 		
@@ -123,17 +129,11 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 		}
 		
 		//assumption
-		ExecutionTreeAssumption assumption = new AbductiveExecutionTreeAssumptionImpl(goal,this);
+		ExecutionTreeAssumption assumption = new AbductiveExecutionTreeAssumptionImpl(goal,vb,this);
 		addChild(assumption);
 		
 		childIndex = 0;
 		isPrepared = true;
-	}
-	
-	
-	@Override
-	public void postprocess(VariableBindings vb) {
-		getCurrentlyProcessed().postprocess(vb);
 	}
 	
 }

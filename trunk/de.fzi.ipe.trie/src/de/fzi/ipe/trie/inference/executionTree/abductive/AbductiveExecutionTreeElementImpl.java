@@ -72,10 +72,5 @@ public class AbductiveExecutionTreeElementImpl implements ExecutionTreeElement{
 		return toReturn;
 	}
 
-	public void postprocess(VariableBindings vb) {
-		for (ExecutionTreeElement element: getChildren()) {
-			element.postprocess(vb);
-		}
-	}
 
 }
