@@ -5,7 +5,7 @@ package de.fzi.ipe.trie.rcp;
 // Log Refresh
 // Log Atom Focus 
 // Log Atom activated, deactivated Event
-//TODO Real output
+//Real output
 
 // Procedural Debugger Logging
 	// action logging
