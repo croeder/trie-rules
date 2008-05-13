@@ -1,7 +1,9 @@
 package de.fzi.ipe.trie.proceduraldebugger.gui.labelProvider;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.IBaseLabelProvider;
@@ -30,6 +32,13 @@ public class LabelUtil {
 	
 	private static NullLabelProvider NULL_LABEL_PROVIDER = new NullLabelProvider();
 
+	//map used to ensure that the variables names shown are unique. If a variable name
+	//is already found in this map, connected to a different variable, then the id is shown as well.
+	private static final Map<String,ProofVariable> usedVariableNames = new HashMap<String,ProofVariable>();
+	
+	public static void resetUsedVariableNames() {
+		usedVariableNames.clear();
+	}
 	
 	public static String toString(Atom atom) {
 		StringBuilder builder = new StringBuilder();
@@ -53,14 +62,27 @@ public class LabelUtil {
 		}
 		else if (term instanceof ProofVariable) {
 			ProofVariable var = (ProofVariable) term;
-			if (displayVariableID) {
-				return var.getVariableName() + "-"+var.getId();
-			}
-			else return var.getVariableName(); 
+			return toString(var); 
 		}
 		else {
 			return term.toString();
 		}
+	}
+
+	private static String toString(ProofVariable var) {
+		if (displayVariableID) {
+			String variableName = var.getVariableName();
+			ProofVariable previousProofVariable = usedVariableNames.get(variableName);
+			if (previousProofVariable == null) {
+				usedVariableNames.put(variableName, previousProofVariable);
+				return variableName;
+			}
+			else if (previousProofVariable.equals(var)) {
+				return variableName;
+			}
+			else return var.getVariableName() + "-"+var.getId();
+		}
+		else return var.getVariableName();
 	}
 	
 	public static void setHideBeforeHash(boolean hide) {

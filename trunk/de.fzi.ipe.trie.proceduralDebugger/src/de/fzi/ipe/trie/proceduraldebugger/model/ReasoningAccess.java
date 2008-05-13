@@ -2,8 +2,10 @@ package de.fzi.ipe.trie.proceduraldebugger.model;
 
 import de.fzi.ipe.trie.Rule;
 import de.fzi.ipe.trie.inference.BackwardChainer;
+import de.fzi.ipe.trie.inference.ProofVariable;
 import de.fzi.ipe.trie.inference.Suspender;
 import de.fzi.ipe.trie.inference.executionTree.simple.SimpleBackwardChainer;
+import de.fzi.ipe.trie.proceduraldebugger.gui.labelProvider.LabelUtil;
 
 public class ReasoningAccess {
 
@@ -28,6 +30,8 @@ public class ReasoningAccess {
 
 	public static void startDebugging() {
 		stopDebugging();
+		ProofVariable.resetCounter();
+		LabelUtil.resetUsedVariableNames();
 		reasoner = new SimpleBackwardChainer(DatamodelAccess.getKnowledgeBase(),suspender);
 		reasoningThread = new ReasoningThread();
 		reasoningThread.start();
