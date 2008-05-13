@@ -69,7 +69,7 @@ public class RuleDetailsGroup implements DebuggerEventBusListener {
 		makeBodyClauses(styledText,rule);
 		styledText.updateText();
 
-		comment.setText(rule.getComment());
+		if (rule != null) comment.setText(rule.getComment());
 		
 		GridData gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
 		gridData.minimumHeight = styledText.getSize().y + comment.getLineHeight()*2;
