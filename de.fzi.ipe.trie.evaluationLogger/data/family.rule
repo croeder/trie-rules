@@ -1,0 +1,62 @@
+# Example Rule File  
+@prefix zach: <http://www.fzi.de/ipe/zach#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+
+# Return all arguments ?B about a some apartment preferences ?B
+[Query:   
+	(x,x,x)   
+<-  
+    	(zach:Mike,zach:has_grandfather,?Grandfather)
+]
+
+
+# Someone is the (paternal) grandfather of someone, when someone has a father who has him as a father.
+[Paternal_Grandfather:
+	(?child, zach:has_grandfather, ?grandfather)
+<- 
+	(?child, zach:has_father, ?father)
+	(?father, zach:has_father, ?grandfather)
+]
+
+
+# Someone is the (maternal) grandfather of someone, when someone has a mother who has him as a father.
+[Maternal_Grandfather:
+	(?child, zach:has_grandfather, ?grandfather)
+<- 
+	(?child, zach:has_mother, ?father)
+	(?father, zach:has_father, ?grandfather)
+]
+
+# Someone is the (paternal) grandmother of someone, when someone has a father who has him as a mother.
+[Paternal_Grandmother:
+	(?child, zach:has_grandma, ?grandma)
+<- 
+	(?child, zach:has_father, ?mother)
+	(?mother, zach:has_mother, ?grandma)
+]
+
+
+# Someone is the (maternal) grandmother of someone, when someone has a mother who has him as a mother.
+[Maternal_Grandmother:
+	(?child, zach:has_grandma, ?grandma)
+<- 
+	(?child, zach:has_mother, ?mother)
+	(?mother, zach:has_mother, ?grandma)
+]
+
+
+# A ?child has a ?father, if it can be inferred that '?father has_child ?child'
+[Has_Father:
+	(?child, zach:has_father, ?father)
+<-
+	(?father, rdf:type, zach:Father)
+	(?father, zach:has_child, ?child)
+]
+
+# A ?child has a ?mother, , if it can be inferred that '?mother has_child ?child'
+[Has_Mother:
+	(?child, zach:has_mother, ?mother)
+<-
+	(?mother, rdf:type, zach:Mother)
+	(?mother, zach:has_child, ?child)
+] 

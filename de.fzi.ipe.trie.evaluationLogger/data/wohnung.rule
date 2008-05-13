@@ -7,22 +7,9 @@
 	(x,x,x)   
 <-  
     	(?A,rdf:type,zach:Apartment)
-	(zach:Family,zach:is_argument,?A)
-]
- 
-# All arguments for something are arguments about it. 
-[Rule_Argument:
-	(?X,zach:is_argument,?Y)
-<- 
-	(?X,zach:is_argument_for,?Y)
+	(zach:Family,zach:is_argument_for,?A)
 ]
 
-# All arguments against something are arguments about it. 
-[Rule_Argument2: 
- 	(?X,zach:is_argument,?Y)
-<-
-	(?X,zach:is_argument_against,?Y)
-]
 
 # If an apartment has a property that is also mentioned
 # in the preferences, then this becomes an argument
@@ -34,19 +21,6 @@
 	(?AP,zach:preference,?B)
 	(?A,rdf:type,zach:Apartment)
 	(?A,zach:has_property,?B)
-]
-
-# If an apartment has a property whose opposite
-# is mentioned in the preference, then this becomes
-# an argument against this apartment. 
-[Rule_Property_Is_Argument_Against:
-	(?Property, zach:is_argument_against,?Apartment)
-<-
-	(?ApartmentPreference,rdf:type,zach:ApartmentPreferences)
-	(?ApartmentPreference,zach:preference,?Preference)
-	(?Apartment,rdf:type,zach:Apartment)
-	(?Apartment,zach:has_property,?Property)
-	(?Property,zach:opposite,?Preference)
 ]
 
 

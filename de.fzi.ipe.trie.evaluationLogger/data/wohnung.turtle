@@ -9,6 +9,3 @@
 	:has_property :Pool;			
 	:has_property :SuitedForCars.
 
-
-:Quite :opposite :Loud.
-:Loud :opposite :Quite.
