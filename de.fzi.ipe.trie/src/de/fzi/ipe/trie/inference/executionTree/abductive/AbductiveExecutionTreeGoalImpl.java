@@ -22,6 +22,8 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 	private boolean isPrepared = false;
 	private int childIndex = 0;
 	
+	private boolean hasReturnedTrue = false;
+	
 	protected AbductiveExecutionTreeGoalImpl(Atom goal) {
 		this.goal = goal;
 	}
@@ -66,7 +68,7 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 			else if (currentElement instanceof AbductiveExecutionTreeAssumptionImpl) {
 				AbductiveExecutionTreeAssumptionImpl assumption = (AbductiveExecutionTreeAssumptionImpl) currentElement;
 				childIndex ++;
-				if (query.kbGrounding().getFraction() >0.90) { 
+				if (!hasReturnedTrue && query.kbGrounding().getFraction() >0.90) { 
 					boolean unify = (Unification.unify(goal, assumption.getGoal(),assumption,vb,0) != -1);
 					if (unify) {
 						success = true;
@@ -75,13 +77,13 @@ public class AbductiveExecutionTreeGoalImpl extends AbductiveExecutionTreeElemen
 				}
 				else success = false;
 			}
-			
 			if (success) {
 				suspender.performedAction(Suspender.Action.EXIT_GOAL, this, null);
 				break;
 			}
 			
 		}
+		hasReturnedTrue = hasReturnedTrue | success;
 		return success;
 	}
 	
