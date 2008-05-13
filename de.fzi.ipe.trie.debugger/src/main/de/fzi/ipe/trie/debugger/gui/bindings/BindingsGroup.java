@@ -96,7 +96,7 @@ public class BindingsGroup implements DebuggerEventBusListener{
 			for (int i = 0; i < sortedVariables.length; i++) {
 				TableColumn column = new TableColumn(bindingsViewer.getTable(), SWT.NONE, i);
 				column.setText(sortedVariables[i]);
-				column.setWidth(100);
+				column.setWidth(150);
 			}
 		}
 		bindingsViewer.setInput(result);
@@ -158,8 +158,8 @@ public class BindingsGroup implements DebuggerEventBusListener{
 	private static class ThresholdFilter extends ViewerFilter {
 
 		Set<ResultLineProvider> providers = new HashSet<ResultLineProvider>();
-		static final double THRESHOLD = 0.6d;
-		static final double THRESHOLD_DIFF = 0.1d;
+		static final double THRESHOLD = 0.7d;
+		static final double THRESHOLD_DIFF = 0.01d;
 		
 		boolean sameResultAlreadyBetter(ResultLineProvider currentLine) {
 			for (ResultLineProvider older:providers) {
