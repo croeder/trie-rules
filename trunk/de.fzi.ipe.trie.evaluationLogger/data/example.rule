@@ -1,0 +1,18 @@
+# Example Rule File  
+@prefix zach: <http://www.fzi.de/ipe/zach#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+
+# Return all arguments ?B about a some apartment preferences ?B
+[Query:   
+	(x,x,x)   
+<-  
+    	(?Person,zach:works_in,?Project)
+]
+
+
+# If a project has a member ?X, then ?X works_in the prohect.
+[Project:
+	(?X, zach:works_in, ?Project)
+<- 
+	(?Project, zach:has_member, ?X)
+]

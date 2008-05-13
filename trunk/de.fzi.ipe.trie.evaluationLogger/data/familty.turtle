@@ -1,0 +1,17 @@
+@prefix : <http://www.fzi.de/ipe/zach#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+
+
+:Abraham rdf:type :Male;
+	rdf:type :Father;
+	:has_child:Michelle.
+
+:Michelle rdf:type :Female;
+	rdf:type :Mother; 
+	:has_child :Mike.
+
+:Francis rdf:type :Male;
+	rdf:type :Father;
+	:has_child :Mike.
+
+:Mike rdf:type :Male. 
