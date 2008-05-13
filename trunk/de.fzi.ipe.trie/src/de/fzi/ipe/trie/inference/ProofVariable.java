@@ -14,6 +14,15 @@ public class ProofVariable extends Term implements Comparable<ProofVariable> {
 		this.variableName = name;
 	}
 	
+	/**
+	 * The resets the counter used to generate unique variable names, this method must
+	 * never be called during an inference process, or the inference process may
+	 * return *any* result.
+	 */
+	public static void resetCounter() {
+		counter = 0;
+	}
+	
 	public String getVariableName() {
 		return variableName;
 	}
