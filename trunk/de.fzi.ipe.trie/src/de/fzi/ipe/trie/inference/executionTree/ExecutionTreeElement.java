@@ -2,8 +2,6 @@ package de.fzi.ipe.trie.inference.executionTree;
 
 import java.util.List;
 
-import de.fzi.ipe.trie.inference.VariableBindings;
-
 public interface ExecutionTreeElement {
 
 	
