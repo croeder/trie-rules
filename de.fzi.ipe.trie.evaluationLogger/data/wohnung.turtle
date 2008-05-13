@@ -1,0 +1,14 @@
+@prefix : <http://www.fzi.de/ipe/zach#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+
+
+:MikesPreferences rdf:type :ApartmentPreferences;
+	:preference :Family.
+
+:BayViewApartment rdf:type :Apartment;
+	:has_property :Pool;			
+	:has_property :SuitedForCars.
+
+
+:Quite :opposite :Loud.
+:Loud :opposite :Quite.
