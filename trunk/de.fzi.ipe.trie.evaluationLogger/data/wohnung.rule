@@ -1,0 +1,105 @@
+# Example Rule File  
+@prefix zach: <http://www.fzi.de/ipe/zach#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+  
+# Return all arguments ?B about a some apartment preferences ?B
+[Query:   
+	(x,x,x)   
+<-  
+    	(?A,rdf:type,zach:Apartment)
+	(zach:Family,zach:is_argument,?A)
+]
+ 
+# All arguments for something are arguments about it. 
+[Rule_Argument:
+	(?X,zach:is_argument,?Y)
+<- 
+	(?X,zach:is_argument_for,?Y)
+]
+
+# All arguments against something are arguments about it. 
+[Rule_Argument2: 
+ 	(?X,zach:is_argument,?Y)
+<-
+	(?X,zach:is_argument_against,?Y)
+]
+
+# If an apartment has a property that is also mentioned
+# in the preferences, then this becomes an argument
+# for this apartment.
+[Rule_Property_Is_Argument:
+	(?B, zach:is_argument_for,?A)
+<-
+	(?AP,rdf:type,zach:ApartmentPreferences)
+	(?AP,zach:preference,?B)
+	(?A,rdf:type,zach:Apartment)
+	(?A,zach:has_property,?B)
+]
+
+# If an apartment has a property whose opposite
+# is mentioned in the preference, then this becomes
+# an argument against this apartment. 
+[Rule_Property_Is_Argument_Against:
+	(?Property, zach:is_argument_against,?Apartment)
+<-
+	(?ApartmentPreference,rdf:type,zach:ApartmentPreferences)
+	(?ApartmentPreference,zach:preference,?Preference)
+	(?Apartment,rdf:type,zach:Apartment)
+	(?Apartment,zach:has_property,?Property)
+	(?Property,zach:opposite,?Preference)
+]
+
+
+# If an apartement is well suited for something
+# and this is a preference, then this becomes an 
+# argument for this apartment
+[Rule_Well_Suited: 
+	(?B, zach:is_argument_for,?A)
+<-
+	(?AP,rdf:type,zach:ApartmentPreferences)
+	(?AP,zach:preference,?B)
+	(?A,rdf:type,zach:Apartment)
+	(?A,zach:suitedFor,?B)
+]
+
+# If an apartment is well suited for kids and suited for cars,
+# then it is 'suitedForFamilies'
+[Rule_Suited_For_Families:
+	(?Apartment, zach:suitedFor, zach:Family)
+<- 
+	(?Apartment, rdf:type, zach:Apartment)
+	(?Apartment, zach:suitedFor,zach:Kids)
+	(?Apartment, zach:has_property,zach:SuitedForCars)
+] 
+
+#if an apartment has a garden, then it is well suited for kids.
+[Rule_Garden_For_Kids:
+	(?Apartment, zach:suitedFor, zach:Kids) 
+<-
+	(?Apartment, rdf:type, zach:Apartment)
+	(?Apartment, zach:has_property,zach:Garden)
+]
+
+# If an apartment has a pool, then it is well suited for kids. 
+[Rule_Pool_For_Kids: 
+	(?X, zach:suitedFor, zach:Kids)
+<-
+	(?X,rdf:type,zach:Apartment)
+	(?X,zach:has_property,zach:Pool)
+]
+
+# If an apartment is near a school, then it is well suited for kids.
+[Rule_School_For_Kids:
+	(?X, zach:suitedFor, zach:Kids)
+<-
+	(?X,rdf:type,zach:Apartment)
+	(?X,zach:has_property,zach:NearSchool)
+]
+
+# If an apartment is quiet, then it is well suited for kids.
+[Rule_Quite_For_Kids:
+	(?X, zach:suitedFor, zach:Kids)
+<-
+	(?X,rdf:type,zach:Apartment)
+	(?X,zach:has_property,zach:Quiet) 
+]
