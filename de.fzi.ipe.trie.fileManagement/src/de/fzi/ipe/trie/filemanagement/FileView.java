@@ -31,7 +31,7 @@ public class FileView extends ViewPart {
 
 	@Override
 	public void setFocus() {
-		;
+		DebugLogger.log("FileViewGetsFocus");
 	}
 
 }
