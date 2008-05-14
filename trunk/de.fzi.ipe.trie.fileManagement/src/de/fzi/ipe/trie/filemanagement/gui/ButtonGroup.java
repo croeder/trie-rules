@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
+import de.fzi.ipe.trie.filemanagement.DebugLogger;
 import de.fzi.ipe.trie.filemanagement.SourceFiles;
 import de.fzi.ipe.trie.filemanagement.extensionPoint.SourceFileListener;
 import de.fzi.ipe.trie.filemanagement.model.DebuggerFile;
@@ -105,6 +106,7 @@ public class ButtonGroup implements SourceFileListener{
 				for (FileButton f: buttons) {
 					if (!f.equals(this)) f.button.setSelection(false);
 				}
+				DebugLogger.log("LookingAtFile",file.getName());
 				textView.setText(file);
 			}
 			else {
