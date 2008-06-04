@@ -19,6 +19,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
@@ -29,6 +30,7 @@ import com.hp.hpl.jena.shared.JenaException;
 
 import de.fzi.ipe.trie.debugger.gui.DebugLabelProvider;
 import de.fzi.ipe.trie.debugger.gui.HeadlineComposite;
+import de.fzi.ipe.trie.debugger.gui.RuleListWidget;
 import de.fzi.ipe.trie.debugger.gui.actions.BackAction;
 import de.fzi.ipe.trie.debugger.gui.actions.ForwardAction;
 import de.fzi.ipe.trie.debugger.gui.actions.GoToQueryAction;
@@ -69,7 +71,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener, Obs
 	private static DebugView singleton;
 	
 	private DebuggerEventBus eventBus = new DebuggerEventBus(); 
-	private DebuggerRuleStore debuggerRuleStore;
+	private DebuggerRuleStore ruleStore;
 	
 	private Composite mainComposite, parent;
 	private ScrolledComposite scrolledComposite;
@@ -155,8 +157,8 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener, Obs
 
 	public void createPartControl(Composite parent) {
 		this.parent = parent;
-		debuggerRuleStore = new DebuggerRuleStore(DatamodelAccess.getDatamodel());
-		debuggerRuleStore.addObserver(this);
+		ruleStore = new DebuggerRuleStore(DatamodelAccess.getDatamodel());
+		ruleStore.addObserver(this);
 		
 		createActions();
 		createMenu();
@@ -171,40 +173,44 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener, Obs
 
 		createPartControl();
 		
-		if (debuggerRuleStore.getRule("Query") != null) {
-			DebuggerRule query = debuggerRuleStore.getRule("Query");
+		if (ruleStore.getRule("Query") != null) {
+			DebuggerRule query = ruleStore.getRule("Query");
 			eventBus.sendEvent(new SelectedRuleEvent(query,SelectedRuleEvent.Source.INTERNAL));
 		}
 	}
 
 	private void createPartControl() {
-		GridLayout mainLayout = new GridLayout();
+		GridLayout mainLayout = new GridLayout(2,false);
 		mainLayout.verticalSpacing = 15;
 		mainComposite.setLayout(mainLayout);
 
 		new HeadlineComposite(mainComposite,eventBus);
+		
+		new RuleListWidget(mainComposite,ruleStore, eventBus);
 
-		RuleDetailsGroup ruleDetails = new RuleDetailsGroup(mainComposite,debuggerRuleStore,eventBus);
+		RuleDetailsGroup ruleDetails = new RuleDetailsGroup(mainComposite,ruleStore,eventBus);
 		Point point = ruleDetails.getSize();
 		scrolledComposite.setMinSize(Math.max(point.x, 500), point.y + 600);
 		
 		Composite data = new Composite(mainComposite, SWT.NONE);
 		GridData dataGD = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
 		dataGD.heightHint = 200;
+		dataGD.horizontalSpan = 2;
 		data.setLayoutData(dataGD);
 		data.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-		new BindingsGroup(data,dynamic_b,debuggerRuleStore,eventBus);
+		new BindingsGroup(data,dynamic_b,ruleStore,eventBus);
 
 		Composite data2 = new Composite(mainComposite,SWT.NONE);
 		GridData data2GD = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
 		data2GD.heightHint = 200;
+		data2GD.horizontalSpan = 2;
 		data2.setLayoutData(data2GD);
 		FillLayout data2Layout = new FillLayout(SWT.HORIZONTAL);
 		data2Layout.spacing = 4;
 		data2.setLayout(data2Layout);
-		new DependsOnGroup(data2,debuggerRuleStore, eventBus);
-		new ProoftreeGroup(data2,showProoftree_b,debuggerRuleStore, eventBus);
+		new DependsOnGroup(data2,ruleStore, eventBus);
+		new ProoftreeGroup(data2,showProoftree_b,ruleStore, eventBus);
 	}
 	
 	public void createMenu() {
@@ -236,15 +242,15 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener, Obs
 	public void createToolbar() {
 		IToolBarManager mgr = getViewSite().getActionBars().getToolBarManager();
 
-		back = new BackAction(debuggerRuleStore, eventBus);
+		back = new BackAction(ruleStore, eventBus);
 		back.setToolTipText("Back to last rule");
 		mgr.add(back);
-		forward = new ForwardAction(debuggerRuleStore,eventBus);
+		forward = new ForwardAction(ruleStore,eventBus);
 		forward.setToolTipText("Forward");
 		mgr.add(forward);
 		mgr.add(new Separator());
-		mgr.add(new GoToQueryAction(debuggerRuleStore,eventBus));
-		mgr.add(new SelectRuleDropDownAction(this,debuggerRuleStore, eventBus));
+		mgr.add(new GoToQueryAction(ruleStore,eventBus));
+		mgr.add(new SelectRuleDropDownAction(this,ruleStore, eventBus));
 		mgr.add(new Separator());
 		mgr.add(refresh);
 	}
@@ -253,7 +259,7 @@ public class DebugView extends ViewPart implements DebuggerEventBusListener, Obs
 		refresh = new Action("Refresh") {
 			public void run() {
 				try {
-			    	debuggerRuleStore.reload();
+			    	ruleStore.reload();
 			    } catch (JenaException je) {
 					handleException(je, "Could not reload files");
 				} catch (IOException e) {
