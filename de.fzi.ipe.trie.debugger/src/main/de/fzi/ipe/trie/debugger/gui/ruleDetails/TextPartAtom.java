@@ -47,14 +47,18 @@ public class TextPartAtom extends TextPartWord implements DebuggerEventBusListen
 	@Override
 	public String getToolTipText() {
 		if (atom.isActive()) {
-			if (atom.getBindings().numberResults()> 0) {
+			if (atom.getBindings().numberGroundResults()> 0) {
 				return "This rule atom is active and has results";
+			}
+			//i.e. some non-ground results.
+			else if (atom.getBindings().numberResults() > 0) {
+				return "This rule atom is only satisfiable by assuming things. \n"+
+						"See the red parts of the prooftree for details";
 			}
 			else if (atom.getPossibilities().length > 0) {
 				return  "This rule atom is active but has no results \n"+
 						"There are rules that seem to be able to supply results for this atom, these are \n"+
-						"are shown in the Depends On view below, click on the exclamation mark to see only the rules. \n"+
-						"relevant to this atom. \n"+
+						"are shown in the Depends On view below \n"+
 						"You can click on this atom to deactivate it to see how the rule would work without it.";
 			}
 			else {
