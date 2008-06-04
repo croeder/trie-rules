@@ -105,6 +105,17 @@ public class Result {
 		return results.length;
 	}
 	
+	/**
+	 * Returns the number of results that can be computed without any assumptions.
+	 */
+	public int numberGroundResults() {
+		int i=0;
+		for (Prooftree p: prooftrees) {
+			if (p.getGrounding() == 1d) i++;
+		}
+		return i;
+	}
+	
 	public Set<Variable> getVariables() {
 		return variableToIndex.keySet();
 	}
