@@ -25,12 +25,14 @@ public class DebugLogger implements Logable, SuspendListener{
 		String[] toLog = new String[data.length+1];
 		toLog[0] = "ProceduralDebugger";
 		for (int i=1;i<toLog.length;i++) toLog[i] = data[i-1];
-		logger.log(toLog);
+		if (logger != null) logger.log(toLog);
 	}
 
 	public void suspending(Action a, ExecutionTreeGoal goal, Rule r) {
-		if (r!= null) logger.log(""+a,r.getName(),""+goal);
-		else logger.log(""+a,null,""+goal);
+		if (logger != null) {
+			if (r!= null) logger.log(""+a,r.getName(),""+goal);
+			else logger.log(""+a,null,""+goal);
+		}
 	}
 
 	public void waking() {
