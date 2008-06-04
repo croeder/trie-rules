@@ -79,13 +79,13 @@ public class StyledTextView implements MouseMoveListener, MouseListener, Debugge
     	int endIndex = part.getOffset() + part.getLength();
     	Point locationAtOffset = styledText.getLocationAtOffset(endIndex);
     	if (atom != null) {
-    		AtomFocusButton atomFocusButton = new AtomFocusButton(locationAtOffset,atom,eventBus);
-    		buttons.add(atomFocusButton);
-    		textParts.add(atomFocusButton);
-    		Point locationSecondButton = new Point(locationAtOffset.x+14,locationAtOffset.y);
-    		AtomActivateButton atomActivateButton = new AtomActivateButton(locationSecondButton,atom,eventBus);
-    		buttons.add(atomActivateButton);
-    		textParts.add(atomActivateButton);
+//    		AtomFocusButton atomFocusButton = new AtomFocusButton(locationAtOffset,atom,eventBus);
+//    		buttons.add(atomFocusButton);
+//    		textParts.add(atomFocusButton);
+//    		Point locationSecondButton = new Point(locationAtOffset.x+14,locationAtOffset.y);
+//    		AtomActivateButton atomActivateButton = new AtomActivateButton(locationSecondButton,atom,eventBus);
+//    		buttons.add(atomActivateButton);
+//    		textParts.add(atomActivateButton);
     	}
     }
     

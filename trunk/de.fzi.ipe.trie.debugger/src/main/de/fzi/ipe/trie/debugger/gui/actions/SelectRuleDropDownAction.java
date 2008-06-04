@@ -11,7 +11,6 @@ import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.dialogs.ListDialog;
@@ -19,6 +18,7 @@ import org.eclipse.ui.dialogs.ListDialog;
 import de.fzi.ipe.trie.debugger.DebugView;
 import de.fzi.ipe.trie.debugger.DebuggerPlugin;
 import de.fzi.ipe.trie.debugger.gui.RuleListContentProvider;
+import de.fzi.ipe.trie.debugger.gui.RuleListLabelProvider;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEvent;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBus;
 import de.fzi.ipe.trie.debugger.gui.events.DebuggerEventBusListener;
@@ -124,13 +124,6 @@ public class SelectRuleDropDownAction extends Action implements IMenuCreator, De
         	eventBus.sendEvent(new SelectedRuleEvent(rule,SelectedRuleEvent.Source.RULE_BUTTON));
         }
     }
-    
-    private static class RuleListLabelProvider extends LabelProvider {
-        public String getText(Object element) {
-            return ((DebuggerRule)element).getName();
-        }
-    }
-        
     
     /**
      * Small class that stores information about the n last accessed rules. The most recently accessed 

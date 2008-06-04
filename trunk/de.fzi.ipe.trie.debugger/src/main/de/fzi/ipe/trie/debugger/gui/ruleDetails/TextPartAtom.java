@@ -70,12 +70,12 @@ public class TextPartAtom extends TextPartWord implements DebuggerEventBusListen
 	
 	private Color getForeground() {
 		if (atom.isActive()) {
-			if (atom.getBindings().numberResults()> 0) return COLOR_ACTIVE_DEFAULT;
+			if (atom.getBindings().numberGroundResults()> 0) return COLOR_ACTIVE_DEFAULT;
 			else if (atom.getPossibilities().length > 0) return COLOR_ACTIVE_NO_BINDINGS;
 			else return COLOR_ACTIVE_NO_POSSIBILITIES;
 		}
 		else {
-			if (atom.getBindings().numberResults()> 0) return COLOR_INACTIVE_DEFAULT;
+			if (atom.getBindings().numberGroundResults()> 0) return COLOR_INACTIVE_DEFAULT;
 			else if (atom.getPossibilities().length > 0) return COLOR_INACTIVE_NO_BINDINGS;
 			else return COLOR_INACTIVE_NO_POSSIBILITIES;			
 		}

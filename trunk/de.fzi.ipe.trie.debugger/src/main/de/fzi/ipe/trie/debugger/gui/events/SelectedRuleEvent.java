@@ -4,7 +4,7 @@ import de.fzi.ipe.trie.debugger.model.DebuggerRule;
 
 public class SelectedRuleEvent implements DebuggerEvent {
 
-	public enum Source {FORWARD, BACKWARD, QUERY_BUTTON, RULE_BUTTON, PROOFTREE, DEPENDS_ON,INTERNAL}
+	public enum Source {FORWARD, BACKWARD, QUERY_BUTTON, RULE_BUTTON, PROOFTREE, DEPENDS_ON,INTERNAL, RULE_LIST}
 	
 	private boolean isForward = false, isBackward=false; 
 
