@@ -40,8 +40,9 @@ public class ProceduralDebugView extends ViewPart {
 		et.getLayoutData().verticalSpan = 2;
 		et.getLayoutData().verticalAlignment = SWT.FILL;
 		new VariableBindingsWidget(mainComposite,200);
-		
-		et.addSelectionListener(currentRule);
+
+		et.addSelectionChangedListener(currentRule);
+
 		parent.layout(true);
 	}
 
