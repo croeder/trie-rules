@@ -27,7 +27,7 @@ public class DebugLogger implements Logable, SourceFileListener{
 		String[] toLog = new String[data.length+1];
 		toLog[0] = "FileManagement";
 		for (int i=1;i<toLog.length;i++) toLog[i] = data[i-1];
-		logger.log(toLog);
+		if (logger != null) logger.log(toLog);
 	}
 
 	public void filesChanged() {
