@@ -33,5 +33,8 @@ public class ProoftreeNode {
 		return children;
 	}
 		
-
+	public boolean isAlmostMatch() {
+		return false;
+	}
+	
 }

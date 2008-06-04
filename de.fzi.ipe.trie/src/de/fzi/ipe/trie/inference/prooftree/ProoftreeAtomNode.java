@@ -23,4 +23,14 @@ public class ProoftreeAtomNode extends ProoftreeNode{
 		}
 	}
 
+	
+	/** returns true if one this atom has a child that returns true for isAlmostMatch */
+	public boolean isAlmostMatch() {
+		for (ProoftreeNode node: getChildren()) {
+			if(node.isAlmostMatch()) return true;
+		}
+		return false;
+	}
+	
+	
 }
