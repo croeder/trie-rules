@@ -16,6 +16,21 @@ public class ProoftreeRuleNode extends ProoftreeNode{
 		return rule;
 	}
 	
+	
+	/**
+	 * Returns true if this rule or any of the rules it is directly depending on return isAlmostMatch=true
+	 * @return
+	 */
+	public boolean hasAlmostMatch() {
+		if (isAlmostMatch()) return true;
+		else {
+			for (ProoftreeNode n: getChildren()) {
+				if (n.isAlmostMatch()) return true;
+			}
+		}
+		return false;
+	}
+	
 	public boolean isAlmostMatch() {
 		return rule instanceof RuleProxy;
 	}
