@@ -127,7 +127,7 @@ public class ProoftreeTreeViewer extends TreeViewer{
 			    }
 			    else if (node instanceof ProoftreeRuleNode) {
 			    	ProoftreeRuleNode ruleNode = (ProoftreeRuleNode) node;
-			    	if (ruleNode.isAlmostMatch()) return DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_RULE_RED);
+			    	if (ruleNode.hasAlmostMatch()) return DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_RULE_RED);
 			    	else return DebuggerPlugin.getImage(DebuggerPlugin.IMAGE_RULE_GREEN);
 			    }
 			    else return null;
