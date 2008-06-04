@@ -12,23 +12,23 @@ import org.eclipse.ui.IStartup;
 public class EarlyStartupManager implements IStartup {
 
 	public void earlyStartup() {
-		LoggerImpl.getLogger();
-		FileLogger.getInstance();
-		try {
-			IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
-			IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint("de.fzi.trie.evaluationLogger.Logable");
-			IExtension[] extensions = extensionPoint.getExtensions();
-			for (IExtension ext: extensions) {
-				IConfigurationElement[] configurationElements = ext.getConfigurationElements();
-				for (IConfigurationElement confi: configurationElements) {
-					Logable list = (Logable) confi.createExecutableExtension("ClassName");
-					list.setLogger(LoggerImpl.getLogger());
-				}
-			}
-		} catch (CoreException e) {
-			System.err.println("Evaluation Logger Startup Failed");
-			e.printStackTrace();
-		}
+//		LoggerImpl.getLogger();
+//		FileLogger.getInstance();
+//		try {
+//			IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+//			IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint("de.fzi.trie.evaluationLogger.Logable");
+//			IExtension[] extensions = extensionPoint.getExtensions();
+//			for (IExtension ext: extensions) {
+//				IConfigurationElement[] configurationElements = ext.getConfigurationElements();
+//				for (IConfigurationElement confi: configurationElements) {
+//					Logable list = (Logable) confi.createExecutableExtension("ClassName");
+//					list.setLogger(LoggerImpl.getLogger());
+//				}
+//			}
+//		} catch (CoreException e) {
+//			System.err.println("Evaluation Logger Startup Failed");
+//			e.printStackTrace();
+//		}
 	}
 
 }

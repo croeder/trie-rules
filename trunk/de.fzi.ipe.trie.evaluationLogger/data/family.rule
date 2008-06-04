@@ -2,7 +2,7 @@
 @prefix zach: <http://www.fzi.de/ipe/zach#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 
-# Return all arguments ?B about a some apartment preferences ?B
+# Return all grandfathers of Mike
 [Query:   
 	(x,x,x)   
 <-  
@@ -24,7 +24,7 @@
 	(?child, zach:has_grandfather, ?grandfather)
 <- 
 	(?child, zach:has_mother, ?father)
-	(?father, zach:has_father, ?grandfather)
+	(?father, zach:has_fater, ?grandfather)
 ]
 
 # Someone is the (paternal) grandmother of someone, when someone has a father who has him as a mother.
