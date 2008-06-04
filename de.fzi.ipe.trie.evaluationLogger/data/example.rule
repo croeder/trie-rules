@@ -2,7 +2,7 @@
 @prefix zach: <http://www.fzi.de/ipe/zach#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 
-# Return all arguments ?B about a some apartment preferences ?B
+# Return all ?Person that works_in a ?Project
 [Query:   
 	(x,x,x)   
 <-  

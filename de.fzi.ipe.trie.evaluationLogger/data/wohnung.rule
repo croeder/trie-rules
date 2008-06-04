@@ -11,19 +11,6 @@
 ]
 
 
-# If an apartment has a property that is also mentioned
-# in the preferences, then this becomes an argument
-# for this apartment.
-[Rule_Property_Is_Argument:
-	(?B, zach:is_argument_for,?A)
-<-
-	(?AP,rdf:type,zach:ApartmentPreferences)
-	(?AP,zach:preference,?B)
-	(?A,rdf:type,zach:Apartment)
-	(?A,zach:has_property,?B)
-]
-
-
 # If an apartement is well suited for something
 # and this is a preference, then this becomes an 
 # argument for this apartment
@@ -43,7 +30,7 @@
 <- 
 	(?Apartment, rdf:type, zach:Apartment)
 	(?Apartment, zach:suitedFor,zach:Kids)
-	(?Apartment, zach:has_property,zach:SuitedForCars)
+	(?Apartment, zach:has_attribute,zach:SuitedForCars)
 ] 
 
 #if an apartment has a garden, then it is well suited for kids.
@@ -68,12 +55,4 @@
 <-
 	(?X,rdf:type,zach:Apartment)
 	(?X,zach:has_property,zach:NearSchool)
-]
-
-# If an apartment is quiet, then it is well suited for kids.
-[Rule_Quite_For_Kids:
-	(?X, zach:suitedFor, zach:Kids)
-<-
-	(?X,rdf:type,zach:Apartment)
-	(?X,zach:has_property,zach:Quiet) 
 ]
