@@ -22,7 +22,7 @@ public class Perspective implements IPerspectiveFactory {
 		folder.addView(FileView.VIEW_ID);
 		folder.addView(DebugView.VIEW_ID);
 		folder.addView(DependencyView.VIEW_ID);
-//		folder.addView("de.fzi.ipe.trie.evaluationlogger.views.LoggerDebugView");
+		folder.addView("de.fzi.ipe.trie.evaluationlogger.views.LoggerDebugView");
 	}
 
 }
