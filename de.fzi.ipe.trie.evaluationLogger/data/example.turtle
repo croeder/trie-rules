@@ -5,3 +5,6 @@
 :Im_Wissensnetz rdf:type :Project;
 	:has_member :Mark.
 
+:Mark rdf:type :Person. 
+
+
